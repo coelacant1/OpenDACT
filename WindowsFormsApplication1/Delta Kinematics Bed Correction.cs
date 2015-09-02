@@ -13,17 +13,6 @@ using System.IO.Ports;
 using System.Diagnostics;
 using System.Threading;
 
-/*
-/////////////////////////////////
-TODO:
-XY Scaling:
-    Xalpha rotation
-    Xxyz offset
-    hrad
-    diagonalRod
-    deltaRad
-*/
-
 namespace deltaKinematics
 {
     public partial class Form1 : Form
@@ -471,7 +460,7 @@ namespace deltaKinematics
         // Version information.
         private void versionButton_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.MessageBox.Show("Version: 3.0.0\n\nCreated by Steven T. Rowland\nsteventrowland@gmail.com\n");
+            System.Windows.Forms.MessageBox.Show("Version: 2.0.3B\n\nCreated by Steven T. Rowland\nsteventrowland@gmail.com\n");
         }
 
         // Open advanced panel.
@@ -537,24 +526,6 @@ namespace deltaKinematics
                     }
                     else
                     {
-                        /*
-						if (message.StartsWith("EPR"))
-						{
-							// instead of doing this, we should call to a method that 
-							// parses the line and sets the appropriate variable
-							_eepromString += message;
-						}
-						else
-						{
-							if (!message.Contains("ok"))
-							{
-								_initiatingCalibration = false;
-								LogMessage("Finished retrieving EEPROM values\n");
-							}
-						}
-                        */
-
-
                         if (message.Contains("Z-probe:"))
                         {
                             //Z-probe: 10.66 zCorr: 0
@@ -960,7 +931,6 @@ namespace deltaKinematics
                         if (message.Contains("EPR"))
                         {
                             LogMessage(message + "\n");
-                            //:2 75 250000 Baudrate
                             string[] parseEPR = message.Split(new string[] { "EPR", "\n" }, StringSplitOptions.RemoveEmptyEntries);
                             string[] parseEPRSpace;
 
@@ -1070,7 +1040,7 @@ namespace deltaKinematics
             }
         }
 
-        //
+        //prints to printer console
         public void LogMessage(string value)
         {
             if (InvokeRequired)
@@ -1081,7 +1051,7 @@ namespace deltaKinematics
             printerConsoleTextBox.AppendText(value + "\n");
         }
 
-        //
+        //prints to console
         public void LogConsole(string value)
         {
             if (InvokeRequired)
@@ -1092,6 +1062,7 @@ namespace deltaKinematics
             consoleTextBox.AppendText(value + "\n");
         }
 
+        /*
         //
         private void displaydata_event(object sender, EventArgs e)
         {
@@ -1102,6 +1073,7 @@ namespace deltaKinematics
                 //printerConsoleTextBox.AppendText(inData + "\n");
             }
         }
+        */
 
         private void fetchEEProm()
         {
@@ -1126,7 +1098,7 @@ namespace deltaKinematics
 
         private void initiateCal()
         {
-
+            //set gcode specifications
             valueZ = 0.482 * plateDiameter;
             valueXYLarge = 0.417 * plateDiameter;
             valueXYSmall = 0.241 * plateDiameter;
@@ -1156,8 +1128,10 @@ namespace deltaKinematics
 
         private void calibratePrinter()
         {
+            //check accuracy of current height-map and determine to end or procede
             if (X <= accuracy2 && X >= -accuracy2 && XOpp <= accuracy2 && XOpp >= -accuracy2 && Y <= accuracy2 && Y >= -accuracy2 && YOpp <= accuracy2 && YOpp >= -accuracy2 && Z <= accuracy2 && Z >= -accuracy2 && ZOpp <= accuracy2 && ZOpp >= -accuracy2)
             {
+                //fsr plate offset
                 if (comboBoxZMinimumValue == "FSR")
                 {
                     _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - Convert.ToDouble(textFSRPlateOffset.Text)));
@@ -1168,14 +1142,17 @@ namespace deltaKinematics
                 Thread.Sleep(pauseTimeSet);
                 _serialPort.WriteLine("G28");
                 LogConsole("Calibration Complete\n");
+                //end code
             }
             else if (iterationNum > maxIterations)
             {
+                //max iterations hit
                 LogConsole("Calibration Failed\n");
                 LogConsole("Maximum number of iterations hit. Please restart application and run the advanced calibration.\n");
             }
             else
             {
+                //logs current iteration number
                 LogConsole("Current iteration: " + iterationNum + "\n");
 
                 //basic calibration
@@ -1224,14 +1201,12 @@ namespace deltaKinematics
                     _serialPort.WriteLine("M206 T3 P921 X" + ToLongString(DC));
                     Thread.Sleep(pauseTimeSet);
 
-                    towerXRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(X - XOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
-                    towerYRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(Y - YOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
-                    towerZRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(Z - ZOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
+                    //analyzes the printer geometry
+                    analyzeGeometry();
+                    LogConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
 
                     ////////////////////////////////////////////////////////////////////////////////
                     //Tower Offset Calibration******************************************************
-
-                    //balance axes - retrieve data
                     int j = 0;
 
                     while (j < 1)
@@ -1386,14 +1361,15 @@ namespace deltaKinematics
                             j = 1;
                         }
                     }
-                    //send data back to printer
 
+                    //round to the nearest whole number
                     offsetX = Math.Round(offsetX);
                     offsetY = Math.Round(offsetY);
                     offsetZ = Math.Round(offsetZ);
 
                     LogConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ + "\n");
-
+                    
+                    //send data back to printer
                     _serialPort.WriteLine("M206 T1 P893 S" + offsetX.ToString());
                     Thread.Sleep(pauseTimeSet);
                     _serialPort.WriteLine("M206 T1 P895 S" + offsetY.ToString());
@@ -1468,6 +1444,7 @@ namespace deltaKinematics
                         }
                     }
 
+                    //log
                     LogConsole("ABC:" + A + " " + B + " " + C + "\n");
                     LogConsole("Heights: X:" + X + ", XOpp:" + XOpp + ", Y:" + Y + ", YOpp:" + YOpp + ", Z:" + Z + ", and ZOpp:" + ZOpp + "\n");
 
@@ -1528,6 +1505,7 @@ namespace deltaKinematics
                         }
                     }
 
+                    //log
                     LogConsole("Diagonal Rod:" + diagonalRod + "\n");
                     LogConsole("Heights: X:" + X + ", XOpp:" + XOpp + ", Y:" + Y + ", YOpp:" + YOpp + ", Z:" + Z + ", and ZOpp:" + ZOpp + "\n");
 
@@ -1559,7 +1537,7 @@ namespace deltaKinematics
                     if (calculationCount == 0)
                     {
                         //////////////////////////////////////////////////////////////////////////////
-                        //HRad is calibrated by increasing the outside edge of the glass by the average differences, this should balance the values with a central point of around zero
+                        //HRad is calibrated by increasing the outside edge of the glass by the average differences, this should balance the values with an average of zero
                         if (calculationCheckCount == 0)
                         {
                             calculationX = X;
@@ -1687,139 +1665,7 @@ namespace deltaKinematics
                     }
                     else if (calculationCount == 2)
                     {
-
-                        //calculates the tower angle at the top and bottom
-                        /*
-                        towerXRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + X) - (centerHeight + XOpp)));
-                        towerYRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + Y) - (centerHeight + YOpp)));
-                        towerZRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + Z) - (centerHeight + ZOpp)));
-                        */
-                        /*
-                        double XPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(X - XOpp), 2) + Math.Pow((270 * 0.963), 2));
-                        double hypX = Math.Sqrt(Math.Pow(XPlateRadCalc, 2) + Math.Pow((centerHeight - XOpp), 2));
-                        double XAngleCompl = Math.Acos(Math.Pow(XPlateRadCalc, 2) + Math.Pow((centerHeight - XOpp), 2) - Math.Pow(hypX, 2)) / (2 * XPlateRadCalc * (centerHeight - XOpp));
-
-                        //use complimentary angle of angle found
-                        towerXRotation = 180 - XAngleCompl * 57.296;
-
-                        double YPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(Y - YOpp), 2) + Math.Pow((270 * 0.963), 2));
-                        double hypY = Math.Sqrt(Math.Pow(YPlateRadCalc, 2) + Math.Pow((centerHeight - YOpp), 2));
-                        double YAngleCompl = Math.Acos(Math.Pow(YPlateRadCalc, 2) + Math.Pow((centerHeight - YOpp), 2) - Math.Pow(hypY, 2)) / (2 * YPlateRadCalc * (centerHeight - YOpp));
-
-                        //use complimentary angle of angle found
-                        towerYRotation = 180 - YAngleCompl * 57.296;
-
-                        double ZPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(Z - ZOpp), 2) + Math.Pow((270 * 0.963), 2));
-                        double hypZ = Math.Sqrt(Math.Pow(ZPlateRadCalc, 2) + Math.Pow((centerHeight - ZOpp), 2));
-                        double ZAngleCompl = Math.Acos(Math.Pow(ZPlateRadCalc, 2) + Math.Pow((centerHeight - ZOpp), 2) - Math.Pow(hypZ, 2)) / (2 * ZPlateRadCalc * (centerHeight - ZOpp));
-
-                        //use complimentary angle of angle found
-                        towerZRotation = 180 - ZAngleCompl * 57.296;
-                        */
-                        /*
-                        cos A = (b2 + c2 − a2) / 2bc
-
-                        a = centerheight
-                        b = Math.Sqrt(Math.Pow(centerHeight, 2) + Math.Pow(plateDiameter * 0.963))
-                        c = plate build diameter
-
-                        A = 
-
-                        if (X < XOpp)
-                        {
-                            LogConsole("X inverted");
-                            towerXRotation = (90 - towerXRotation) + 90;
-                        }
-                        if (Y < YOpp)
-                        {
-                            LogConsole("Y inverted");
-                            towerYRotation = (90 - towerYRotation) + 90;
-                        }
-                        if (Z < ZOpp)
-                        {
-                            LogConsole("Z inverted");
-                            towerZRotation = (90 - towerZRotation) + 90;
-                        }
-                        */
-
-                        towerXRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(X - XOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
-                        towerYRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(Y - YOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
-                        towerZRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(Z - ZOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
-
-                        if (X < XOpp)
-                        {
-                            towerXRotation = 90 - towerXRotation;
-                        }
-                        else
-                        {
-                            towerXRotation = 90 + towerXRotation;
-                        }
-
-                        if (Y < YOpp)
-                        {
-                            towerYRotation = 90 - towerYRotation;
-                        }
-                        else
-                        {
-                            towerYRotation = 90 + towerYRotation;
-                        }
-
-                        if (Z < ZOpp)
-                        {
-                            towerZRotation = 90 - towerZRotation;
-                        }
-                        else
-                        {
-                            towerZRotation = 90 + towerZRotation;
-                        }
-
-                        //bottom
-                        Invoke((MethodInvoker)delegate { this.textXAngleTower.Text = towerXRotation.ToString(); });
-                        Invoke((MethodInvoker)delegate { this.textYAngleTower.Text = towerYRotation.ToString(); });
-                        Invoke((MethodInvoker)delegate { this.textZAngleTower.Text = towerZRotation.ToString(); });
-
-                        //top
-                        Invoke((MethodInvoker)delegate { this.textXAngleTop.Text = (180 - towerXRotation).ToString(); });
-                        Invoke((MethodInvoker)delegate { this.textYAngleTop.Text = (180 - towerYRotation).ToString(); });
-                        Invoke((MethodInvoker)delegate { this.textZAngleTop.Text = (180 - towerZRotation).ToString(); });
-
-                        //Calculates the radii for each tower at the top and bottom of the towers
-                        //X
-                        double hypotenuseX = (Math.Sin(90) / Math.Sin(Math.PI - towerXRotation - (180 - towerXRotation))) * centerHeight;
-                        double radiusSideX = Math.Sqrt(Math.Pow(hypotenuseX, 2) - Math.Pow(centerHeight, 2));
-                        double bottomX = HRad;
-                        double topX = HRad - radiusSideX;
-
-                        //Top
-                        Invoke((MethodInvoker)delegate { this.textXPlate.Text = bottomX.ToString(); });
-                        Invoke((MethodInvoker)delegate { this.textXPlateTop.Text = topX.ToString(); });
-
-                        //Y
-                        double hypotenuseY = (Math.Sin(90) / Math.Sin(Math.PI - towerYRotation - (180 - towerYRotation))) * centerHeight;
-                        double radiusSideY = Math.Sqrt(Math.Pow(hypotenuseX, 2) - Math.Pow(centerHeight, 2));
-                        double bottomY = HRad;
-                        double topY = HRad - radiusSideY;
-
-                        //Top
-                        Invoke((MethodInvoker)delegate { this.textYPlate.Text = bottomY.ToString(); });
-                        Invoke((MethodInvoker)delegate { this.textYPlateTop.Text = topY.ToString(); });
-
-                        //Z
-                        double hypotenuseZ = (Math.Sin(90) / Math.Sin(Math.PI - towerZRotation - (180 - towerZRotation))) * centerHeight;
-                        double radiusSideZ = Math.Sqrt(Math.Pow(hypotenuseX, 2) - Math.Pow(centerHeight, 2));
-                        double bottomZ = HRad;
-                        double topZ = HRad - radiusSideZ;
-
-                        //Top
-                        Invoke((MethodInvoker)delegate { this.textZPlate.Text = bottomZ.ToString(); });
-                        Invoke((MethodInvoker)delegate { this.textZPlateTop.Text = topZ.ToString(); });
-
-                        //find max offset in Xy scaling with current tower offsets
-                        double AScaling = Math.Max(Math.Max(Math.Abs(90 - hypotenuseX), Math.Abs(90 - hypotenuseY)), Math.Abs(90 - hypotenuseZ));
-                        double offsetScalingMax = (Math.Sin(90) / Math.Sin(Math.PI - 90 - AScaling)) * centerHeight;
-
-                        //set scaling offset
-                        Invoke((MethodInvoker)delegate { this.textScaleOffset.Text = offsetScalingMax.ToString(); });
+                        analyzeGeometry();
 
                         LogConsole("Tower Rotation calculated, check XY Panel\n");
 
@@ -1918,195 +1764,6 @@ namespace deltaKinematics
                                 offsetX = offsetX - Z * stepsPerMM * offsetXCorrection * 2;
                             }
 
-                            /*
-                            while (j != 1)
-                            {
-                                //XYZ offset
-                                xxPerc = 1;
-                                yyPerc = 1;
-                                zzPerc = 1;
-
-                                //X
-                                xxOppPerc = 0.5;
-                                xyPerc = 0.25;
-                                xyOppPerc = 0.25;
-                                xzPerc = 0.25;
-                                xzOppPerc = 0.25;
-
-                                //Y
-                                yyOppPerc = 0.5;
-                                yxPerc = 0.25;
-                                yxOppPerc = 0.25;
-                                yzPerc = 0.25;
-                                yzOppPerc = 0.25;
-
-                                //Z
-                                zzOppPerc = 0.5;
-                                zxPerc = 0.25;
-                                zxOppPerc = 0.25;
-                                zyPerc = 0.25;
-                                zyOppPerc = 0.25;
-
-                                //correction
-                                offsetXCorrection = 1 / 1.4;
-                                offsetYCorrection = 1 / 1.4;
-                                offsetZCorrection = 1 / 1.4;
-
-                                double theoryX = offsetX + X * stepsPerMM * offsetXCorrection;
-
-                                //correction of one tower allows for XY dimensional accuracy
-                                if (X > 0)
-                                {
-                                    //if x is positive
-                                    offsetX = offsetX + X * stepsPerMM * offsetXCorrection;
-
-                                    XOpp = XOpp + (X * xxOppPerc);//0.5
-                                    Z = Z + (X * xzPerc);//0.25
-                                    Y = Y + (X * xyPerc);//0.25
-                                    ZOpp = ZOpp - (X * xzOppPerc);//0.25
-                                    YOpp = YOpp - (X * xyOppPerc);//0.25
-                                    X = X - X;
-                                }
-                                else if (theoryX > 0 && X < 0)
-                                {
-                                    //if x is negative and can be decreased
-                                    offsetX = offsetX + X * stepsPerMM * offsetXCorrection;
-
-                                    XOpp = XOpp + (X * xxOppPerc);//0.5
-                                    Z = Z + (X * xzPerc);//0.25
-                                    Y = Y + (X * xyPerc);//0.25
-                                    ZOpp = ZOpp - (X * xzOppPerc);//0.25
-                                    YOpp = YOpp - (X * xyOppPerc);//0.25
-                                    X = X - X;
-                                }
-                                else
-                                {
-                                    //if X is negative
-                                    offsetY = offsetY - X * stepsPerMM * offsetYCorrection * 2;
-                                    offsetZ = offsetZ - X * stepsPerMM * offsetZCorrection * 2;
-
-                                    YOpp = YOpp - (X * 2 * yyOppPerc);
-                                    X = X - (X * 2 * yxPerc);
-                                    Z = Z - (X * 2 * yxPerc);
-                                    XOpp = XOpp + (X * 2 * yxOppPerc);
-                                    ZOpp = ZOpp + (X * 2 * yxOppPerc);
-                                    Y = Y + X * 2;
-
-                                    ZOpp = ZOpp - (X * 2 * zzOppPerc);
-                                    X = X - (X * 2 * zxPerc);
-                                    Y = Y - (X * 2 * zyPerc);
-                                    XOpp = XOpp + (X * 2 * yxOppPerc);
-                                    YOpp = YOpp + (X * 2 * zyOppPerc);
-                                    Z = Z + X * 2;
-                                }
-
-                                double theoryY = offsetY + Y * stepsPerMM * offsetYCorrection;
-
-                                //Y
-                                if (Y > 0)
-                                {
-                                    offsetY = offsetY + Y * stepsPerMM * offsetYCorrection;
-
-                                    YOpp = YOpp + (Y * yyOppPerc);
-                                    X = X + (Y * yxPerc);
-                                    Z = Z + (Y * yxPerc);
-                                    XOpp = XOpp - (Y * yxOppPerc);
-                                    ZOpp = ZOpp - (Y * yxOppPerc);
-                                    Y = Y - Y;
-                                }
-                                else if (theoryY > 0 && Y < 0)
-                                {
-                                    offsetY = offsetY + Y * stepsPerMM * offsetYCorrection;
-
-                                    YOpp = YOpp + (Y * yyOppPerc);
-                                    X = X + (Y * yxPerc);
-                                    Z = Z + (Y * yxPerc);
-                                    XOpp = XOpp - (Y * yxOppPerc);
-                                    ZOpp = ZOpp - (Y * yxOppPerc);
-                                    Y = Y - Y;
-                                }
-                                else
-                                {
-                                    offsetX = offsetX - Y * stepsPerMM * offsetXCorrection * 2;
-                                    offsetZ = offsetZ - Y * stepsPerMM * offsetZCorrection * 2;
-
-                                    XOpp = XOpp - (Y * 2 * xxOppPerc);//0.5
-                                    Z = Z - (Y * 2 * xzPerc);//0.25
-                                    Y = Y - (Y * 2 * xyPerc);//0.25
-                                    ZOpp = ZOpp + (Y * 2 * xzOppPerc);//0.25
-                                    YOpp = YOpp + (Y * 2 * xyOppPerc);//0.25
-                                    X = X + Y * 2;
-
-                                    ZOpp = ZOpp - (Y * 2 * zzOppPerc);
-                                    X = X - (Y * 2 * zxPerc);
-                                    Y = Y - (Y * 2 * zyPerc);
-                                    XOpp = XOpp + (Y * 2 * yxOppPerc);
-                                    YOpp = YOpp + (Y * 2 * zyOppPerc);
-                                    Z = Z + Y * 2;
-                                }
-
-                                double theoryZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
-
-                                //Z
-                                if (Z > 0)
-                                {
-                                    offsetZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
-
-                                    ZOpp = ZOpp + (Z * zzOppPerc);
-                                    X = X + (Z * zxPerc);
-                                    Y = Y + (Z * zyPerc);
-                                    XOpp = XOpp - (Z * yxOppPerc);
-                                    YOpp = YOpp - (Z * zyOppPerc);
-                                    Z = Z - Z;
-                                }
-                                else if (theoryZ > 0 && Z < 0)
-                                {
-                                    offsetZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
-
-                                    ZOpp = ZOpp + (Z * zzOppPerc);
-                                    X = X + (Z * zxPerc);
-                                    Y = Y + (Z * zyPerc);
-                                    XOpp = XOpp - (Z * yxOppPerc);
-                                    YOpp = YOpp - (Z * zyOppPerc);
-                                    Z = Z - Z;
-                                }
-                                else
-                                {
-                                    offsetY = offsetY - Z * stepsPerMM * offsetYCorrection * 2;
-                                    offsetX = offsetX - Z * stepsPerMM * offsetXCorrection * 2;
-
-                                    XOpp = XOpp - (Z * 2 * xxOppPerc);//0.5
-                                    Z = Z - (Z * 2 * xzPerc);//0.25
-                                    Y = Y - (Z * 2 * xyPerc);//0.25
-                                    ZOpp = ZOpp + (Z * 2 * xzOppPerc);//0.25
-                                    YOpp = YOpp + (Z * 2 * xyOppPerc);//0.25
-                                    X = X + Z * 2;
-
-                                    YOpp = YOpp - (Z * 2 * yyOppPerc);
-                                    X = X - (Z * 2 * yxPerc);
-                                    Z = Z - (Z * 2 * yxPerc);
-                                    XOpp = XOpp + (Z * 2 * yxOppPerc);
-                                    ZOpp = ZOpp + (Z * 2 * yxOppPerc);
-                                    Y = Y + Z * 2;
-                                }
-
-                                X = checkZero(X);
-                                Y = checkZero(Y);
-                                Z = checkZero(Z);
-                                XOpp = checkZero(XOpp);
-                                YOpp = checkZero(YOpp);
-                                ZOpp = checkZero(ZOpp);
-
-                                if (X < accuracy && X > -accuracy && Y < accuracy && Y > -accuracy && Z < accuracy && Z > -accuracy)
-                                {
-                                    j = 1;
-                                }
-                                else
-                                {
-                                    LogConsole("Calculation XYZ:" + ToLongString(offsetX) + " " + ToLongString(offsetY) + " " + ToLongString(offsetZ) + "\n");
-                                }
-                            }
-                            */
 
                             LogConsole("Virtual heights: X:" + ToLongString(X) + ", XOpp:" + ToLongString(XOpp) + ", Y:" + ToLongString(Y) + ", YOpp:" + ToLongString(YOpp) + ", Z:" + ToLongString(Z) + ", and ZOpp:" + ToLongString(ZOpp) + "\n");
                             //send data back to printer
@@ -2328,6 +1985,7 @@ namespace deltaKinematics
             }// end advanced calibration
         }//end calibrate
 
+        //used in previous delta radii calibration
         private double[] linearRegression(double[] y, double[] x)
         {
             double[] lr = { };
@@ -2353,8 +2011,280 @@ namespace deltaKinematics
 
             return lr;
         }
-        /*
-        
+
+        //check if values are close to zero, then set them to zero - avoids errors
+        private double checkZero(double value)
+        {
+            if (value > 0 && value < accuracy)
+            {
+                return 0;
+            }
+            else if (value < 0 && value > -accuracy)
+            {
+                return 0;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        //uses long string instead of scientific notation
+        private static string ToLongString(double input)
+        {
+            string str = input.ToString().ToUpper();
+
+            // if string representation was collapsed from scientific notation, just return it:
+            if (!str.Contains("E")) return str;
+
+            bool negativeNumber = false;
+
+            if (str[0] == '-')
+            {
+                str = str.Remove(0, 1);
+                negativeNumber = true;
+            }
+
+            string sep = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            char decSeparator = sep.ToCharArray()[0];
+
+            string[] exponentParts = str.Split('E');
+            string[] decimalParts = exponentParts[0].Split(decSeparator);
+
+            // fix missing decimal point:
+            if (decimalParts.Length == 1) decimalParts = new string[] { exponentParts[0], "0" };
+
+            int exponentValue = int.Parse(exponentParts[1]);
+
+            string newNumber = decimalParts[0] + decimalParts[1];
+
+            string result;
+
+            if (exponentValue > 0)
+            {
+                result =
+                    newNumber +
+                    GetZeros(exponentValue - decimalParts[1].Length);
+            }
+            else // negative exponent
+            {
+                result =
+                    "0" +
+                    decSeparator +
+                    GetZeros(exponentValue + decimalParts[0].Length) +
+                    newNumber;
+
+                result = result.TrimEnd('0');
+            }
+
+            if (negativeNumber)
+                result = "-" + result;
+
+            return result;
+        }
+
+        //
+        private static string GetZeros(int zeroCount)
+        {
+            if (zeroCount < 0)
+            {
+                zeroCount = Math.Abs(zeroCount);
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < zeroCount; i++)
+            {
+                sb.Append("0");
+            }
+
+            return sb.ToString();
+        }
+
+        //
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+        //
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
+        //
+        private void textMaxIterations_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        //
+        private void scalingXYDisplay_Click(object sender, EventArgs e)
+        {
+            if (XYPanel1.Visible == false)
+            {
+                XYPanel1.Visible = true;
+            }
+            else
+            {
+                XYPanel1.Visible = false;
+            }
+        }
+
+        //
+        private void consoleTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        //analyzes the geometry/accuracies of the printers frame
+        private void analyzeGeometry()
+        {
+            //calculates the tower angle at the top and bottom
+            towerXRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(X - XOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
+            towerYRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(Y - YOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
+            towerZRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(Z - ZOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
+
+            if (X < XOpp)
+            {
+                towerXRotation = 90 - towerXRotation;
+            }
+            else
+            {
+                towerXRotation = 90 + towerXRotation;
+            }
+
+            if (Y < YOpp)
+            {
+                towerYRotation = 90 - towerYRotation;
+            }
+            else
+            {
+                towerYRotation = 90 + towerYRotation;
+            }
+
+            if (Z < ZOpp)
+            {
+                towerZRotation = 90 - towerZRotation;
+            }
+            else
+            {
+                towerZRotation = 90 + towerZRotation;
+            }
+
+            //bottom
+            Invoke((MethodInvoker)delegate { this.textXAngleTower.Text = towerXRotation.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textYAngleTower.Text = towerYRotation.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textZAngleTower.Text = towerZRotation.ToString(); });
+
+            //top
+            Invoke((MethodInvoker)delegate { this.textXAngleTop.Text = (180 - towerXRotation).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textYAngleTop.Text = (180 - towerYRotation).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textZAngleTop.Text = (180 - towerZRotation).ToString(); });
+
+            //Calculates the radii for each tower at the top and bottom of the towers
+            //X
+            double hypotenuseX = (Math.Sin(90) / Math.Sin(Math.PI - towerXRotation - (180 - towerXRotation))) * centerHeight;
+            double radiusSideX = Math.Sqrt(Math.Pow(hypotenuseX, 2) - Math.Pow(centerHeight, 2));
+            double bottomX = HRad;
+            double topX = HRad - radiusSideX;
+
+            //Top
+            Invoke((MethodInvoker)delegate { this.textXPlate.Text = bottomX.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textXPlateTop.Text = topX.ToString(); });
+
+            //Y
+            double hypotenuseY = (Math.Sin(90) / Math.Sin(Math.PI - towerYRotation - (180 - towerYRotation))) * centerHeight;
+            double radiusSideY = Math.Sqrt(Math.Pow(hypotenuseX, 2) - Math.Pow(centerHeight, 2));
+            double bottomY = HRad;
+            double topY = HRad - radiusSideY;
+
+            //Top
+            Invoke((MethodInvoker)delegate { this.textYPlate.Text = bottomY.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textYPlateTop.Text = topY.ToString(); });
+
+            //Z
+            double hypotenuseZ = (Math.Sin(90) / Math.Sin(Math.PI - towerZRotation - (180 - towerZRotation))) * centerHeight;
+            double radiusSideZ = Math.Sqrt(Math.Pow(hypotenuseX, 2) - Math.Pow(centerHeight, 2));
+            double bottomZ = HRad;
+            double topZ = HRad - radiusSideZ;
+
+            //Top
+            Invoke((MethodInvoker)delegate { this.textZPlate.Text = bottomZ.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textZPlateTop.Text = topZ.ToString(); });
+
+            //find max offset in Xy scaling with current tower offsets
+            double AScaling = Math.Max(Math.Max(Math.Abs(90 - hypotenuseX), Math.Abs(90 - hypotenuseY)), Math.Abs(90 - hypotenuseZ));
+            double offsetScalingMax = (Math.Sin(90) / Math.Sin(Math.PI - 90 - AScaling)) * centerHeight;
+
+            //set scaling offset
+            Invoke((MethodInvoker)delegate { this.textScaleOffset.Text = offsetScalingMax.ToString(); });
+        }
+    }
+}
+
+/*
+//REMOVED CODE
+//FIRST TOWER ANALYSIS
+            towerXRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + X) - (centerHeight + XOpp)));
+            towerYRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + Y) - (centerHeight + YOpp)));
+            towerZRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + Z) - (centerHeight + ZOpp)));
+
+
+//SECOND TOWER ANALYSIS
+double XPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(X - XOpp), 2) + Math.Pow((270 * 0.963), 2));
+double hypX = Math.Sqrt(Math.Pow(XPlateRadCalc, 2) + Math.Pow((centerHeight - XOpp), 2));
+double XAngleCompl = Math.Acos(Math.Pow(XPlateRadCalc, 2) + Math.Pow((centerHeight - XOpp), 2) - Math.Pow(hypX, 2)) / (2 * XPlateRadCalc * (centerHeight - XOpp));
+
+//use complimentary angle of angle found
+towerXRotation = 180 - XAngleCompl * 57.296;
+
+double YPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(Y - YOpp), 2) + Math.Pow((270 * 0.963), 2));
+double hypY = Math.Sqrt(Math.Pow(YPlateRadCalc, 2) + Math.Pow((centerHeight - YOpp), 2));
+double YAngleCompl = Math.Acos(Math.Pow(YPlateRadCalc, 2) + Math.Pow((centerHeight - YOpp), 2) - Math.Pow(hypY, 2)) / (2 * YPlateRadCalc * (centerHeight - YOpp));
+
+//use complimentary angle of angle found
+towerYRotation = 180 - YAngleCompl * 57.296;
+
+double ZPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(Z - ZOpp), 2) + Math.Pow((270 * 0.963), 2));
+double hypZ = Math.Sqrt(Math.Pow(ZPlateRadCalc, 2) + Math.Pow((centerHeight - ZOpp), 2));
+double ZAngleCompl = Math.Acos(Math.Pow(ZPlateRadCalc, 2) + Math.Pow((centerHeight - ZOpp), 2) - Math.Pow(hypZ, 2)) / (2 * ZPlateRadCalc * (centerHeight - ZOpp));
+
+//use complimentary angle of angle found
+towerZRotation = 180 - ZAngleCompl * 57.296;
+cos A = (b2 + c2 − a2) / 2bc
+
+a = centerheight
+b = Math.Sqrt(Math.Pow(centerHeight, 2) + Math.Pow(plateDiameter * 0.963))
+c = plate build diameter
+
+A = 
+
+if (X < XOpp)
+{
+    LogConsole("X inverted");
+    towerXRotation = (90 - towerXRotation) + 90;
+}
+if (Y < YOpp)
+{
+    LogConsole("Y inverted");
+    towerYRotation = (90 - towerYRotation) + 90;
+}
+if (Z < ZOpp)
+{
+    LogConsole("Z inverted");
+    towerZRotation = (90 - towerZRotation) + 90;
+}
+
+//THIRD DELTA RADII
                         //should not have large input values, or should even equal zero
 
                         // lr.slope
@@ -2444,131 +2374,193 @@ namespace deltaKinematics
                             }
                         }
                     }
-                    */
 
-        //check if values are close to zero, then set them to zero - avoids errors
-        private double checkZero(double value)
-        {
-            if (value > 0 && value < accuracy)
-            {
-                return 0;
-            }
-            else if (value < 0 && value > -accuracy)
-            {
-                return 0;
-            }
-            else
-            {
-                return value;
-            }
-        }
+    
+                            while (j != 1)
+                            {
+                                //XYZ offset
+                                xxPerc = 1;
+                                yyPerc = 1;
+                                zzPerc = 1;
 
+                                //X
+                                xxOppPerc = 0.5;
+                                xyPerc = 0.25;
+                                xyOppPerc = 0.25;
+                                xzPerc = 0.25;
+                                xzOppPerc = 0.25;
 
-        private static string ToLongString(double input)
-        {
-            string str = input.ToString().ToUpper();
+                                //Y
+                                yyOppPerc = 0.5;
+                                yxPerc = 0.25;
+                                yxOppPerc = 0.25;
+                                yzPerc = 0.25;
+                                yzOppPerc = 0.25;
 
-            // if string representation was collapsed from scientific notation, just return it:
-            if (!str.Contains("E")) return str;
+                                //Z
+                                zzOppPerc = 0.5;
+                                zxPerc = 0.25;
+                                zxOppPerc = 0.25;
+                                zyPerc = 0.25;
+                                zyOppPerc = 0.25;
 
-            bool negativeNumber = false;
+                                //correction
+                                offsetXCorrection = 1 / 1.4;
+                                offsetYCorrection = 1 / 1.4;
+                                offsetZCorrection = 1 / 1.4;
 
-            if (str[0] == '-')
-            {
-                str = str.Remove(0, 1);
-                negativeNumber = true;
-            }
+                                double theoryX = offsetX + X * stepsPerMM * offsetXCorrection;
 
-            string sep = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-            char decSeparator = sep.ToCharArray()[0];
+                                //correction of one tower allows for XY dimensional accuracy
+                                if (X > 0)
+                                {
+                                    //if x is positive
+                                    offsetX = offsetX + X * stepsPerMM * offsetXCorrection;
 
-            string[] exponentParts = str.Split('E');
-            string[] decimalParts = exponentParts[0].Split(decSeparator);
+                                    XOpp = XOpp + (X * xxOppPerc);//0.5
+                                    Z = Z + (X * xzPerc);//0.25
+                                    Y = Y + (X * xyPerc);//0.25
+                                    ZOpp = ZOpp - (X * xzOppPerc);//0.25
+                                    YOpp = YOpp - (X * xyOppPerc);//0.25
+                                    X = X - X;
+                                }
+                                else if (theoryX > 0 && X < 0)
+                                {
+                                    //if x is negative and can be decreased
+                                    offsetX = offsetX + X * stepsPerMM * offsetXCorrection;
 
-            // fix missing decimal point:
-            if (decimalParts.Length == 1) decimalParts = new string[] { exponentParts[0], "0" };
+                                    XOpp = XOpp + (X * xxOppPerc);//0.5
+                                    Z = Z + (X * xzPerc);//0.25
+                                    Y = Y + (X * xyPerc);//0.25
+                                    ZOpp = ZOpp - (X * xzOppPerc);//0.25
+                                    YOpp = YOpp - (X * xyOppPerc);//0.25
+                                    X = X - X;
+                                }
+                                else
+                                {
+                                    //if X is negative
+                                    offsetY = offsetY - X * stepsPerMM * offsetYCorrection * 2;
+                                    offsetZ = offsetZ - X * stepsPerMM * offsetZCorrection * 2;
 
-            int exponentValue = int.Parse(exponentParts[1]);
+                                    YOpp = YOpp - (X * 2 * yyOppPerc);
+                                    X = X - (X * 2 * yxPerc);
+                                    Z = Z - (X * 2 * yxPerc);
+                                    XOpp = XOpp + (X * 2 * yxOppPerc);
+                                    ZOpp = ZOpp + (X * 2 * yxOppPerc);
+                                    Y = Y + X * 2;
 
-            string newNumber = decimalParts[0] + decimalParts[1];
+                                    ZOpp = ZOpp - (X * 2 * zzOppPerc);
+                                    X = X - (X * 2 * zxPerc);
+                                    Y = Y - (X * 2 * zyPerc);
+                                    XOpp = XOpp + (X * 2 * yxOppPerc);
+                                    YOpp = YOpp + (X * 2 * zyOppPerc);
+                                    Z = Z + X * 2;
+                                }
 
-            string result;
+                                double theoryY = offsetY + Y * stepsPerMM * offsetYCorrection;
 
-            if (exponentValue > 0)
-            {
-                result =
-                    newNumber +
-                    GetZeros(exponentValue - decimalParts[1].Length);
-            }
-            else // negative exponent
-            {
-                result =
-                    "0" +
-                    decSeparator +
-                    GetZeros(exponentValue + decimalParts[0].Length) +
-                    newNumber;
+                                //Y
+                                if (Y > 0)
+                                {
+                                    offsetY = offsetY + Y * stepsPerMM * offsetYCorrection;
 
-                result = result.TrimEnd('0');
-            }
+                                    YOpp = YOpp + (Y * yyOppPerc);
+                                    X = X + (Y * yxPerc);
+                                    Z = Z + (Y * yxPerc);
+                                    XOpp = XOpp - (Y * yxOppPerc);
+                                    ZOpp = ZOpp - (Y * yxOppPerc);
+                                    Y = Y - Y;
+                                }
+                                else if (theoryY > 0 && Y < 0)
+                                {
+                                    offsetY = offsetY + Y * stepsPerMM * offsetYCorrection;
 
-            if (negativeNumber)
-                result = "-" + result;
+                                    YOpp = YOpp + (Y * yyOppPerc);
+                                    X = X + (Y * yxPerc);
+                                    Z = Z + (Y * yxPerc);
+                                    XOpp = XOpp - (Y * yxOppPerc);
+                                    ZOpp = ZOpp - (Y * yxOppPerc);
+                                    Y = Y - Y;
+                                }
+                                else
+                                {
+                                    offsetX = offsetX - Y * stepsPerMM * offsetXCorrection * 2;
+                                    offsetZ = offsetZ - Y * stepsPerMM * offsetZCorrection * 2;
 
-            return result;
-        }
+                                    XOpp = XOpp - (Y * 2 * xxOppPerc);//0.5
+                                    Z = Z - (Y * 2 * xzPerc);//0.25
+                                    Y = Y - (Y * 2 * xyPerc);//0.25
+                                    ZOpp = ZOpp + (Y * 2 * xzOppPerc);//0.25
+                                    YOpp = YOpp + (Y * 2 * xyOppPerc);//0.25
+                                    X = X + Y * 2;
 
-        private static string GetZeros(int zeroCount)
-        {
-            if (zeroCount < 0)
-                zeroCount = Math.Abs(zeroCount);
+                                    ZOpp = ZOpp - (Y * 2 * zzOppPerc);
+                                    X = X - (Y * 2 * zxPerc);
+                                    Y = Y - (Y * 2 * zyPerc);
+                                    XOpp = XOpp + (Y * 2 * yxOppPerc);
+                                    YOpp = YOpp + (Y * 2 * zyOppPerc);
+                                    Z = Z + Y * 2;
+                                }
 
-            StringBuilder sb = new StringBuilder();
+                                double theoryZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
 
-            for (int i = 0; i < zeroCount; i++) sb.Append("0");
+                                //Z
+                                if (Z > 0)
+                                {
+                                    offsetZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
 
-            return sb.ToString();
-        }
+                                    ZOpp = ZOpp + (Z * zzOppPerc);
+                                    X = X + (Z * zxPerc);
+                                    Y = Y + (Z * zyPerc);
+                                    XOpp = XOpp - (Z * yxOppPerc);
+                                    YOpp = YOpp - (Z * zyOppPerc);
+                                    Z = Z - Z;
+                                }
+                                else if (theoryZ > 0 && Z < 0)
+                                {
+                                    offsetZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
 
-        //
-        private void label1_Click(object sender, EventArgs e)
-        {
+                                    ZOpp = ZOpp + (Z * zzOppPerc);
+                                    X = X + (Z * zxPerc);
+                                    Y = Y + (Z * zyPerc);
+                                    XOpp = XOpp - (Z * yxOppPerc);
+                                    YOpp = YOpp - (Z * zyOppPerc);
+                                    Z = Z - Z;
+                                }
+                                else
+                                {
+                                    offsetY = offsetY - Z * stepsPerMM * offsetYCorrection * 2;
+                                    offsetX = offsetX - Z * stepsPerMM * offsetXCorrection * 2;
 
-        }
+                                    XOpp = XOpp - (Z * 2 * xxOppPerc);//0.5
+                                    Z = Z - (Z * 2 * xzPerc);//0.25
+                                    Y = Y - (Z * 2 * xyPerc);//0.25
+                                    ZOpp = ZOpp + (Z * 2 * xzOppPerc);//0.25
+                                    YOpp = YOpp + (Z * 2 * xyOppPerc);//0.25
+                                    X = X + Z * 2;
 
-        //
-        private void Form1_Load(object sender, EventArgs e)
-        {
+                                    YOpp = YOpp - (Z * 2 * yyOppPerc);
+                                    X = X - (Z * 2 * yxPerc);
+                                    Z = Z - (Z * 2 * yxPerc);
+                                    XOpp = XOpp + (Z * 2 * yxOppPerc);
+                                    ZOpp = ZOpp + (Z * 2 * yxOppPerc);
+                                    Y = Y + Z * 2;
+                                }
 
-        }
+                                X = checkZero(X);
+                                Y = checkZero(Y);
+                                Z = checkZero(Z);
+                                XOpp = checkZero(XOpp);
+                                YOpp = checkZero(YOpp);
+                                ZOpp = checkZero(ZOpp);
 
-
-        //
-        private void Form1_Load_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textMaxIterations_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void scalingXYDisplay_Click(object sender, EventArgs e)
-        {
-            if (XYPanel1.Visible == false)
-            {
-                XYPanel1.Visible = true;
-            }
-            else
-            {
-                XYPanel1.Visible = false;
-            }
-        }
-
-        private void consoleTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-    }
-}
-
+                                if (X < accuracy && X > -accuracy && Y < accuracy && Y > -accuracy && Z < accuracy && Z > -accuracy)
+                                {
+                                    j = 1;
+                                }
+                                else
+                                {
+                                    LogConsole("Calculation XYZ:" + ToLongString(offsetX) + " " + ToLongString(offsetY) + " " + ToLongString(offsetZ) + "\n");
+                                }
+                            }
+*/

@@ -761,7 +761,7 @@
             this.textAccuracy2.Name = "textAccuracy2";
             this.textAccuracy2.Size = new System.Drawing.Size(100, 20);
             this.textAccuracy2.TabIndex = 2;
-            this.textAccuracy2.Text = "0.025";
+            this.textAccuracy2.Text = "0.02";
             // 
             // textAccuracy
             // 

@@ -48,6 +48,12 @@ namespace deltaKinematics
         private double tempYOpp;
         private double tempZ;
         private double tempZOpp;
+        private double tempX2;
+        private double tempXOpp2;
+        private double tempY2;
+        private double tempYOpp2;
+        private double tempZ2;
+        private double tempZOpp2;
         private double calculationX;
         private double calculationXOpp;
         private double calculationY;
@@ -128,6 +134,8 @@ namespace deltaKinematics
         private double alphaRotationPercentageZ = 1.725;
 
         private double zProbeSpeed;
+        private int analyzeCount = 0;
+        private int calibrationState;
 
         //delta radii
         double DASA;
@@ -227,21 +235,24 @@ namespace deltaKinematics
         public void setAdvancedCalVars()
         {
             Invoke((MethodInvoker)delegate { this.textDeltaTower.Text = deltaTower.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textDeltaOpp.Text = textDeltaOpp.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textDeltaOpp.Text = deltaOpp.ToString(); });
             Invoke((MethodInvoker)delegate { this.textHRadRatio.Text = HRadRatio.ToString(); });
 
+            Invoke((MethodInvoker)delegate { this.textxxPerc.Text = offsetXCorrection.ToString(); });
             Invoke((MethodInvoker)delegate { this.textxxOppPerc.Text = xxOppPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textxyPerc.Text = xyPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textxyOppPerc.Text = xyOppPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textxzPerc.Text = xzPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textxzOppPerc.Text = xzOppPerc.ToString(); });
 
+            Invoke((MethodInvoker)delegate { this.textyyPerc.Text = offsetYCorrection.ToString(); });
             Invoke((MethodInvoker)delegate { this.textyyOppPerc.Text = yyOppPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textyxPerc.Text = yxPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textyxOppPerc.Text = yxOppPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textyzPerc.Text = yzPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textyzOppPerc.Text = yzOppPerc.ToString(); });
 
+            Invoke((MethodInvoker)delegate { this.textzzPerc.Text = offsetZCorrection.ToString(); });
             Invoke((MethodInvoker)delegate { this.textzzOppPerc.Text = zzOppPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textzxPerc.Text = zxPerc.ToString(); });
             Invoke((MethodInvoker)delegate { this.textzxOppPerc.Text = zxOppPerc.ToString(); });
@@ -405,6 +416,9 @@ namespace deltaKinematics
             {
                 setVariablesAll();
 
+                calibrationState = 0;
+                advancedCalibration = 0;
+
                 //fetches EEProm
                 fetchEEProm();
                 //LogMessage (_eepromString);
@@ -480,14 +494,33 @@ namespace deltaKinematics
             }
         }
 
-        // Start advanced calibration.
-        private void advancedCalibrationButton_Click(object sender, EventArgs e)
+        //starts basic offset learning calibration
+        private void basicCalibration_Click(object sender, EventArgs e)
         {
-            advancedCalibration = 1;
             if (_serialPort.IsOpen)
             {
                 setVariablesAll();
 
+                calibrationState = 0;
+                advancedCalibration = 1;
+                //fetches EEProm
+                fetchEEProm();
+            }
+            else
+            {
+                LogConsole("Not Connected\n");
+            }
+        }
+
+        // Start heuristic calibration.
+        private void advancedCalibrationButton_Click(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                setVariablesAll();
+
+                calibrationState = 1;
+                advancedCalibration = 1;
                 //fetches EEProm
                 fetchEEProm();
             }
@@ -520,12 +553,15 @@ namespace deltaKinematics
                 {
                     string message = _serialPort.ReadLine();
 
+                    LogMessage(message + "\n");
+
                     if (!_initiatingCalibration)
                     {
-                        LogMessage(message + "\n");
+                        //LogMessage(message + "\n"); //moved
                     }
                     else
                     {
+
                         if (message.Contains("Z-probe:"))
                         {
                             //Z-probe: 10.66 zCorr: 0
@@ -690,8 +726,6 @@ namespace deltaKinematics
                                 // Sets height-maps in separate function
                                 setHeights();
 
-                                LogConsole("Center:" + centerHeight + ", X:" + X + ", XOpp:" + XOpp + ", Y:" + Y + ", YOpp:" + YOpp + ", Z:" + Z + ", and ZOpp:" + ZOpp + "\n");
-
                                 _serialPort.WriteLine("M206 T3 P153 X" + centerHeight);
                                 LogConsole("Setting Z Max Length\n");
                                 Thread.Sleep(pauseTimeSet);
@@ -766,13 +800,14 @@ namespace deltaKinematics
                                     else if (advancedCalCount == 3)
                                     {//get X offset percentages
 
-                                        offsetXCorrection = 1 / (X - tempX);
-                                        xxOppPerc = (XOpp - tempXOpp) / (X - tempX);
-                                        xyPerc = (Y - tempY) / (X - tempX);
-                                        xyOppPerc = (YOpp - tempYOpp) / (X - tempX);
-                                        xzPerc = (Z - tempZ) / (X - tempX);
-                                        xzOppPerc = (ZOpp - tempZOpp) / (X - tempX);
-
+                                        offsetXCorrection = Math.Abs(1 / (X - tempX));
+                                        xxOppPerc = Math.Abs((XOpp - tempXOpp) / (X - tempX));
+                                        xyPerc = Math.Abs((Y - tempY) / (X - tempX));
+                                        xyOppPerc = Math.Abs((YOpp - tempYOpp) / (X - tempX));
+                                        xzPerc = Math.Abs((Z - tempZ) / (X - tempX));
+                                        xzOppPerc = Math.Abs((ZOpp - tempZOpp) / (X - tempX));
+                                        
+                                        LogConsole("X: " + X.ToString() + "Xtemp: " + tempX.ToString() + "offsetCor: " + offsetXCorrection.ToString() + "\n");
 
                                         if (_serialPort.IsOpen)
                                         {
@@ -794,13 +829,14 @@ namespace deltaKinematics
                                     else if (advancedCalCount == 4)
                                     {//get Y offset percentages
 
-                                        offsetYCorrection = 1 / (Y - tempY);
-                                        yyOppPerc = (YOpp - tempYOpp) / (Y - tempY);
-                                        yxPerc = (X - tempX) / (Y - tempY);
-                                        yxOppPerc = (XOpp - tempXOpp) / (Y - tempY);
-                                        yzPerc = (Z - tempZ) / (Y - tempY);
-                                        yzOppPerc = (ZOpp - tempZOpp) / (Y - tempY);
-
+                                        offsetYCorrection = Math.Abs(1 / (Y - tempY));
+                                        yyOppPerc = Math.Abs((YOpp - tempYOpp) / (Y - tempY));
+                                        yxPerc = Math.Abs((X - tempX) / (Y - tempY));
+                                        yxOppPerc = Math.Abs((XOpp - tempXOpp) / (Y - tempY));
+                                        yzPerc = Math.Abs((Z - tempZ) / (Y - tempY));
+                                        yzOppPerc = Math.Abs((ZOpp - tempZOpp) / (Y - tempY));
+                                        
+                                        LogConsole("Y: " + Y.ToString() + "Ytemp: " + tempY.ToString() + "offsetCor: " + offsetYCorrection.ToString() + "\n");
 
                                         if (_serialPort.IsOpen)
                                         {
@@ -822,12 +858,14 @@ namespace deltaKinematics
                                     else if (advancedCalCount == 5)
                                     {//get Z offset percentages
 
-                                        offsetZCorrection = 1 / (Z - tempZ);
-                                        zzOppPerc = (ZOpp - tempZOpp) / (Z - tempZ);
-                                        zxPerc = (X - tempX) / (Z - tempZ);
-                                        zxOppPerc = (XOpp - tempXOpp) / (Z - tempZ);
-                                        zyPerc = (Y - tempY) / (Z - tempZ);
-                                        zyOppPerc = (YOpp - tempYOpp) / (Z - tempZ);
+                                        offsetZCorrection = Math.Abs(1 / (Z - tempZ));
+                                        zzOppPerc = Math.Abs((ZOpp - tempZOpp) / (Z - tempZ));
+                                        zxPerc = Math.Abs((X - tempX) / (Z - tempZ));
+                                        zxOppPerc = Math.Abs((XOpp - tempXOpp) / (Z - tempZ));
+                                        zyPerc = Math.Abs((Y - tempY) / (Z - tempZ));
+                                        zyOppPerc = Math.Abs((YOpp - tempYOpp) / (Z - tempZ));
+
+                                        LogConsole("Z: " + Z.ToString() + "Ztemp: " + tempZ.ToString() + "offsetCor: " + offsetZCorrection.ToString() + "\n");
 
                                         if (_serialPort.IsOpen)
                                         {
@@ -845,7 +883,6 @@ namespace deltaKinematics
                                         initiateCal();
 
                                         advancedCalCount++;
-                                        LogConsole("XYZ offset percentages: " + xxOppPerc + ", " + yyOppPerc + ", and" + zzOppPerc + "\n");
 
                                     }
                                     else if (advancedCalCount == 6)//6
@@ -1156,7 +1193,7 @@ namespace deltaKinematics
                 LogConsole("Current iteration: " + iterationNum + "\n");
 
                 //basic calibration
-                if (advancedCalibration == 0)
+                if (calibrationState == 0)
                 {
                     //////////////////////////////////////////////////////////////////////////////
                     //HRad is calibrated by increasing the outside edge of the glass by the average differences, this should balance the values with a central point of around zero
@@ -1180,7 +1217,6 @@ namespace deltaKinematics
                     ZOpp = checkZero(ZOpp);
 
                     LogConsole("HRad:" + HRad + "\n");
-                    LogConsole("Heights: X:" + X + ", XOpp:" + XOpp + ", Y:" + Y + ", YOpp:" + YOpp + ", Z:" + Z + ", and ZOpp:" + ZOpp + "\n");
 
                     ////////////////////////////////////////////////////////////////////////////////
                     //Delta Radius Calibration******************************************************
@@ -1202,164 +1238,237 @@ namespace deltaKinematics
                     Thread.Sleep(pauseTimeSet);
 
                     //analyzes the printer geometry
-                    analyzeGeometry();
-                    LogConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
+                    if (analyzeCount == 0)
+                    {
+                        analyzeCount++;
+                        analyzeGeometry();
+
+                        LogConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
+                    }
 
                     ////////////////////////////////////////////////////////////////////////////////
                     //Tower Offset Calibration******************************************************
                     int j = 0;
+                    tempX2 = X;
+                    tempXOpp2 = XOpp;
+                    tempY2 = Y;
+                    tempYOpp2 = YOpp;
+                    tempZ2 = Z;
+                    tempZOpp2 = ZOpp;
 
-                    while (j < 1)
+                    while (j < 20)
                     {
-                        double theoryX = offsetX + X * stepsPerMM * offsetXCorrection;
+                        double theoryX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
 
                         //correction of one tower allows for XY dimensional accuracy
-                        if (X > 0)
+                        if (tempX2 > 0)
                         {
                             //if x is positive
-                            offsetX = offsetX + X * stepsPerMM * offsetXCorrection;
+                            offsetX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
 
-                            XOpp = XOpp + (X * xxOppPerc);//0.5
-                            Z = Z + (X * xzPerc);//0.25
-                            Y = Y + (X * xyPerc);//0.25
-                            ZOpp = ZOpp - (X * xzOppPerc);//0.25
-                            YOpp = YOpp - (X * xyOppPerc);//0.25
-                            X = X - X;
+                            tempXOpp2 = tempXOpp2 + (tempX2 * xxOppPerc);//0.5
+                            tempZ2 = tempZ2 + (tempX2 * xzPerc);//0.25
+                            tempY2 = tempY2 + (tempX2 * xyPerc);//0.25
+                            tempZOpp2 = tempZOpp2 - (tempX2 * xzOppPerc);//0.25
+                            tempYOpp2 = tempYOpp2 - (tempX2 * xyOppPerc);//0.25
+                            tempX2 = tempX2 - tempX2;
                         }
-                        else if (theoryX > 0 && X < 0)
+                        else if (theoryX > 0 && tempX2 < 0)
                         {
                             //if x is negative and can be decreased
-                            offsetX = offsetX + X * stepsPerMM * offsetXCorrection;
+                            offsetX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
 
-                            XOpp = XOpp + (X * xxOppPerc);//0.5
-                            Z = Z + (X * xzPerc);//0.25
-                            Y = Y + (X * xyPerc);//0.25
-                            ZOpp = ZOpp - (X * xzOppPerc);//0.25
-                            YOpp = YOpp - (X * xyOppPerc);//0.25
-                            X = X - X;
+                            tempXOpp2 = tempXOpp2 + (tempX2 * xxOppPerc);//0.5
+                            tempZ2 = tempZ2 + (tempX2 * xzPerc);//0.25
+                            tempY2 = tempY2 + (tempX2 * xyPerc);//0.25
+                            tempZOpp2 = tempZOpp2 - (tempX2 * xzOppPerc);//0.25
+                            tempYOpp2 = tempYOpp2 - (tempX2 * xyOppPerc);//0.25
+                            tempX2 = tempX2 - tempX2;
                         }
                         else
                         {
-                            //if X is negative
-                            offsetY = offsetY - X * stepsPerMM * offsetYCorrection * 2;
-                            offsetZ = offsetZ - X * stepsPerMM * offsetZCorrection * 2;
+                            //if tempX2 is negative
+                            offsetY = offsetY - tempX2 * stepsPerMM * offsetYCorrection * 2;
+                            offsetZ = offsetZ - tempX2 * stepsPerMM * offsetZCorrection * 2;
 
-                            YOpp = YOpp - (X * 2 * yyOppPerc);
-                            X = X - (X * 2 * yxPerc);
-                            Z = Z - (X * 2 * yxPerc);
-                            XOpp = XOpp + (X * 2 * yxOppPerc);
-                            ZOpp = ZOpp + (X * 2 * yxOppPerc);
-                            Y = Y + X * 2;
+                            tempYOpp2 = tempYOpp2 - (tempX2 * 2 * yyOppPerc);
+                            tempX2 = tempX2 - (tempX2 * 2 * yxPerc);
+                            tempZ2 = tempZ2 - (tempX2 * 2 * yxPerc);
+                            tempXOpp2 = tempXOpp2 + (tempX2 * 2 * yxOppPerc);
+                            tempZOpp2 = tempZOpp2 + (tempX2 * 2 * yxOppPerc);
+                            tempY2 = tempY2 + tempX2 * 2;
 
-                            ZOpp = ZOpp - (X * 2 * zzOppPerc);
-                            X = X - (X * 2 * zxPerc);
-                            Y = Y - (X * 2 * zyPerc);
-                            XOpp = XOpp + (X * 2 * yxOppPerc);
-                            YOpp = YOpp + (X * 2 * zyOppPerc);
-                            Z = Z + X * 2;
+                            tempZOpp2 = tempZOpp2 - (tempX2 * 2 * zzOppPerc);
+                            tempX2 = tempX2 - (tempX2 * 2 * zxPerc);
+                            tempY2 = tempY2 - (tempX2 * 2 * zyPerc);
+                            tempXOpp2 = tempXOpp2 + (tempX2 * 2 * yxOppPerc);
+                            tempYOpp2 = tempYOpp2 + (tempX2 * 2 * zyOppPerc);
+                            tempZ2 = tempZ2 + tempX2 * 2;
                         }
 
-                        double theoryY = offsetY + Y * stepsPerMM * offsetYCorrection;
+                        double theoryY = offsetY + tempY2 * stepsPerMM * offsetYCorrection;
 
                         //Y
-                        if (Y > 0)
+                        if (tempY2 > 0)
                         {
-                            offsetY = offsetY + Y * stepsPerMM * offsetYCorrection;
+                            offsetY = offsetY + tempY2 * stepsPerMM * offsetYCorrection;
 
-                            YOpp = YOpp + (Y * yyOppPerc);
-                            X = X + (Y * yxPerc);
-                            Z = Z + (Y * yxPerc);
-                            XOpp = XOpp - (Y * yxOppPerc);
-                            ZOpp = ZOpp - (Y * yxOppPerc);
-                            Y = Y - Y;
+                            tempYOpp2 = tempYOpp2 + (tempY2 * yyOppPerc);
+                            tempX2 = tempX2 + (tempY2 * yxPerc);
+                            tempZ2 = tempZ2 + (tempY2 * yxPerc);
+                            tempXOpp2 = tempXOpp2 - (tempY2 * yxOppPerc);
+                            tempZOpp2 = tempZOpp2 - (tempY2 * yxOppPerc);
+                            tempY2 = tempY2 - tempY2;
                         }
-                        else if (theoryY > 0 && Y < 0)
+                        else if (theoryY > 0 && tempY2 < 0)
                         {
-                            offsetY = offsetY + Y * stepsPerMM * offsetYCorrection;
+                            offsetY = offsetY + tempY2 * stepsPerMM * offsetYCorrection;
 
-                            YOpp = YOpp + (Y * yyOppPerc);
-                            X = X + (Y * yxPerc);
-                            Z = Z + (Y * yxPerc);
-                            XOpp = XOpp - (Y * yxOppPerc);
-                            ZOpp = ZOpp - (Y * yxOppPerc);
-                            Y = Y - Y;
+                            tempYOpp2 = tempYOpp2 + (tempY2 * yyOppPerc);
+                            tempX2 = tempX2 + (tempY2 * yxPerc);
+                            tempZ2 = tempZ2 + (tempY2 * yxPerc);
+                            tempXOpp2 = tempXOpp2 - (tempY2 * yxOppPerc);
+                            tempZOpp2 = tempZOpp2 - (tempY2 * yxOppPerc);
+                            tempY2 = tempY2 - tempY2;
                         }
                         else
                         {
-                            offsetX = offsetX - Y * stepsPerMM * offsetXCorrection * 2;
-                            offsetZ = offsetZ - Y * stepsPerMM * offsetZCorrection * 2;
+                            offsetX = offsetX - tempY2 * stepsPerMM * offsetXCorrection * 2;
+                            offsetZ = offsetZ - tempY2 * stepsPerMM * offsetZCorrection * 2;
 
-                            XOpp = XOpp - (Y * 2 * xxOppPerc);//0.5
-                            Z = Z - (Y * 2 * xzPerc);//0.25
-                            Y = Y - (Y * 2 * xyPerc);//0.25
-                            ZOpp = ZOpp + (Y * 2 * xzOppPerc);//0.25
-                            YOpp = YOpp + (Y * 2 * xyOppPerc);//0.25
-                            X = X + Y * 2;
+                            tempXOpp2 = tempXOpp2 - (tempY2 * 2 * xxOppPerc);//0.5
+                            tempZ2 = tempZ2 - (tempY2 * 2 * xzPerc);//0.25
+                            tempY2 = tempY2 - (tempY2 * 2 * xyPerc);//0.25
+                            tempZOpp2 = tempZOpp2 + (tempY2 * 2 * xzOppPerc);//0.25
+                            tempYOpp2 = tempYOpp2 + (tempY2 * 2 * xyOppPerc);//0.25
+                            tempX2 = tempX2 + tempY2 * 2;
 
-                            ZOpp = ZOpp - (Y * 2 * zzOppPerc);
-                            X = X - (Y * 2 * zxPerc);
-                            Y = Y - (Y * 2 * zyPerc);
-                            XOpp = XOpp + (Y * 2 * yxOppPerc);
-                            YOpp = YOpp + (Y * 2 * zyOppPerc);
-                            Z = Z + Y * 2;
+                            tempZOpp2 = tempZOpp2 - (tempY2 * 2 * zzOppPerc);
+                            tempX2 = tempX2 - (tempY2 * 2 * zxPerc);
+                            tempY2 = tempY2 - (tempY2 * 2 * zyPerc);
+                            tempXOpp2 = tempXOpp2 + (tempY2 * 2 * yxOppPerc);
+                            tempYOpp2 = tempYOpp2 + (tempY2 * 2 * zyOppPerc);
+                            tempZ2 = tempZ2 + tempY2 * 2;
                         }
 
-                        double theoryZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
+                        double theoryZ = offsetZ + tempZ2 * stepsPerMM * offsetZCorrection;
 
                         //Z
-                        if (Z > 0)
+                        if (tempZ2 > 0)
                         {
-                            offsetZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
+                            offsetZ = offsetZ + tempZ2 * stepsPerMM * offsetZCorrection;
 
-                            ZOpp = ZOpp + (Z * zzOppPerc);
-                            X = X + (Z * zxPerc);
-                            Y = Y + (Z * zyPerc);
-                            XOpp = XOpp - (Z * yxOppPerc);
-                            YOpp = YOpp - (Z * zyOppPerc);
-                            Z = Z - Z;
+                            tempZOpp2 = tempZOpp2 + (tempZ2 * zzOppPerc);
+                            tempX2 = tempX2 + (tempZ2 * zxPerc);
+                            tempY2 = tempY2 + (tempZ2 * zyPerc);
+                            tempXOpp2 = tempXOpp2 - (tempZ2 * yxOppPerc);
+                            tempYOpp2 = tempYOpp2 - (tempZ2 * zyOppPerc);
+                            tempZ2 = tempZ2 - tempZ2;
                         }
-                        else if (theoryZ > 0 && Z < 0)
+                        else if (theoryZ > 0 && tempZ2 < 0)
                         {
-                            offsetZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
+                            offsetZ = offsetZ + tempZ2 * stepsPerMM * offsetZCorrection;
 
-                            ZOpp = ZOpp + (Z * zzOppPerc);
-                            X = X + (Z * zxPerc);
-                            Y = Y + (Z * zyPerc);
-                            XOpp = XOpp - (Z * yxOppPerc);
-                            YOpp = YOpp - (Z * zyOppPerc);
-                            Z = Z - Z;
+                            tempZOpp2 = tempZOpp2 + (tempZ2 * zzOppPerc);
+                            tempX2 = tempX2 + (tempZ2 * zxPerc);
+                            tempY2 = tempY2 + (tempZ2 * zyPerc);
+                            tempXOpp2 = tempXOpp2 - (tempZ2 * yxOppPerc);
+                            tempYOpp2 = tempYOpp2 - (tempZ2 * zyOppPerc);
+                            tempZ2 = tempZ2 - tempZ2;
                         }
                         else
                         {
-                            offsetY = offsetY - Z * stepsPerMM * offsetYCorrection * 2;
-                            offsetX = offsetX - Z * stepsPerMM * offsetXCorrection * 2;
+                            offsetY = offsetY - tempZ2 * stepsPerMM * offsetYCorrection * 2;
+                            offsetX = offsetX - tempZ2 * stepsPerMM * offsetXCorrection * 2;
 
-                            XOpp = XOpp - (Z * 2 * xxOppPerc);//0.5
-                            Z = Z - (Z * 2 * xzPerc);//0.25
-                            Y = Y - (Z * 2 * xyPerc);//0.25
-                            ZOpp = ZOpp + (Z * 2 * xzOppPerc);//0.25
-                            YOpp = YOpp + (Z * 2 * xyOppPerc);//0.25
-                            X = X + Z * 2;
+                            tempXOpp2 = tempXOpp2 - (tempZ2 * 2 * xxOppPerc);//0.5
+                            tempZ2 = tempZ2 - (tempZ2 * 2 * xzPerc);//0.25
+                            tempY2 = tempY2 - (tempZ2 * 2 * xyPerc);//0.25
+                            tempZOpp2 = tempZOpp2 + (tempZ2 * 2 * xzOppPerc);//0.25
+                            tempYOpp2 = tempYOpp2 + (tempZ2 * 2 * xyOppPerc);//0.25
+                            tempX2 = tempX2 + tempZ2 * 2;
 
-                            YOpp = YOpp - (Z * 2 * yyOppPerc);
-                            X = X - (Z * 2 * yxPerc);
-                            Z = Z - (Z * 2 * yxPerc);
-                            XOpp = XOpp + (Z * 2 * yxOppPerc);
-                            ZOpp = ZOpp + (Z * 2 * yxOppPerc);
-                            Y = Y + Z * 2;
+                            tempYOpp2 = tempYOpp2 - (tempZ2 * 2 * yyOppPerc);
+                            tempX2 = tempX2 - (tempZ2 * 2 * yxPerc);
+                            tempZ2 = tempZ2 - (tempZ2 * 2 * yxPerc);
+                            tempXOpp2 = tempXOpp2 + (tempZ2 * 2 * yxOppPerc);
+                            tempZOpp2 = tempZOpp2 + (tempZ2 * 2 * yxOppPerc);
+                            tempY2 = tempY2 + tempZ2 * 2;
                         }
 
-                        X = checkZero(X);
-                        Y = checkZero(Y);
-                        Z = checkZero(Z);
-                        XOpp = checkZero(XOpp);
-                        YOpp = checkZero(YOpp);
-                        ZOpp = checkZero(ZOpp);
+                        tempX2 = checkZero(X);
+                        tempY2 = checkZero(Y);
+                        tempZ2 = checkZero(Z);
+                        tempXOpp2 = checkZero(tempXOpp2);
+                        tempYOpp2 = checkZero(tempYOpp2);
+                        tempZOpp2 = checkZero(tempZOpp2);
 
-                        if (X < accuracy && X > -accuracy && Y < accuracy && Y > -accuracy && Z < accuracy && Z > -accuracy)
+                        if (tempX2 < accuracy && tempX2 > -accuracy && tempY2 < accuracy && tempY2 > -accuracy && tempZ2 < accuracy && tempZ2 > -accuracy && j < 5)
                         {
-                            j = 1;
+                            j = 20;
                         }
+                        else if (j == 5)
+                        {
+                            //error protection
+                            tempX2 = X;
+                            tempXOpp2 = XOpp;
+                            tempY2 = Y;
+                            tempYOpp2 = YOpp;
+                            tempZ2 = Z;
+                            tempZOpp2 = ZOpp;
+
+                            //X
+                            offsetXCorrection = 1;
+                            xxOppPerc = 0.5;
+                            xyPerc = 0.25;
+                            xyOppPerc = 0.25;
+                            xzPerc = 0.25;
+                            xzOppPerc = 0.25;
+
+                            //Y
+                            offsetYCorrection = 1;
+                            yyOppPerc = 0.5;
+                            yxPerc = 0.25;
+                            yxOppPerc = 0.25;
+                            yzPerc = 0.25;
+                            yzOppPerc = 0.25;
+
+                            //Z
+                            offsetZCorrection = 1;
+                            zzOppPerc = 0.5;
+                            zxPerc = 0.25;
+                            zxOppPerc = 0.25;
+                            zyPerc = 0.25;
+                            zyOppPerc = 0.25;
+
+                            offsetX = 0;
+                            offsetY = 0;
+                            offsetZ = 0;
+
+                            j++;
+                        }
+                        else
+                        {
+                            j++;
+                        }
+                    }
+
+                    if (offsetX > 1000 || offsetY > 1000 || offsetZ > 1000)
+                    {
+                        LogConsole("XYZ offset calibration error, setting default values.");
+
+                        offsetX = 0;
+                        offsetY = 0;
+                        offsetZ = 0;
+                    }
+                    else
+                    {
+                        X = tempX2;
+                        XOpp = tempXOpp2;
+                        Y = tempY2;
+                        YOpp = tempYOpp2;
+                        Z = tempZ2;
+                        ZOpp = tempZOpp2;
                     }
 
                     //round to the nearest whole number
@@ -1368,7 +1477,7 @@ namespace deltaKinematics
                     offsetZ = Math.Round(offsetZ);
 
                     LogConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ + "\n");
-                    
+
                     //send data back to printer
                     _serialPort.WriteLine("M206 T1 P893 S" + offsetX.ToString());
                     Thread.Sleep(pauseTimeSet);
@@ -1379,140 +1488,172 @@ namespace deltaKinematics
 
                     ////////////////////////////////////////////////////////////////////////////////
                     //Alpha Rotation Calibration****************************************************
-                    int k = 0;
 
-                    while (k < 1)
+                    if (offsetX != 0 && offsetY != 0 && offsetZ != 0)
                     {
-                        //X Alpha Rotation
-                        if (YOpp > ZOpp)
+                        int k = 0;
+                        while (k < 100)
                         {
-                            double ZYOppAvg = (YOpp - ZOpp) / 2;
-                            A = A + (ZYOppAvg * alphaRotationPercentageX); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
-                            YOpp = YOpp - ZYOppAvg;
-                            ZOpp = ZOpp + ZYOppAvg;
-                        }
-                        else if (YOpp < ZOpp)
-                        {
-                            double ZYOppAvg = (ZOpp - YOpp) / 2;
+                            //X Alpha Rotation
+                            if (YOpp > ZOpp)
+                            {
+                                double ZYOppAvg = (YOpp - ZOpp) / 2;
+                                A = A + (ZYOppAvg * alphaRotationPercentageX); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
+                                YOpp = YOpp - ZYOppAvg;
+                                ZOpp = ZOpp + ZYOppAvg;
+                            }
+                            else if (YOpp < ZOpp)
+                            {
+                                double ZYOppAvg = (ZOpp - YOpp) / 2;
 
-                            A = A - (ZYOppAvg * alphaRotationPercentageX);
-                            YOpp = YOpp + ZYOppAvg;
-                            ZOpp = ZOpp - ZYOppAvg;
+                                A = A - (ZYOppAvg * alphaRotationPercentageX);
+                                YOpp = YOpp + ZYOppAvg;
+                                ZOpp = ZOpp - ZYOppAvg;
+                            }
+
+                            //Y Alpha Rotation
+                            if (ZOpp > XOpp)
+                            {
+                                double XZOppAvg = (ZOpp - XOpp) / 2;
+                                B = B + (XZOppAvg * alphaRotationPercentageY);
+                                ZOpp = ZOpp - XZOppAvg;
+                                XOpp = XOpp + XZOppAvg;
+                            }
+                            else if (ZOpp < XOpp)
+                            {
+                                double XZOppAvg = (XOpp - ZOpp) / 2;
+
+                                B = B - (XZOppAvg * alphaRotationPercentageY);
+                                ZOpp = ZOpp + XZOppAvg;
+                                XOpp = XOpp - XZOppAvg;
+                            }
+                            //Z Alpha Rotation
+                            if (XOpp > YOpp)
+                            {
+                                double YXOppAvg = (XOpp - YOpp) / 2;
+                                C = C + (YXOppAvg * alphaRotationPercentageZ);
+                                XOpp = XOpp - YXOppAvg;
+                                YOpp = YOpp + YXOppAvg;
+                            }
+                            else if (XOpp < YOpp)
+                            {
+                                double YXOppAvg = (YOpp - XOpp) / 2;
+
+                                C = C - (YXOppAvg * alphaRotationPercentageZ);
+                                XOpp = XOpp + YXOppAvg;
+                                YOpp = YOpp - YXOppAvg;
+                            }
+
+                            //determine if value is close enough
+                            double hTow = Math.Max(Math.Max(XOpp, YOpp), ZOpp);
+                            double lTow = Math.Min(Math.Min(XOpp, YOpp), ZOpp);
+                            double towDiff = hTow - lTow;
+
+                            if (towDiff < accuracy && towDiff > -accuracy)
+                            {
+                                k = 100;
+                            }
+                            else
+                            {
+                                k++;
+                            }
                         }
 
-                        //Y Alpha Rotation
-                        if (ZOpp > XOpp)
-                        {
-                            double XZOppAvg = (ZOpp - XOpp) / 2;
-                            B = B + (XZOppAvg * alphaRotationPercentageY);
-                            ZOpp = ZOpp - XZOppAvg;
-                            XOpp = XOpp + XZOppAvg;
-                        }
-                        else if (ZOpp < XOpp)
-                        {
-                            double XZOppAvg = (XOpp - ZOpp) / 2;
-
-                            B = B - (XZOppAvg * alphaRotationPercentageY);
-                            ZOpp = ZOpp + XZOppAvg;
-                            XOpp = XOpp - XZOppAvg;
-                        }
-                        //Z Alpha Rotation
-                        if (XOpp > YOpp)
-                        {
-                            double YXOppAvg = (XOpp - YOpp) / 2;
-                            C = C + (YXOppAvg * alphaRotationPercentageZ);
-                            XOpp = XOpp - YXOppAvg;
-                            YOpp = YOpp + YXOppAvg;
-                        }
-                        else if (XOpp < YOpp)
-                        {
-                            double YXOppAvg = (YOpp - XOpp) / 2;
-
-                            C = C - (YXOppAvg * alphaRotationPercentageZ);
-                            XOpp = XOpp + YXOppAvg;
-                            YOpp = YOpp - YXOppAvg;
-                        }
-
-                        //determine if value is close enough
-                        double hTow = Math.Max(Math.Max(XOpp, YOpp), ZOpp);
-                        double lTow = Math.Min(Math.Min(XOpp, YOpp), ZOpp);
-                        double towDiff = hTow - lTow;
-
-                        if (towDiff < accuracy && towDiff > -accuracy)
-                        {
-                            k = 1;
-                        }
+                        //log
+                        LogConsole("ABC:" + A + " " + B + " " + C + "\n");
                     }
-
-                    //log
-                    LogConsole("ABC:" + A + " " + B + " " + C + "\n");
-                    LogConsole("Heights: X:" + X + ", XOpp:" + XOpp + ", Y:" + Y + ", YOpp:" + YOpp + ", Z:" + Z + ", and ZOpp:" + ZOpp + "\n");
 
                     ////////////////////////////////////////////////////////////////////////////////
                     //Diagonal Rod Calibration******************************************************
                     double diagChange = 1 / deltaOpp;
                     double towOppDiff = deltaTower / deltaOpp; //0.5
 
-                    int i = 0;
-                    while (i < 1)
+                    if (offsetX != 0 && offsetY != 0 && offsetZ != 0)
                     {
-                        double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                        diagonalRod = diagonalRod + (XYZOpp * diagChange);
-                        X = X - towOppDiff * XYZOpp;
-                        Y = Y - towOppDiff * XYZOpp;
-                        Z = Z - towOppDiff * XYZOpp;
-                        XOpp = XOpp - XYZOpp;
-                        YOpp = YOpp - XYZOpp;
-                        ZOpp = ZOpp - XYZOpp;
-                        XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                        XYZOpp = checkZero(XYZOpp);
-
-                        double XYZ = (X + Y + Z) / 3;
-                        //hrad
-                        HRad = HRad + (XYZ / HRadRatio);
-
-                        if (XYZOpp >= 0)
+                        int i = 0;
+                        while (i < 100)
                         {
-                            X = X - XYZ;
-                            Y = Y - XYZ;
-                            Z = Z - XYZ;
-                            XOpp = XOpp - XYZ;
-                            YOpp = YOpp - XYZ;
-                            ZOpp = ZOpp - XYZ;
+                            double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+                            diagonalRod = diagonalRod + (XYZOpp * diagChange);
+                            X = X - towOppDiff * XYZOpp;
+                            Y = Y - towOppDiff * XYZOpp;
+                            Z = Z - towOppDiff * XYZOpp;
+                            XOpp = XOpp - XYZOpp;
+                            YOpp = YOpp - XYZOpp;
+                            ZOpp = ZOpp - XYZOpp;
+                            XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+                            XYZOpp = checkZero(XYZOpp);
+
+                            double XYZ = (X + Y + Z) / 3;
+                            //hrad
+                            HRad = HRad + (XYZ / HRadRatio);
+
+                            if (XYZOpp >= 0)
+                            {
+                                X = X - XYZ;
+                                Y = Y - XYZ;
+                                Z = Z - XYZ;
+                                XOpp = XOpp - XYZ;
+                                YOpp = YOpp - XYZ;
+                                ZOpp = ZOpp - XYZ;
+                            }
+                            else
+                            {
+                                X = X + XYZ;
+                                Y = Y + XYZ;
+                                Z = Z + XYZ;
+                                XOpp = XOpp + XYZ;
+                                YOpp = YOpp + XYZ;
+                                ZOpp = ZOpp + XYZ;
+                            }
+
+                            X = checkZero(X);
+                            Y = checkZero(Y);
+                            Z = checkZero(Z);
+                            XOpp = checkZero(XOpp);
+                            YOpp = checkZero(YOpp);
+                            ZOpp = checkZero(ZOpp);
+
+                            //XYZ is zero
+                            if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
+                            {
+                                i = 100;
+                                diagonalRod = checkZero(diagonalRod);
+                            }
+                            else
+                            {
+                                i++;
+                            }
+                        }
+
+                        if (diagonalRod < 500 && diagonalRod > 100)
+                        {
+                            //send obtained values back to the printer*************************************
+                            LogConsole("Diagonal Rod:" + diagonalRod + "\n");
+                            Thread.Sleep(pauseTimeSet);
+                            _serialPort.WriteLine("M206 T3 P881 X" + diagonalRod.ToString());
+                            LogConsole("Setting diagonal rod\n");
                         }
                         else
                         {
-                            X = X + XYZ;
-                            Y = Y + XYZ;
-                            Z = Z + XYZ;
-                            XOpp = XOpp + XYZ;
-                            YOpp = YOpp + XYZ;
-                            ZOpp = ZOpp + XYZ;
+                            LogConsole("Diagonal rod not set\n");
                         }
 
-                        X = checkZero(X);
-                        Y = checkZero(Y);
-                        Z = checkZero(Z);
-                        XOpp = checkZero(XOpp);
-                        YOpp = checkZero(YOpp);
-                        ZOpp = checkZero(ZOpp);
-
-                        //XYZ is zero
-                        if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
+                        if (HRad < 250 && HRad > 50)
                         {
-                            i = 1;
-                            diagonalRod = checkZero(diagonalRod);
+                            //send obtained values back to the printer*************************************
+                            LogConsole("HRad Recalibration:" + HRad + "\n");
+                            _serialPort.WriteLine("M206 T3 P885 X" + checkZero(HRad).ToString());
+                            LogConsole("Setting Horizontal Radius\n");
+                            Thread.Sleep(pauseTimeSet);
+                        }
+                        else
+                        {
+                            LogConsole("Horizontal radius not set\n");
                         }
                     }
 
-                    //log
-                    LogConsole("Diagonal Rod:" + diagonalRod + "\n");
-                    LogConsole("Heights: X:" + X + ", XOpp:" + XOpp + ", Y:" + Y + ", YOpp:" + YOpp + ", Z:" + Z + ", and ZOpp:" + ZOpp + "\n");
-
                     //send obtained values back to the printer*************************************
-                    Thread.Sleep(5000);
-                    _serialPort.WriteLine("M206 T3 P881 X" + diagonalRod.ToString());
-                    LogConsole("Setting diagonal rod\n");
                     Thread.Sleep(pauseTimeSet);
                     _serialPort.WriteLine("M206 T3 P901 X" + checkZero(A).ToString());
                     LogConsole("Setting A Rotation\n");
@@ -1522,9 +1663,6 @@ namespace deltaKinematics
                     Thread.Sleep(pauseTimeSet);
                     _serialPort.WriteLine("M206 T3 P909 X" + checkZero(C).ToString());
                     LogConsole("Setting C Rotation\n");
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("M206 T3 P885 X" + checkZero(HRad).ToString());
-                    LogConsole("Setting Horizontal Radius\n");
                     Thread.Sleep(pauseTimeSet);
 
                     //rechecks calibration to either restart or finish
@@ -1665,9 +1803,13 @@ namespace deltaKinematics
                     }
                     else if (calculationCount == 2)
                     {
-                        analyzeGeometry();
+                        if (analyzeCount == 0)
+                        {
+                            analyzeCount++;
+                            analyzeGeometry();
 
-                        LogConsole("Tower Rotation calculated, check XY Panel\n");
+                            LogConsole("Tower Rotation calculated, check XY Panel\n");
+                        }
 
                         ////////////////////////////////////////////////////////////////////////////////
                         //Tower Offset Calibration******************************************************
@@ -1804,7 +1946,7 @@ namespace deltaKinematics
                         {
                             int k = 0;
 
-                            while (k < 1)
+                            while (k < 100)
                             {
                                 //X Alpha Rotation
                                 if (YOpp > ZOpp)
@@ -1864,7 +2006,11 @@ namespace deltaKinematics
 
                                 if (towDiff < accuracy && towDiff > -accuracy)
                                 {
-                                    k = 1;
+                                    k = 100;
+                                }
+                                else
+                                {
+                                    k++;
                                 }
                             }
 
@@ -1911,7 +2057,7 @@ namespace deltaKinematics
                             double towOppDiff = deltaTower / deltaOpp; //0.5
 
                             int i = 0;
-                            while (i < 1)
+                            while (i < 100)
                             {
                                 double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
                                 diagonalRod = diagonalRod + (XYZOpp * diagChange);
@@ -1957,8 +2103,12 @@ namespace deltaKinematics
                                 //XYZ is zero
                                 if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
                                 {
-                                    i = 1;
+                                    i = 100;
                                     diagonalRod = checkZero(diagonalRod);
+                                }
+                                else
+                                {
+                                    i++;
                                 }
                             }
 
@@ -2227,6 +2377,16 @@ namespace deltaKinematics
 
             //set scaling offset
             Invoke((MethodInvoker)delegate { this.textScaleOffset.Text = offsetScalingMax.ToString(); });
+        }
+
+        private void label14_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label21_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -99,6 +99,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.panelAdvancedMore = new System.Windows.Forms.Panel();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label61 = new System.Windows.Forms.Label();
+            this.label62 = new System.Windows.Forms.Label();
+            this.textzzPerc = new System.Windows.Forms.TextBox();
+            this.textyyPerc = new System.Windows.Forms.TextBox();
+            this.textxxPerc = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.textZProbeHeight = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -176,12 +182,6 @@
             this.textYAngleTower = new System.Windows.Forms.TextBox();
             this.textXAngleTower = new System.Windows.Forms.TextBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.textxxPerc = new System.Windows.Forms.TextBox();
-            this.textyyPerc = new System.Windows.Forms.TextBox();
-            this.textzzPerc = new System.Windows.Forms.TextBox();
-            this.label53 = new System.Windows.Forms.Label();
-            this.label61 = new System.Windows.Forms.Label();
-            this.label62 = new System.Windows.Forms.Label();
             this.advancedPanel.SuspendLayout();
             this.panelAdvancedMore.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -404,7 +404,7 @@
             this.basicCalibration.Name = "basicCalibration";
             this.basicCalibration.Size = new System.Drawing.Size(122, 23);
             this.basicCalibration.TabIndex = 56;
-            this.basicCalibration.Text = "Advanced Calibration";
+            this.basicCalibration.Text = "A.I. Calibration";
             this.basicCalibration.UseVisualStyleBackColor = true;
             this.basicCalibration.Click += new System.EventHandler(this.basicCalibration_Click);
             // 
@@ -424,7 +424,7 @@
             this.advancedCalibrationButton.Name = "advancedCalibrationButton";
             this.advancedCalibrationButton.Size = new System.Drawing.Size(122, 23);
             this.advancedCalibrationButton.TabIndex = 54;
-            this.advancedCalibrationButton.Text = "Heuristic Calibration";
+            this.advancedCalibrationButton.Text = "H.A.I. Calibration";
             this.advancedCalibrationButton.UseVisualStyleBackColor = true;
             this.advancedCalibrationButton.Click += new System.EventHandler(this.advancedCalibrationButton_Click);
             // 
@@ -902,6 +902,57 @@
             this.panelAdvancedMore.Size = new System.Drawing.Size(522, 645);
             this.panelAdvancedMore.TabIndex = 31;
             this.panelAdvancedMore.Visible = false;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(-3, 573);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(43, 13);
+            this.label53.TabIndex = 94;
+            this.label53.Text = "Z(Main)";
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(-3, 521);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(46, 13);
+            this.label61.TabIndex = 93;
+            this.label61.Text = "Y(Main)]";
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(0, 469);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(43, 13);
+            this.label62.TabIndex = 92;
+            this.label62.Text = "X(Main)";
+            // 
+            // textzzPerc
+            // 
+            this.textzzPerc.Location = new System.Drawing.Point(1, 589);
+            this.textzzPerc.Name = "textzzPerc";
+            this.textzzPerc.Size = new System.Drawing.Size(79, 20);
+            this.textzzPerc.TabIndex = 91;
+            this.textzzPerc.Text = "1.5";
+            // 
+            // textyyPerc
+            // 
+            this.textyyPerc.Location = new System.Drawing.Point(1, 538);
+            this.textyyPerc.Name = "textyyPerc";
+            this.textyyPerc.Size = new System.Drawing.Size(79, 20);
+            this.textyyPerc.TabIndex = 90;
+            this.textyyPerc.Text = "1.5";
+            // 
+            // textxxPerc
+            // 
+            this.textxxPerc.Location = new System.Drawing.Point(1, 486);
+            this.textxxPerc.Name = "textxxPerc";
+            this.textxxPerc.Size = new System.Drawing.Size(79, 20);
+            this.textxxPerc.TabIndex = 89;
+            this.textxxPerc.Text = "1.5";
             // 
             // label36
             // 
@@ -1577,57 +1628,6 @@
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox6.TabIndex = 58;
             this.pictureBox6.TabStop = false;
-            // 
-            // textxxPerc
-            // 
-            this.textxxPerc.Location = new System.Drawing.Point(1, 486);
-            this.textxxPerc.Name = "textxxPerc";
-            this.textxxPerc.Size = new System.Drawing.Size(79, 20);
-            this.textxxPerc.TabIndex = 89;
-            this.textxxPerc.Text = "1";
-            // 
-            // textyyPerc
-            // 
-            this.textyyPerc.Location = new System.Drawing.Point(1, 538);
-            this.textyyPerc.Name = "textyyPerc";
-            this.textyyPerc.Size = new System.Drawing.Size(79, 20);
-            this.textyyPerc.TabIndex = 90;
-            this.textyyPerc.Text = "1";
-            // 
-            // textzzPerc
-            // 
-            this.textzzPerc.Location = new System.Drawing.Point(1, 589);
-            this.textzzPerc.Name = "textzzPerc";
-            this.textzzPerc.Size = new System.Drawing.Size(79, 20);
-            this.textzzPerc.TabIndex = 91;
-            this.textzzPerc.Text = "1";
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(-3, 573);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(43, 13);
-            this.label53.TabIndex = 94;
-            this.label53.Text = "Z(Main)";
-            // 
-            // label61
-            // 
-            this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(-3, 521);
-            this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(46, 13);
-            this.label61.TabIndex = 93;
-            this.label61.Text = "Y(Main)]";
-            // 
-            // label62
-            // 
-            this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(0, 469);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(43, 13);
-            this.label62.TabIndex = 92;
-            this.label62.Text = "X(Main)";
             // 
             // Form1
             // 

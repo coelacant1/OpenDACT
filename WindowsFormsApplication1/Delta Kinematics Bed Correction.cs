@@ -17,6 +17,7 @@ namespace deltaKinematics
 {
     public partial class Form1 : Form
     {
+        string versionState = "2.0.4PA";
         string wait = "wait";
         //////////////////////////
         private double centerHeight;
@@ -219,6 +220,14 @@ namespace deltaKinematics
                 Invoke((MethodInvoker)delegate { this.textYOppTemp.Text = Math.Round(YOpp, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.textZTemp.Text = Math.Round(Z, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.textZOppTemp.Text = Math.Round(ZOpp, 3).ToString(); });
+                
+                //calculate parameters
+                tempX = X;
+                tempXOpp = XOpp;
+                tempY = Y;
+                tempYOpp = YOpp;
+                tempZ = Z;
+                tempZOpp = ZOpp;
             }
             else
             {
@@ -234,30 +243,30 @@ namespace deltaKinematics
         //
         public void setAdvancedCalVars()
         {
-            Invoke((MethodInvoker)delegate { this.textDeltaTower.Text = deltaTower.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textDeltaOpp.Text = deltaOpp.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textHRadRatio.Text = HRadRatio.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textDeltaTower.Text = Math.Round(deltaTower, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textDeltaOpp.Text = Math.Round(deltaOpp, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textHRadRatio.Text = Math.Round(HRadRatio, 3).ToString(); });
 
-            Invoke((MethodInvoker)delegate { this.textxxPerc.Text = offsetXCorrection.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textxxOppPerc.Text = xxOppPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textxyPerc.Text = xyPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textxyOppPerc.Text = xyOppPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textxzPerc.Text = xzPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textxzOppPerc.Text = xzOppPerc.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxxPerc.Text = Math.Round(offsetXCorrection, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxxOppPerc.Text = Math.Round(xxOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxyPerc.Text = Math.Round(xyPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxyOppPerc.Text = Math.Round(xyOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxzPerc.Text = Math.Round(xzPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxzOppPerc.Text = Math.Round(xzOppPerc, 3).ToString(); });
 
-            Invoke((MethodInvoker)delegate { this.textyyPerc.Text = offsetYCorrection.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textyyOppPerc.Text = yyOppPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textyxPerc.Text = yxPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textyxOppPerc.Text = yxOppPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textyzPerc.Text = yzPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textyzOppPerc.Text = yzOppPerc.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyyPerc.Text = Math.Round(offsetYCorrection, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyyOppPerc.Text = Math.Round(yyOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyxPerc.Text = Math.Round(yxPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyxOppPerc.Text = Math.Round(yxOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyzPerc.Text = Math.Round(yzPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyzOppPerc.Text = Math.Round(yzOppPerc, 3).ToString(); });
 
-            Invoke((MethodInvoker)delegate { this.textzzPerc.Text = offsetZCorrection.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textzzOppPerc.Text = zzOppPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textzxPerc.Text = zxPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textzxOppPerc.Text = zxOppPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textzyPerc.Text = zyPerc.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textzyOppPerc.Text = zyOppPerc.ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzzPerc.Text = Math.Round(offsetZCorrection, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzzOppPerc.Text = Math.Round(zzOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzxPerc.Text = Math.Round(zxPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzxOppPerc.Text = Math.Round(zxOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzyPerc.Text = Math.Round(zyPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzyOppPerc.Text = Math.Round(zyOppPerc, 3).ToString(); });
         }
 
 
@@ -474,7 +483,7 @@ namespace deltaKinematics
         // Version information.
         private void versionButton_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.MessageBox.Show("Version: 2.0.3B\n\nCreated by Steven T. Rowland\nsteventrowland@gmail.com\n");
+            System.Windows.Forms.MessageBox.Show("Version: " + versionState + "\n\nCreated by Steven T. Rowland\nsteventrowland@gmail.com\n");
         }
 
         // Open advanced panel.
@@ -553,14 +562,13 @@ namespace deltaKinematics
                 {
                     string message = _serialPort.ReadLine();
 
-                    LogMessage(message + "\n");
-
                     if (!_initiatingCalibration)
                     {
-                        //LogMessage(message + "\n"); //moved
+                        LogMessage(message + "\n");
                     }
                     else
                     {
+                        LogMessage(message + "\n");
 
                         if (message.Contains("Z-probe:"))
                         {
@@ -806,8 +814,6 @@ namespace deltaKinematics
                                         xyOppPerc = Math.Abs((YOpp - tempYOpp) / (X - tempX));
                                         xzPerc = Math.Abs((Z - tempZ) / (X - tempX));
                                         xzOppPerc = Math.Abs((ZOpp - tempZOpp) / (X - tempX));
-                                        
-                                        LogConsole("X: " + X.ToString() + "Xtemp: " + tempX.ToString() + "offsetCor: " + offsetXCorrection.ToString() + "\n");
 
                                         if (_serialPort.IsOpen)
                                         {
@@ -835,8 +841,6 @@ namespace deltaKinematics
                                         yxOppPerc = Math.Abs((XOpp - tempXOpp) / (Y - tempY));
                                         yzPerc = Math.Abs((Z - tempZ) / (Y - tempY));
                                         yzOppPerc = Math.Abs((ZOpp - tempZOpp) / (Y - tempY));
-                                        
-                                        LogConsole("Y: " + Y.ToString() + "Ytemp: " + tempY.ToString() + "offsetCor: " + offsetYCorrection.ToString() + "\n");
 
                                         if (_serialPort.IsOpen)
                                         {
@@ -864,8 +868,6 @@ namespace deltaKinematics
                                         zxOppPerc = Math.Abs((XOpp - tempXOpp) / (Z - tempZ));
                                         zyPerc = Math.Abs((Y - tempY) / (Z - tempZ));
                                         zyOppPerc = Math.Abs((YOpp - tempYOpp) / (Z - tempZ));
-
-                                        LogConsole("Z: " + Z.ToString() + "Ztemp: " + tempZ.ToString() + "offsetCor: " + offsetZCorrection.ToString() + "\n");
 
                                         if (_serialPort.IsOpen)
                                         {
@@ -967,7 +969,6 @@ namespace deltaKinematics
                         //parse EEProm
                         if (message.Contains("EPR"))
                         {
-                            LogMessage(message + "\n");
                             string[] parseEPR = message.Split(new string[] { "EPR", "\n" }, StringSplitOptions.RemoveEmptyEntries);
                             string[] parseEPRSpace;
 
@@ -1197,7 +1198,6 @@ namespace deltaKinematics
                 {
                     //////////////////////////////////////////////////////////////////////////////
                     //HRad is calibrated by increasing the outside edge of the glass by the average differences, this should balance the values with a central point of around zero
-
                     double HRadSA = ((X + XOpp + Y + YOpp + Z + ZOpp) / 6);
 
                     HRad = HRad + (HRadSA / HRadRatio);
@@ -1228,8 +1228,29 @@ namespace deltaKinematics
                     DB = DB + ((DBSA) / HRadRatio);
                     DC = DC + ((DCSA) / HRadRatio);
 
-                    LogConsole("Delta Radii Offsets: " + DA.ToString() + ", " + DB.ToString() + ", " + DC.ToString());
+                    X = X + ((DASA) / HRadRatio) * 0.5;
+                    XOpp = XOpp + ((DASA) / HRadRatio) * 0.225;
+                    Y = Y + ((DASA) / HRadRatio) * 0.1375;
+                    YOpp = YOpp + ((DASA) / HRadRatio) * 0.1375;
+                    Z = Z + ((DASA) / HRadRatio) * 0.1375;
+                    ZOpp = ZOpp + ((DASA) / HRadRatio) * 0.1375;
 
+                    X = X + ((DBSA) / HRadRatio) * 0.1375;
+                    XOpp = XOpp + ((DBSA) / HRadRatio) * 0.1375;
+                    Y = Y + ((DBSA) / HRadRatio) * 0.5;
+                    YOpp = YOpp + ((DBSA) / HRadRatio) * 0.225;
+                    Z = Z + ((DBSA) / HRadRatio) * 0.1375;
+                    ZOpp = ZOpp + ((DBSA) / HRadRatio) * 0.1375;
+
+                    X = X + ((DCSA) / HRadRatio) * 0.1375;
+                    XOpp = XOpp + ((DCSA) / HRadRatio) * 0.1375;
+                    Y = Y + ((DCSA) / HRadRatio) * 0.1375;
+                    YOpp = YOpp + ((DCSA) / HRadRatio) * 0.1375;
+                    Z = Z + ((DCSA) / HRadRatio) * 0.5;
+                    ZOpp = ZOpp + ((DCSA) / HRadRatio) * 0.225;
+
+                    LogConsole("Delta Radii Offsets: " + DA.ToString() + ", " + DB.ToString() + ", " + DC.ToString());
+                    
                     _serialPort.WriteLine("M206 T3 P913 X" + ToLongString(DA));
                     Thread.Sleep(pauseTimeSet);
                     _serialPort.WriteLine("M206 T3 P917 X" + ToLongString(DB));
@@ -1256,7 +1277,7 @@ namespace deltaKinematics
                     tempZ2 = Z;
                     tempZOpp2 = ZOpp;
 
-                    while (j < 20)
+                    while (j < 100)
                     {
                         double theoryX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
 
@@ -1396,18 +1417,21 @@ namespace deltaKinematics
                             tempY2 = tempY2 + tempZ2 * 2;
                         }
 
-                        tempX2 = checkZero(X);
-                        tempY2 = checkZero(Y);
-                        tempZ2 = checkZero(Z);
+                        tempX2 = checkZero(tempX2);
+                        tempY2 = checkZero(tempY2);
+                        tempZ2 = checkZero(tempZ2);
                         tempXOpp2 = checkZero(tempXOpp2);
                         tempYOpp2 = checkZero(tempYOpp2);
                         tempZOpp2 = checkZero(tempZOpp2);
 
-                        if (tempX2 < accuracy && tempX2 > -accuracy && tempY2 < accuracy && tempY2 > -accuracy && tempZ2 < accuracy && tempZ2 > -accuracy && j < 5)
+                        LogConsole("XYZ Calc: " + offsetX + " " + offsetY + " " + offsetZ);
+                        LogConsole("Height-Map: " + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
+
+                        if (tempX2 < accuracy && tempX2 > -accuracy && tempY2 < accuracy && tempY2 > -accuracy && tempZ2 < accuracy && tempZ2 > -accuracy && offsetX < 1000 && offsetY < 1000 && offsetZ < 1000)
                         {
-                            j = 20;
+                            j = 100;
                         }
-                        else if (j == 5)
+                        else if (j == 50)
                         {
                             //error protection
                             tempX2 = X;
@@ -1418,7 +1442,7 @@ namespace deltaKinematics
                             tempZOpp2 = ZOpp;
 
                             //X
-                            offsetXCorrection = 1;
+                            offsetXCorrection = 1.5;
                             xxOppPerc = 0.5;
                             xyPerc = 0.25;
                             xyOppPerc = 0.25;
@@ -1426,7 +1450,7 @@ namespace deltaKinematics
                             xzOppPerc = 0.25;
 
                             //Y
-                            offsetYCorrection = 1;
+                            offsetYCorrection = 1.5;
                             yyOppPerc = 0.5;
                             yxPerc = 0.25;
                             yxOppPerc = 0.25;
@@ -1434,7 +1458,7 @@ namespace deltaKinematics
                             yzOppPerc = 0.25;
 
                             //Z
-                            offsetZCorrection = 1;
+                            offsetZCorrection = 1.5;
                             zzOppPerc = 0.5;
                             zxPerc = 0.25;
                             zxOppPerc = 0.25;
@@ -1456,7 +1480,7 @@ namespace deltaKinematics
                     if (offsetX > 1000 || offsetY > 1000 || offsetZ > 1000)
                     {
                         LogConsole("XYZ offset calibration error, setting default values.");
-
+                        LogConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ + "\n");
                         offsetX = 0;
                         offsetY = 0;
                         offsetZ = 0;
@@ -1715,15 +1739,6 @@ namespace deltaKinematics
                             initiateCal();
                             calculationCheckCount = 0;
                             calculationTemp1 = 0;
-
-
-                            //calculate parameters
-                            tempX = X;
-                            tempXOpp = XOpp;
-                            tempY = Y;
-                            tempYOpp = YOpp;
-                            tempZ = Z;
-                            tempZOpp = ZOpp;
                         }
                         else
                         {
@@ -1905,9 +1920,7 @@ namespace deltaKinematics
                                 offsetY = offsetY - Z * stepsPerMM * offsetYCorrection * 2;
                                 offsetX = offsetX - Z * stepsPerMM * offsetXCorrection * 2;
                             }
-
-
-                            LogConsole("Virtual heights: X:" + ToLongString(X) + ", XOpp:" + ToLongString(XOpp) + ", Y:" + ToLongString(Y) + ", YOpp:" + ToLongString(YOpp) + ", Z:" + ToLongString(Z) + ", and ZOpp:" + ToLongString(ZOpp) + "\n");
+                            
                             //send data back to printer
 
                             offsetX = Math.Round(offsetX);

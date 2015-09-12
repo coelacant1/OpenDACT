@@ -321,6 +321,14 @@ namespace deltaKinematics
             {
                 LogConsole("No ports available\n");
             }
+            // Basic set of standard baud rates.
+            cboBaudRate.Items.Add("250000");
+            cboBaudRate.Items.Add("115200");
+            cboBaudRate.Items.Add("57600");
+            cboBaudRate.Items.Add("38400");
+            cboBaudRate.Items.Add("19200");
+            cboBaudRate.Items.Add("9600");
+            cboBaudRate.Text = "250000";  // This is the default for most RAMBo controllers.
         }
 
         // Connect to printer.
@@ -342,7 +350,7 @@ namespace deltaKinematics
                     }
 
                     _serialPort.PortName = portComboBox.Text;
-                    _serialPort.BaudRate = int.Parse(textBox5.Text);
+                    _serialPort.BaudRate = int.Parse(cboBaudRate.Text);
 
                     // Set the read/write timeouts.
                     _serialPort.ReadTimeout = 500;
@@ -384,7 +392,7 @@ namespace deltaKinematics
                     _continue = false;
                     readThread.Join();
                     _serialPort.Close();
-                    LogConsole("Disonnected\n");
+                    LogConsole("Disconnected\n");
                 }
                 catch (Exception e1)
                 {
@@ -2400,6 +2408,13 @@ namespace deltaKinematics
         private void label21_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void cboBaudRate_Validating(object sender, CancelEventArgs e) {
+            if (!cboBaudRate.Items.Contains(cboBaudRate.Text)) {
+                LogConsole("Invalid baud rate selected!\n");
+                e.Cancel = false; // if this is true, the user can't leave the control.
+            }
         }
     }
 }

@@ -97,7 +97,6 @@
             this.textAccuracy = new System.Windows.Forms.TextBox();
             this.textHRadRatio = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
             this.panelAdvancedMore = new System.Windows.Forms.Panel();
             this.label53 = new System.Windows.Forms.Label();
             this.label61 = new System.Windows.Forms.Label();
@@ -182,6 +181,7 @@
             this.textYAngleTower = new System.Windows.Forms.TextBox();
             this.textXAngleTower = new System.Windows.Forms.TextBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.cboBaudRate = new System.Windows.Forms.ComboBox();
             this.advancedPanel.SuspendLayout();
             this.panelAdvancedMore.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -807,13 +807,6 @@
             this.label4.Size = new System.Drawing.Size(61, 13);
             this.label4.TabIndex = 15;
             this.label4.Text = "Baud Rate:";
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(325, 6);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(195, 20);
-            this.textBox5.TabIndex = 20;
             // 
             // panelAdvancedMore
             // 
@@ -1629,6 +1622,15 @@
             this.pictureBox6.TabIndex = 58;
             this.pictureBox6.TabStop = false;
             // 
+            // cboBaudRate
+            // 
+            this.cboBaudRate.FormattingEnabled = true;
+            this.cboBaudRate.Location = new System.Drawing.Point(325, 6);
+            this.cboBaudRate.Name = "cboBaudRate";
+            this.cboBaudRate.Size = new System.Drawing.Size(192, 21);
+            this.cboBaudRate.TabIndex = 33;
+            this.cboBaudRate.Validating += new System.ComponentModel.CancelEventHandler(this.cboBaudRate_Validating);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1636,6 +1638,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1662, 656);
+            this.Controls.Add(this.cboBaudRate);
             this.Controls.Add(this.XYPanel1);
             this.Controls.Add(this.xyPanel);
             this.Controls.Add(this.panelAdvancedMore);
@@ -1645,7 +1648,6 @@
             this.Controls.Add(this.portComboBox);
             this.Controls.Add(this.contactButton);
             this.Controls.Add(this.donateButton);
-            this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -1656,6 +1658,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.consoleTextBox);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Delta Kinematics Bed Leveling Tool";
             this.Load += new System.EventHandler(this.Form1_Load_1);
             this.advancedPanel.ResumeLayout(false);
@@ -1743,7 +1746,6 @@
         private System.Windows.Forms.TextBox textxxOppPerc;
         private System.Windows.Forms.Button advancedCalibrationButton;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.Button openMorePanelButton;
         private System.Windows.Forms.Panel panelAdvancedMore;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -1831,6 +1833,7 @@
         private System.Windows.Forms.TextBox textzzPerc;
         private System.Windows.Forms.TextBox textyyPerc;
         private System.Windows.Forms.TextBox textxxPerc;
+        private System.Windows.Forms.ComboBox cboBaudRate;
     }
 }
 

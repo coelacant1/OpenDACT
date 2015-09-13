@@ -53,22 +53,6 @@
             this.basicCalibration = new System.Windows.Forms.Button();
             this.advancedCalibrationButton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.xyPanel = new System.Windows.Forms.Panel();
-            this.label41 = new System.Windows.Forms.Label();
-            this.label42 = new System.Windows.Forms.Label();
-            this.label43 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.label39 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.textZAngle = new System.Windows.Forms.TextBox();
-            this.textYAngle = new System.Windows.Forms.TextBox();
-            this.textXAngle = new System.Windows.Forms.TextBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.cboBaudRate = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabAdvanced = new System.Windows.Forms.TabPage();
@@ -155,38 +139,35 @@
             this.tabInitialAnalysis = new System.Windows.Forms.TabPage();
             this.XYPanel1 = new System.Windows.Forms.Panel();
             this.label52 = new System.Windows.Forms.Label();
-            this.textScaleOffset = new System.Windows.Forms.TextBox();
             this.label51 = new System.Windows.Forms.Label();
             this.label50 = new System.Windows.Forms.Label();
             this.label59 = new System.Windows.Forms.Label();
-            this.textZAngleTop = new System.Windows.Forms.TextBox();
             this.label57 = new System.Windows.Forms.Label();
             this.label58 = new System.Windows.Forms.Label();
-            this.textYAngleTop = new System.Windows.Forms.TextBox();
-            this.textXAngleTop = new System.Windows.Forms.TextBox();
             this.label56 = new System.Windows.Forms.Label();
-            this.textZPlateTop = new System.Windows.Forms.TextBox();
             this.label54 = new System.Windows.Forms.Label();
             this.label55 = new System.Windows.Forms.Label();
-            this.textYPlateTop = new System.Windows.Forms.TextBox();
-            this.textXPlateTop = new System.Windows.Forms.TextBox();
             this.label44 = new System.Windows.Forms.Label();
             this.label45 = new System.Windows.Forms.Label();
             this.label46 = new System.Windows.Forms.Label();
-            this.textZPlate = new System.Windows.Forms.TextBox();
-            this.textYPlate = new System.Windows.Forms.TextBox();
-            this.textXPlate = new System.Windows.Forms.TextBox();
             this.label47 = new System.Windows.Forms.Label();
             this.label48 = new System.Windows.Forms.Label();
             this.label49 = new System.Windows.Forms.Label();
-            this.textZAngleTower = new System.Windows.Forms.TextBox();
-            this.textYAngleTower = new System.Windows.Forms.TextBox();
-            this.textXAngleTower = new System.Windows.Forms.TextBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.lblXAngleTower = new System.Windows.Forms.Label();
+            this.lblXPlate = new System.Windows.Forms.Label();
+            this.lblXAngleTop = new System.Windows.Forms.Label();
+            this.lblXPlateTop = new System.Windows.Forms.Label();
+            this.lblYAngleTower = new System.Windows.Forms.Label();
+            this.lblYPlate = new System.Windows.Forms.Label();
+            this.lblYAngleTop = new System.Windows.Forms.Label();
+            this.lblYPlateTop = new System.Windows.Forms.Label();
+            this.lblScaleOffset = new System.Windows.Forms.Label();
+            this.lblZAngleTower = new System.Windows.Forms.Label();
+            this.lblZPlate = new System.Windows.Forms.Label();
+            this.lblZAngleTop = new System.Windows.Forms.Label();
+            this.lblZPlateTop = new System.Windows.Forms.Label();
             this.advancedPanel.SuspendLayout();
-            this.xyPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
             this.panelAdvancedMore.SuspendLayout();
@@ -212,7 +193,6 @@
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "GCode:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // sendGCodeButton
             // 
@@ -250,7 +230,6 @@
             this.consoleTextBox.ReadOnly = true;
             this.consoleTextBox.Size = new System.Drawing.Size(422, 243);
             this.consoleTextBox.TabIndex = 6;
-            this.consoleTextBox.TextChanged += new System.EventHandler(this.consoleTextBox_TextChanged);
             // 
             // label3
             // 
@@ -430,155 +409,6 @@
             this.label4.TabIndex = 15;
             this.label4.Text = "Baud Rate:";
             // 
-            // xyPanel
-            // 
-            this.xyPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.xyPanel.Controls.Add(this.label41);
-            this.xyPanel.Controls.Add(this.label42);
-            this.xyPanel.Controls.Add(this.label43);
-            this.xyPanel.Controls.Add(this.textBox2);
-            this.xyPanel.Controls.Add(this.textBox3);
-            this.xyPanel.Controls.Add(this.textBox6);
-            this.xyPanel.Controls.Add(this.pictureBox4);
-            this.xyPanel.Controls.Add(this.label40);
-            this.xyPanel.Controls.Add(this.label39);
-            this.xyPanel.Controls.Add(this.label38);
-            this.xyPanel.Controls.Add(this.label37);
-            this.xyPanel.Controls.Add(this.textZAngle);
-            this.xyPanel.Controls.Add(this.textYAngle);
-            this.xyPanel.Controls.Add(this.textXAngle);
-            this.xyPanel.Controls.Add(this.pictureBox3);
-            this.xyPanel.Location = new System.Drawing.Point(1199, 91);
-            this.xyPanel.Name = "xyPanel";
-            this.xyPanel.Size = new System.Drawing.Size(345, 645);
-            this.xyPanel.TabIndex = 32;
-            this.xyPanel.Visible = false;
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(66, 364);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(77, 13);
-            this.label41.TabIndex = 72;
-            this.label41.Text = "Z Plate Radius";
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(212, 500);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(77, 13);
-            this.label42.TabIndex = 71;
-            this.label42.Text = "Y Plate Radius";
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(3, 500);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(77, 13);
-            this.label43.TabIndex = 70;
-            this.label43.Text = "X Plate Radius";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(69, 380);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 69;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(238, 473);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 68;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(3, 473);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 20);
-            this.textBox6.TabIndex = 67;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(6, 270);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(335, 235);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 66;
-            this.pictureBox4.TabStop = false;
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(66, 109);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(44, 13);
-            this.label40.TabIndex = 65;
-            this.label40.Text = "Z Angle";
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(212, 245);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(44, 13);
-            this.label39.TabIndex = 64;
-            this.label39.Text = "Y Angle";
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(3, 245);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(44, 13);
-            this.label38.TabIndex = 63;
-            this.label38.Text = "X Angle";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(3, 7);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(96, 13);
-            this.label37.TabIndex = 62;
-            this.label37.Text = "XYZ Tower Angles";
-            // 
-            // textZAngle
-            // 
-            this.textZAngle.Location = new System.Drawing.Point(69, 125);
-            this.textZAngle.Name = "textZAngle";
-            this.textZAngle.Size = new System.Drawing.Size(100, 20);
-            this.textZAngle.TabIndex = 61;
-            // 
-            // textYAngle
-            // 
-            this.textYAngle.Location = new System.Drawing.Point(238, 218);
-            this.textYAngle.Name = "textYAngle";
-            this.textYAngle.Size = new System.Drawing.Size(100, 20);
-            this.textYAngle.TabIndex = 60;
-            // 
-            // textXAngle
-            // 
-            this.textXAngle.Location = new System.Drawing.Point(3, 218);
-            this.textXAngle.Name = "textXAngle";
-            this.textXAngle.Size = new System.Drawing.Size(100, 20);
-            this.textXAngle.TabIndex = 59;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(3, 17);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(335, 235);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 58;
-            this.pictureBox3.TabStop = false;
-            // 
             // cboBaudRate
             // 
             this.cboBaudRate.FormattingEnabled = true;
@@ -604,7 +434,7 @@
             this.tabAdvanced.Location = new System.Drawing.Point(4, 22);
             this.tabAdvanced.Name = "tabAdvanced";
             this.tabAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAdvanced.Size = new System.Drawing.Size(580, 654);
+            this.tabAdvanced.Size = new System.Drawing.Size(614, 654);
             this.tabAdvanced.TabIndex = 0;
             this.tabAdvanced.Text = "Advanced Settings";
             this.tabAdvanced.UseVisualStyleBackColor = true;
@@ -874,6 +704,7 @@
             this.comboZMin.Name = "comboZMin";
             this.comboZMin.Size = new System.Drawing.Size(121, 21);
             this.comboZMin.TabIndex = 74;
+            this.comboZMin.Validating += new System.ComponentModel.CancelEventHandler(this.comboZMin_Validating);
             // 
             // label30
             // 
@@ -1398,34 +1229,34 @@
             // XYPanel1
             // 
             this.XYPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.XYPanel1.Controls.Add(this.lblZPlateTop);
+            this.XYPanel1.Controls.Add(this.lblZAngleTop);
+            this.XYPanel1.Controls.Add(this.lblZPlate);
+            this.XYPanel1.Controls.Add(this.lblZAngleTower);
+            this.XYPanel1.Controls.Add(this.lblScaleOffset);
+            this.XYPanel1.Controls.Add(this.lblYPlateTop);
+            this.XYPanel1.Controls.Add(this.lblYAngleTop);
+            this.XYPanel1.Controls.Add(this.lblYPlate);
+            this.XYPanel1.Controls.Add(this.lblYAngleTower);
+            this.XYPanel1.Controls.Add(this.lblXPlateTop);
+            this.XYPanel1.Controls.Add(this.lblXAngleTop);
+            this.XYPanel1.Controls.Add(this.lblXPlate);
+            this.XYPanel1.Controls.Add(this.lblXAngleTower);
             this.XYPanel1.Controls.Add(this.label52);
-            this.XYPanel1.Controls.Add(this.textScaleOffset);
             this.XYPanel1.Controls.Add(this.label51);
             this.XYPanel1.Controls.Add(this.label50);
             this.XYPanel1.Controls.Add(this.label59);
-            this.XYPanel1.Controls.Add(this.textZAngleTop);
             this.XYPanel1.Controls.Add(this.label57);
             this.XYPanel1.Controls.Add(this.label58);
-            this.XYPanel1.Controls.Add(this.textYAngleTop);
-            this.XYPanel1.Controls.Add(this.textXAngleTop);
             this.XYPanel1.Controls.Add(this.label56);
-            this.XYPanel1.Controls.Add(this.textZPlateTop);
             this.XYPanel1.Controls.Add(this.label54);
             this.XYPanel1.Controls.Add(this.label55);
-            this.XYPanel1.Controls.Add(this.textYPlateTop);
-            this.XYPanel1.Controls.Add(this.textXPlateTop);
             this.XYPanel1.Controls.Add(this.label44);
             this.XYPanel1.Controls.Add(this.label45);
             this.XYPanel1.Controls.Add(this.label46);
-            this.XYPanel1.Controls.Add(this.textZPlate);
-            this.XYPanel1.Controls.Add(this.textYPlate);
-            this.XYPanel1.Controls.Add(this.textXPlate);
             this.XYPanel1.Controls.Add(this.label47);
             this.XYPanel1.Controls.Add(this.label48);
             this.XYPanel1.Controls.Add(this.label49);
-            this.XYPanel1.Controls.Add(this.textZAngleTower);
-            this.XYPanel1.Controls.Add(this.textYAngleTower);
-            this.XYPanel1.Controls.Add(this.textXAngleTower);
             this.XYPanel1.Controls.Add(this.pictureBox6);
             this.XYPanel1.Location = new System.Drawing.Point(0, 0);
             this.XYPanel1.Name = "XYPanel1";
@@ -1440,13 +1271,6 @@
             this.label52.Size = new System.Drawing.Size(124, 13);
             this.label52.TabIndex = 94;
             this.label52.Text = "Printer Geometry Offsets:";
-            // 
-            // textScaleOffset
-            // 
-            this.textScaleOffset.Location = new System.Drawing.Point(293, 620);
-            this.textScaleOffset.Name = "textScaleOffset";
-            this.textScaleOffset.Size = new System.Drawing.Size(100, 20);
-            this.textScaleOffset.TabIndex = 93;
             // 
             // label51
             // 
@@ -1471,192 +1295,108 @@
             this.label59.AutoSize = true;
             this.label59.Location = new System.Drawing.Point(399, 571);
             this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(66, 13);
+            this.label59.Size = new System.Drawing.Size(69, 13);
             this.label59.TabIndex = 89;
-            this.label59.Text = "Z Top Angle";
-            // 
-            // textZAngleTop
-            // 
-            this.textZAngleTop.Location = new System.Drawing.Point(491, 566);
-            this.textZAngleTop.Name = "textZAngleTop";
-            this.textZAngleTop.Size = new System.Drawing.Size(100, 20);
-            this.textZAngleTop.TabIndex = 88;
+            this.label59.Text = "Z Top Angle:";
             // 
             // label57
             // 
             this.label57.AutoSize = true;
             this.label57.Location = new System.Drawing.Point(201, 571);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(66, 13);
+            this.label57.Size = new System.Drawing.Size(69, 13);
             this.label57.TabIndex = 87;
-            this.label57.Text = "Y Top Angle";
+            this.label57.Text = "Y Top Angle:";
             // 
             // label58
             // 
             this.label58.AutoSize = true;
             this.label58.Location = new System.Drawing.Point(3, 571);
             this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(66, 13);
+            this.label58.Size = new System.Drawing.Size(69, 13);
             this.label58.TabIndex = 86;
-            this.label58.Text = "X Top Angle";
-            // 
-            // textYAngleTop
-            // 
-            this.textYAngleTop.Location = new System.Drawing.Point(293, 568);
-            this.textYAngleTop.Name = "textYAngleTop";
-            this.textYAngleTop.Size = new System.Drawing.Size(100, 20);
-            this.textYAngleTop.TabIndex = 85;
-            // 
-            // textXAngleTop
-            // 
-            this.textXAngleTop.Location = new System.Drawing.Point(95, 568);
-            this.textXAngleTop.Name = "textXAngleTop";
-            this.textXAngleTop.Size = new System.Drawing.Size(100, 20);
-            this.textXAngleTop.TabIndex = 84;
+            this.label58.Text = "X Top Angle:";
             // 
             // label56
             // 
             this.label56.AutoSize = true;
             this.label56.Location = new System.Drawing.Point(399, 597);
             this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(72, 13);
+            this.label56.Size = new System.Drawing.Size(75, 13);
             this.label56.TabIndex = 83;
-            this.label56.Text = "Z Top Radius";
-            // 
-            // textZPlateTop
-            // 
-            this.textZPlateTop.Location = new System.Drawing.Point(491, 594);
-            this.textZPlateTop.Name = "textZPlateTop";
-            this.textZPlateTop.Size = new System.Drawing.Size(100, 20);
-            this.textZPlateTop.TabIndex = 82;
+            this.label56.Text = "Z Top Radius:";
             // 
             // label54
             // 
             this.label54.AutoSize = true;
             this.label54.Location = new System.Drawing.Point(201, 597);
             this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(72, 13);
+            this.label54.Size = new System.Drawing.Size(75, 13);
             this.label54.TabIndex = 81;
-            this.label54.Text = "Y Top Radius";
+            this.label54.Text = "Y Top Radius:";
             // 
             // label55
             // 
             this.label55.AutoSize = true;
             this.label55.Location = new System.Drawing.Point(3, 597);
             this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(72, 13);
+            this.label55.Size = new System.Drawing.Size(75, 13);
             this.label55.TabIndex = 80;
-            this.label55.Text = "X Top Radius";
-            // 
-            // textYPlateTop
-            // 
-            this.textYPlateTop.Location = new System.Drawing.Point(293, 594);
-            this.textYPlateTop.Name = "textYPlateTop";
-            this.textYPlateTop.Size = new System.Drawing.Size(100, 20);
-            this.textYPlateTop.TabIndex = 79;
-            // 
-            // textXPlateTop
-            // 
-            this.textXPlateTop.Location = new System.Drawing.Point(95, 594);
-            this.textXPlateTop.Name = "textXPlateTop";
-            this.textXPlateTop.Size = new System.Drawing.Size(100, 20);
-            this.textXPlateTop.TabIndex = 78;
+            this.label55.Text = "X Top Radius:";
             // 
             // label44
             // 
             this.label44.AutoSize = true;
             this.label44.Location = new System.Drawing.Point(399, 545);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(86, 13);
+            this.label44.Size = new System.Drawing.Size(89, 13);
             this.label44.TabIndex = 72;
-            this.label44.Text = "Z Bottom Radius";
+            this.label44.Text = "Z Bottom Radius:";
             // 
             // label45
             // 
             this.label45.AutoSize = true;
             this.label45.Location = new System.Drawing.Point(201, 545);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(86, 13);
+            this.label45.Size = new System.Drawing.Size(89, 13);
             this.label45.TabIndex = 71;
-            this.label45.Text = "Y Bottom Radius";
+            this.label45.Text = "Y Bottom Radius:";
             // 
             // label46
             // 
             this.label46.AutoSize = true;
             this.label46.Location = new System.Drawing.Point(3, 545);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(86, 13);
+            this.label46.Size = new System.Drawing.Size(89, 13);
             this.label46.TabIndex = 70;
-            this.label46.Text = "X Bottom Radius";
-            // 
-            // textZPlate
-            // 
-            this.textZPlate.Location = new System.Drawing.Point(491, 542);
-            this.textZPlate.Name = "textZPlate";
-            this.textZPlate.Size = new System.Drawing.Size(100, 20);
-            this.textZPlate.TabIndex = 69;
-            // 
-            // textYPlate
-            // 
-            this.textYPlate.Location = new System.Drawing.Point(293, 542);
-            this.textYPlate.Name = "textYPlate";
-            this.textYPlate.Size = new System.Drawing.Size(100, 20);
-            this.textYPlate.TabIndex = 68;
-            // 
-            // textXPlate
-            // 
-            this.textXPlate.Location = new System.Drawing.Point(95, 542);
-            this.textXPlate.Name = "textXPlate";
-            this.textXPlate.Size = new System.Drawing.Size(100, 20);
-            this.textXPlate.TabIndex = 67;
+            this.label46.Text = "X Bottom Radius:";
             // 
             // label47
             // 
             this.label47.AutoSize = true;
             this.label47.Location = new System.Drawing.Point(399, 519);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(80, 13);
+            this.label47.Size = new System.Drawing.Size(83, 13);
             this.label47.TabIndex = 65;
-            this.label47.Text = "Z Bottom Angle";
+            this.label47.Text = "Z Bottom Angle:";
             // 
             // label48
             // 
             this.label48.AutoSize = true;
             this.label48.Location = new System.Drawing.Point(201, 519);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(80, 13);
+            this.label48.Size = new System.Drawing.Size(83, 13);
             this.label48.TabIndex = 64;
-            this.label48.Text = "Y Bottom Angle";
+            this.label48.Text = "Y Bottom Angle:";
             // 
             // label49
             // 
             this.label49.AutoSize = true;
             this.label49.Location = new System.Drawing.Point(3, 519);
             this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(80, 13);
+            this.label49.Size = new System.Drawing.Size(83, 13);
             this.label49.TabIndex = 63;
-            this.label49.Text = "X Bottom Angle";
-            // 
-            // textZAngleTower
-            // 
-            this.textZAngleTower.Location = new System.Drawing.Point(491, 516);
-            this.textZAngleTower.Name = "textZAngleTower";
-            this.textZAngleTower.Size = new System.Drawing.Size(100, 20);
-            this.textZAngleTower.TabIndex = 61;
-            // 
-            // textYAngleTower
-            // 
-            this.textYAngleTower.Location = new System.Drawing.Point(293, 516);
-            this.textYAngleTower.Name = "textYAngleTower";
-            this.textYAngleTower.Size = new System.Drawing.Size(100, 20);
-            this.textYAngleTower.TabIndex = 60;
-            // 
-            // textXAngleTower
-            // 
-            this.textXAngleTower.Location = new System.Drawing.Point(95, 516);
-            this.textXAngleTower.Name = "textXAngleTower";
-            this.textXAngleTower.Size = new System.Drawing.Size(100, 20);
-            this.textXAngleTower.TabIndex = 59;
+            this.label49.Text = "X Bottom Angle:";
             // 
             // pictureBox6
             // 
@@ -1668,6 +1408,136 @@
             this.pictureBox6.TabIndex = 58;
             this.pictureBox6.TabStop = false;
             // 
+            // lblXAngleTower
+            // 
+            this.lblXAngleTower.AutoSize = true;
+            this.lblXAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblXAngleTower.Location = new System.Drawing.Point(92, 519);
+            this.lblXAngleTower.Name = "lblXAngleTower";
+            this.lblXAngleTower.Size = new System.Drawing.Size(95, 13);
+            this.lblXAngleTower.TabIndex = 95;
+            this.lblXAngleTower.Text = "lblXAngleTower";
+            // 
+            // lblXPlate
+            // 
+            this.lblXPlate.AutoSize = true;
+            this.lblXPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblXPlate.Location = new System.Drawing.Point(92, 545);
+            this.lblXPlate.Name = "lblXPlate";
+            this.lblXPlate.Size = new System.Drawing.Size(57, 13);
+            this.lblXPlate.TabIndex = 96;
+            this.lblXPlate.Text = "lblXPlate";
+            // 
+            // lblXAngleTop
+            // 
+            this.lblXAngleTop.AutoSize = true;
+            this.lblXAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblXAngleTop.Location = new System.Drawing.Point(92, 571);
+            this.lblXAngleTop.Name = "lblXAngleTop";
+            this.lblXAngleTop.Size = new System.Drawing.Size(82, 13);
+            this.lblXAngleTop.TabIndex = 97;
+            this.lblXAngleTop.Text = "lblXAngleTop";
+            // 
+            // lblXPlateTop
+            // 
+            this.lblXPlateTop.AutoSize = true;
+            this.lblXPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblXPlateTop.Location = new System.Drawing.Point(92, 597);
+            this.lblXPlateTop.Name = "lblXPlateTop";
+            this.lblXPlateTop.Size = new System.Drawing.Size(79, 13);
+            this.lblXPlateTop.TabIndex = 98;
+            this.lblXPlateTop.Text = "lblXPlateTop";
+            // 
+            // lblYAngleTower
+            // 
+            this.lblYAngleTower.AutoSize = true;
+            this.lblYAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYAngleTower.Location = new System.Drawing.Point(290, 519);
+            this.lblYAngleTower.Name = "lblYAngleTower";
+            this.lblYAngleTower.Size = new System.Drawing.Size(95, 13);
+            this.lblYAngleTower.TabIndex = 99;
+            this.lblYAngleTower.Text = "lblYAngleTower";
+            // 
+            // lblYPlate
+            // 
+            this.lblYPlate.AutoSize = true;
+            this.lblYPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYPlate.Location = new System.Drawing.Point(290, 545);
+            this.lblYPlate.Name = "lblYPlate";
+            this.lblYPlate.Size = new System.Drawing.Size(57, 13);
+            this.lblYPlate.TabIndex = 100;
+            this.lblYPlate.Text = "lblYPlate";
+            // 
+            // lblYAngleTop
+            // 
+            this.lblYAngleTop.AutoSize = true;
+            this.lblYAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYAngleTop.Location = new System.Drawing.Point(290, 571);
+            this.lblYAngleTop.Name = "lblYAngleTop";
+            this.lblYAngleTop.Size = new System.Drawing.Size(82, 13);
+            this.lblYAngleTop.TabIndex = 101;
+            this.lblYAngleTop.Text = "lblYAngleTop";
+            // 
+            // lblYPlateTop
+            // 
+            this.lblYPlateTop.AutoSize = true;
+            this.lblYPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYPlateTop.Location = new System.Drawing.Point(290, 598);
+            this.lblYPlateTop.Name = "lblYPlateTop";
+            this.lblYPlateTop.Size = new System.Drawing.Size(79, 13);
+            this.lblYPlateTop.TabIndex = 102;
+            this.lblYPlateTop.Text = "lblYPlateTop";
+            // 
+            // lblScaleOffset
+            // 
+            this.lblScaleOffset.AutoSize = true;
+            this.lblScaleOffset.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblScaleOffset.Location = new System.Drawing.Point(295, 623);
+            this.lblScaleOffset.Name = "lblScaleOffset";
+            this.lblScaleOffset.Size = new System.Drawing.Size(86, 13);
+            this.lblScaleOffset.TabIndex = 103;
+            this.lblScaleOffset.Text = "lblScaleOffset";
+            // 
+            // lblZAngleTower
+            // 
+            this.lblZAngleTower.AutoSize = true;
+            this.lblZAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZAngleTower.Location = new System.Drawing.Point(488, 519);
+            this.lblZAngleTower.Name = "lblZAngleTower";
+            this.lblZAngleTower.Size = new System.Drawing.Size(95, 13);
+            this.lblZAngleTower.TabIndex = 104;
+            this.lblZAngleTower.Text = "lblZAngleTower";
+            // 
+            // lblZPlate
+            // 
+            this.lblZPlate.AutoSize = true;
+            this.lblZPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZPlate.Location = new System.Drawing.Point(488, 545);
+            this.lblZPlate.Name = "lblZPlate";
+            this.lblZPlate.Size = new System.Drawing.Size(57, 13);
+            this.lblZPlate.TabIndex = 105;
+            this.lblZPlate.Text = "lblZPlate";
+            // 
+            // lblZAngleTop
+            // 
+            this.lblZAngleTop.AutoSize = true;
+            this.lblZAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZAngleTop.Location = new System.Drawing.Point(488, 571);
+            this.lblZAngleTop.Name = "lblZAngleTop";
+            this.lblZAngleTop.Size = new System.Drawing.Size(82, 13);
+            this.lblZAngleTop.TabIndex = 106;
+            this.lblZAngleTop.Text = "lblZAngleTop";
+            // 
+            // lblZPlateTop
+            // 
+            this.lblZPlateTop.AutoSize = true;
+            this.lblZPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZPlateTop.Location = new System.Drawing.Point(488, 597);
+            this.lblZPlateTop.Name = "lblZPlateTop";
+            this.lblZPlateTop.Size = new System.Drawing.Size(79, 13);
+            this.lblZPlateTop.TabIndex = 107;
+            this.lblZPlateTop.Text = "lblZPlateTop";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1677,7 +1547,6 @@
             this.ClientSize = new System.Drawing.Size(1662, 715);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.cboBaudRate);
-            this.Controls.Add(this.xyPanel);
             this.Controls.Add(this.advancedPanel);
             this.Controls.Add(this.openAdvancedPanelButton);
             this.Controls.Add(this.versionButton);
@@ -1699,10 +1568,6 @@
             this.Load += new System.EventHandler(this.Form1_Load_1);
             this.advancedPanel.ResumeLayout(false);
             this.advancedPanel.PerformLayout();
-            this.xyPanel.ResumeLayout(false);
-            this.xyPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabAdvanced.ResumeLayout(false);
             this.panelAdvancedMore.ResumeLayout(false);
@@ -1743,22 +1608,6 @@
         private System.Windows.Forms.Panel advancedPanel;
         private System.Windows.Forms.Button advancedCalibrationButton;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Panel xyPanel;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.Label label37;
-        private System.Windows.Forms.TextBox textZAngle;
-        private System.Windows.Forms.TextBox textYAngle;
-        private System.Windows.Forms.TextBox textXAngle;
-        private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.Label label41;
-        private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.Label label43;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.Button basicCalibration;
         private System.Windows.Forms.ComboBox cboBaudRate;
         private System.Windows.Forms.TabControl tabControl1;
@@ -1846,34 +1695,34 @@
         private System.Windows.Forms.TabPage tabInitialAnalysis;
         private System.Windows.Forms.Panel XYPanel1;
         private System.Windows.Forms.Label label52;
-        private System.Windows.Forms.TextBox textScaleOffset;
         private System.Windows.Forms.Label label51;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.Label label59;
-        private System.Windows.Forms.TextBox textZAngleTop;
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.Label label58;
-        private System.Windows.Forms.TextBox textYAngleTop;
-        private System.Windows.Forms.TextBox textXAngleTop;
         private System.Windows.Forms.Label label56;
-        private System.Windows.Forms.TextBox textZPlateTop;
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.Label label55;
-        private System.Windows.Forms.TextBox textYPlateTop;
-        private System.Windows.Forms.TextBox textXPlateTop;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.Label label45;
         private System.Windows.Forms.Label label46;
-        private System.Windows.Forms.TextBox textZPlate;
-        private System.Windows.Forms.TextBox textYPlate;
-        private System.Windows.Forms.TextBox textXPlate;
         private System.Windows.Forms.Label label47;
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.Label label49;
-        private System.Windows.Forms.TextBox textZAngleTower;
-        private System.Windows.Forms.TextBox textYAngleTower;
-        private System.Windows.Forms.TextBox textXAngleTower;
         private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.Label lblZPlateTop;
+        private System.Windows.Forms.Label lblZAngleTop;
+        private System.Windows.Forms.Label lblZPlate;
+        private System.Windows.Forms.Label lblZAngleTower;
+        private System.Windows.Forms.Label lblScaleOffset;
+        private System.Windows.Forms.Label lblYPlateTop;
+        private System.Windows.Forms.Label lblYAngleTop;
+        private System.Windows.Forms.Label lblYPlate;
+        private System.Windows.Forms.Label lblYAngleTower;
+        private System.Windows.Forms.Label lblXPlateTop;
+        private System.Windows.Forms.Label lblXAngleTop;
+        private System.Windows.Forms.Label lblXPlate;
+        private System.Windows.Forms.Label lblXAngleTower;
     }
 }
 

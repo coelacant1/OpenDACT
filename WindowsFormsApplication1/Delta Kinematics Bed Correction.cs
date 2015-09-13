@@ -162,7 +162,7 @@ namespace deltaKinematics
 
                 maxIterations = int.Parse(textMaxIterations.Text);
                 pauseTimeSet = int.Parse(textPauseTimeSet.Text);
-                probingHeight = int.Parse(textProbingHeight.Text);
+                probingHeight = double.Parse(textProbingHeight.Text);
 
                 HRadRatio = Convert.ToDouble(textHRadRatio.Text);
 
@@ -192,7 +192,7 @@ namespace deltaKinematics
                 deltaTower = Convert.ToDouble(textDeltaTower.Text);
                 deltaOpp = Convert.ToDouble(textDeltaOpp.Text);
 
-                zProbeSpeed = int.Parse(textProbingSpeed.Text);
+                zProbeSpeed = double.Parse(textProbingSpeed.Text);
 
                 _serialPort.WriteLine("M206 T3 P812 X" + textProbingSpeed.Text.ToString());
                 _serialPort.WriteLine("M206 T3 808 X" + textZProbeHeight.Text.ToString());
@@ -272,12 +272,7 @@ namespace deltaKinematics
         }
 
 
-        private void setVariables_Click(object sender, EventArgs e)
-        {
-            setVariablesAll();
-        }
-
-        public Form1()
+         public Form1()
         {
             InitializeComponent();
             Init();
@@ -298,7 +293,7 @@ namespace deltaKinematics
 
             String[] zMinArray = { "FSR", "Z-Probe" };
             comboZMin.DataSource = zMinArray;
-
+         
             // Build the combobox of available ports.
             string[] ports = SerialPort.GetPortNames();
 
@@ -331,9 +326,28 @@ namespace deltaKinematics
             cboBaudRate.Items.Add("19200");
             cboBaudRate.Items.Add("9600");
             cboBaudRate.Text = "250000";  // This is the default for most RAMBo controllers.
+
+            // clear the result labels.
+            lblXAngleTower.Text = "";
+            lblXPlate.Text = "";
+            lblXAngleTop.Text = "";
+            lblXPlateTop.Text = "";
+
+            lblYAngleTower.Text = "";
+            lblYPlate.Text = "";
+            lblYAngleTop.Text = "";
+            lblYPlateTop.Text = "";
+
+            lblZAngleTower.Text = "";
+            lblZPlate.Text = "";
+            lblZAngleTop.Text = "";
+            lblZPlateTop.Text = "";
+
+            lblScaleOffset.Text = "";
+
         }
 
-       
+
         private bool ValidateDoubleField(string inValue, string fieldName) {
             double tempDbl = 0.0;
             if (!double.TryParse(inValue, out tempDbl)) {
@@ -592,20 +606,6 @@ namespace deltaKinematics
                 LogConsole("Not Connected\n");
             }
         }
-
-        // Open "more" panel.
-        //private void openMorePanelButton_Click(object sender, EventArgs e)
-        //{
-        //    if (panelAdvancedMore.Visible == false)
-        //    {
-        //        panelAdvancedMore.Visible = true;
-        //    }
-        //    else
-        //    {
-        //        panelAdvancedMore.Visible = false;
-        //        XYPanel1.Visible = false;
-        //    }
-        //}
 
         // The reader thread. Continue reading as long as _continue is true.
         void Read()
@@ -2321,12 +2321,6 @@ namespace deltaKinematics
         }
 
         //
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        //
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -2340,30 +2334,7 @@ namespace deltaKinematics
         }
 
         //
-        private void textMaxIterations_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        //
-        private void scalingXYDisplay_Click(object sender, EventArgs e)
-        {
-            if (XYPanel1.Visible == false)
-            {
-                XYPanel1.Visible = true;
-            }
-            else
-            {
-                XYPanel1.Visible = false;
-            }
-        }
-
-        //
-        private void consoleTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+    
         //analyzes the geometry/accuracies of the printers frame
         private void analyzeGeometry()
         {
@@ -2400,14 +2371,14 @@ namespace deltaKinematics
             }
 
             //bottom
-            Invoke((MethodInvoker)delegate { this.textXAngleTower.Text = towerXRotation.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textYAngleTower.Text = towerYRotation.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textZAngleTower.Text = towerZRotation.ToString(); });
+            lblXAngleTower.Text = towerXRotation.ToString();
+            lblYAngleTower.Text = towerYRotation.ToString();
+            lblZAngleTower.Text = towerZRotation.ToString();
 
             //top
-            Invoke((MethodInvoker)delegate { this.textXAngleTop.Text = (180 - towerXRotation).ToString(); });
-            Invoke((MethodInvoker)delegate { this.textYAngleTop.Text = (180 - towerYRotation).ToString(); });
-            Invoke((MethodInvoker)delegate { this.textZAngleTop.Text = (180 - towerZRotation).ToString(); });
+            lblXAngleTop.Text = (180 - towerXRotation).ToString();
+            lblYAngleTop.Text = (180 - towerYRotation).ToString();
+            lblZAngleTop.Text = (180 - towerZRotation).ToString();
 
             //Calculates the radii for each tower at the top and bottom of the towers
             //X
@@ -2417,8 +2388,8 @@ namespace deltaKinematics
             double topX = HRad - radiusSideX;
 
             //Top
-            Invoke((MethodInvoker)delegate { this.textXPlate.Text = bottomX.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textXPlateTop.Text = topX.ToString(); });
+            lblXPlate.Text = bottomX.ToString();
+            lblXPlateTop.Text = topX.ToString();
 
             //Y
             double hypotenuseY = (Math.Sin(90) / Math.Sin(Math.PI - towerYRotation - (180 - towerYRotation))) * centerHeight;
@@ -2427,8 +2398,8 @@ namespace deltaKinematics
             double topY = HRad - radiusSideY;
 
             //Top
-            Invoke((MethodInvoker)delegate { this.textYPlate.Text = bottomY.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textYPlateTop.Text = topY.ToString(); });
+            lblYPlate.Text = bottomY.ToString();
+            lblYPlateTop.Text = topY.ToString();
 
             //Z
             double hypotenuseZ = (Math.Sin(90) / Math.Sin(Math.PI - towerZRotation - (180 - towerZRotation))) * centerHeight;
@@ -2437,27 +2408,18 @@ namespace deltaKinematics
             double topZ = HRad - radiusSideZ;
 
             //Top
-            Invoke((MethodInvoker)delegate { this.textZPlate.Text = bottomZ.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textZPlateTop.Text = topZ.ToString(); });
+            lblZPlate.Text = bottomZ.ToString();
+            lblZPlateTop.Text = topZ.ToString();
 
             //find max offset in Xy scaling with current tower offsets
             double AScaling = Math.Max(Math.Max(Math.Abs(90 - hypotenuseX), Math.Abs(90 - hypotenuseY)), Math.Abs(90 - hypotenuseZ));
             double offsetScalingMax = (Math.Sin(90) / Math.Sin(Math.PI - 90 - AScaling)) * centerHeight;
 
             //set scaling offset
-            Invoke((MethodInvoker)delegate { this.textScaleOffset.Text = offsetScalingMax.ToString(); });
+            lblScaleOffset.Text = offsetScalingMax.ToString();
         }
 
-        private void label14_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label21_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        
         #region Field Validation checks.
 
         private void cboBaudRate_Validating(object sender, CancelEventArgs e) {
@@ -2473,7 +2435,7 @@ namespace deltaKinematics
         }
 
         private void textAccuracy2_Validating(object sender, CancelEventArgs e) {
-            ValidateDoubleField(this.Text, "Heightmap Accuracy");
+            ValidateDoubleField((TextBox)sender, "Heightmap Accuracy");
             e.Cancel = false;
         }
 
@@ -2561,7 +2523,7 @@ namespace deltaKinematics
             ValidateDoubleField((TextBox)sender, "Y Opposite");
             e.Cancel = false;
         }
-        #endregion
+        
 
         private void textyxOppPerc_Validating(object sender, CancelEventArgs e) {
             ValidateDoubleField((TextBox)sender, "X Opposite");
@@ -2613,7 +2575,16 @@ namespace deltaKinematics
             e.Cancel = false;
 
         }
-                
+
+        private void comboZMin_Validating(object sender, CancelEventArgs e) {
+            if (!comboZMin.Items.Contains(comboZMin.Text)) {
+                errorProvider.SetError(comboZMin, "Invalid Z-Minimum Type!");
+                LogConsole("Invalid Z-Minimum Type!");
+            } else {
+                errorProvider.Clear();
+            }
+        }
+        #endregion
     }
 }
 

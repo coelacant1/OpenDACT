@@ -151,6 +151,8 @@ namespace deltaKinematics
         Boolean _initiatingCalibration = false;
         string _eepromString;
 
+        ErrorProvider errorProvider = new ErrorProvider();
+
         private void setVariablesAll()
         {
             if (_serialPort.IsOpen)
@@ -331,6 +333,50 @@ namespace deltaKinematics
             cboBaudRate.Text = "250000";  // This is the default for most RAMBo controllers.
         }
 
+       
+        private bool ValidateDoubleField(string inValue, string fieldName) {
+            double tempDbl = 0.0;
+            if (!double.TryParse(inValue, out tempDbl)) {
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            } else
+                return true;
+        }
+
+        private bool ValidateIntField(string inValue, string fieldName) {
+            int tempInt = 0;
+            if (!int.TryParse(inValue, out tempInt)) {
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            } else
+                return true;
+        }
+
+        private bool ValidateDoubleField(TextBox textField, string fieldName) {
+            double tempDbl = 0.0;
+            string inValue = textField.Text;
+            
+            if (!double.TryParse(inValue, out tempDbl)) {
+                errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
+                errorProvider.SetIconAlignment(textField, ErrorIconAlignment.TopRight);
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            } else
+                errorProvider.Clear();
+                return true;
+        }
+
+        private bool ValidateIntField(TextBox textField, string fieldName) {
+            int tempInt = 0;
+            string inValue = textField.Text;
+            if (!int.TryParse(inValue, out tempInt)) {
+                errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            } else
+                errorProvider.Clear();
+                return true;
+        }
         // Connect to printer.
         private void connectButton_Click(object sender, EventArgs e)
         {
@@ -410,7 +456,7 @@ namespace deltaKinematics
         {
             if (_serialPort.IsOpen)
             {
-                string text = textBox1.Text.ToString().ToUpper();
+                string text = textGCode.Text.ToString().ToUpper();
                 _serialPort.WriteLine(text + "\n");
             }
             else
@@ -1123,21 +1169,23 @@ namespace deltaKinematics
 
         private void fetchEEProm()
         {
-            if (int.Parse(textBox4.Text) > 50)
-            {
-                // TODO: make sure the user has entered a plate diameter!
-                plateDiameter = int.Parse(textBox4.Text);
+            // If a .Parse() call fails, it will throw an exception.  If you use .TryParse(),
+            // it will return false on a failure as well as populate the plateDiameter value with 
+            // zero.  If it succeeds, it will return true and populate plateDiameter with the 
+            // converted value.
+            if (double.TryParse(textBuildDiameter.Text, out plateDiameter)) {
+                if (plateDiameter > 50) {
+                    // Replace later
+                    comboBoxZMinimumValue = comboZMin.SelectedItem.ToString();
 
-                // Replace later
-                comboBoxZMinimumValue = comboZMin.SelectedItem.ToString();
-
-                // Read EEPROM
-                _serialPort.WriteLine("M205");
-                LogConsole("Request to read EEPROM sent\n");
-                _initiatingCalibration = true;
-            }
-            else
-            {
+                    // Read EEPROM
+                    _serialPort.WriteLine("M205");
+                    LogConsole("Request to read EEPROM sent\n");
+                    _initiatingCalibration = true;
+                } else {
+                    LogConsole("The minimum plate diameter is 50mm.  Please re-enter.\n");
+                }
+            } else {
                 LogConsole("Please enter your build plate diameter and try again\n");
             }
         }
@@ -2410,11 +2458,154 @@ namespace deltaKinematics
 
         }
 
+        #region Field Validation checks.
+
         private void cboBaudRate_Validating(object sender, CancelEventArgs e) {
             if (!cboBaudRate.Items.Contains(cboBaudRate.Text)) {
                 LogConsole("Invalid baud rate selected!\n");
                 e.Cancel = false; // if this is true, the user can't leave the control.
             }
+        }
+
+        private void textAccuracy_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Calculation Accuracy");
+            e.Cancel = false;
+        }
+
+        private void textAccuracy2_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField(this.Text, "Heightmap Accuracy");
+            e.Cancel = false;
+        }
+
+        private void textHRadRatio_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Horizontal Radius Change");
+            e.Cancel = false;
+        }
+
+        private void textFSRPlateOffset_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "FSR Plate Offset");
+            e.Cancel = false;
+        }
+
+        private void textPauseTimeSet_Validating(object sender, CancelEventArgs e) {
+            ValidateIntField((TextBox)sender, "Pause-Time COM");
+            e.Cancel = false;
+        }
+
+        private void textProbingHeight_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z-Probe Start Height");
+            e.Cancel = false;
+        }
+
+        private void textDeltaTower_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Tower Diag Rod");
+            e.Cancel = false;
+        }
+
+        private void textDeltaOpp_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Opp Diag Rod");
+            e.Cancel = false;
+        }
+
+        private void textMaxIterations_Validating(object sender, CancelEventArgs e) {
+            ValidateIntField((TextBox)sender, "Max Iterations");
+            e.Cancel = false;
+        }
+
+        private void textProbingSpeed_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Probing Speed");
+            e.Cancel = false;
+        }
+
+        private void textZProbeHeight_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z-Probe Height");
+            e.Cancel = false;
+        }
+
+        private void textxxPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X(Main)");
+            e.Cancel = false;
+        }
+        
+        private void textxxOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X Opposite");
+            e.Cancel = false;
+        }
+
+        private void textxyPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y");
+            e.Cancel = false;
+        }
+
+        private void textxyOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y Opposite");
+            e.Cancel = false;
+        }
+
+        private void textxzPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z");
+            e.Cancel = false;
+        }
+
+        private void textxzOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z Opposite");
+            e.Cancel = false;
+        }
+
+        private void textyyPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y(Main)");
+            e.Cancel = false;
+        }
+
+        private void textyyOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y Opposite");
+            e.Cancel = false;
+        }
+        #endregion
+
+        private void textyxOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X Opposite");
+            e.Cancel = false;
+        }
+
+        private void textyzPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z");
+            e.Cancel = false;
+        }
+
+        private void textyzOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z Opposite");
+            e.Cancel = false;
+        }
+
+        private void textzzPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z(Main)");
+            e.Cancel = false;
+        }
+
+        private void textzzOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z Opposite");
+            e.Cancel = false;
+        }
+
+        private void textzxPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X");
+            e.Cancel = false;
+        }
+
+        private void textzyPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y");
+            e.Cancel = false;
+        }
+
+        private void textzyOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y Opposite");
+            e.Cancel = false;
+        }
+
+        private void textzxOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X Opposite");
+            e.Cancel = false;
         }
     }
 }

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textGCode = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.sendGCodeButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -42,7 +42,7 @@
             this.calibrateButton = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBuildDiameter = new System.Windows.Forms.TextBox();
             this.donateButton = new System.Windows.Forms.Button();
             this.contactButton = new System.Windows.Forms.Button();
             this.portComboBox = new System.Windows.Forms.ComboBox();
@@ -193,12 +193,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.SuspendLayout();
             // 
-            // textBox1
+            // textGCode
             // 
-            this.textBox1.Location = new System.Drawing.Point(47, 38);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(330, 20);
-            this.textBox1.TabIndex = 0;
+            this.textGCode.Location = new System.Drawing.Point(47, 38);
+            this.textGCode.Name = "textGCode";
+            this.textGCode.Size = new System.Drawing.Size(330, 20);
+            this.textGCode.TabIndex = 0;
             // 
             // label1
             // 
@@ -315,12 +315,12 @@
             this.label6.TabIndex = 18;
             this.label6.Text = "Build Diameter (mm):";
             // 
-            // textBox4
+            // textBuildDiameter
             // 
-            this.textBox4.Location = new System.Drawing.Point(112, 6);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(131, 20);
-            this.textBox4.TabIndex = 19;
+            this.textBuildDiameter.Location = new System.Drawing.Point(112, 6);
+            this.textBuildDiameter.Name = "textBuildDiameter";
+            this.textBuildDiameter.Size = new System.Drawing.Size(131, 20);
+            this.textBuildDiameter.TabIndex = 19;
             // 
             // donateButton
             // 
@@ -386,7 +386,7 @@
             this.advancedPanel.Controls.Add(this.openMorePanelButton);
             this.advancedPanel.Controls.Add(this.advancedCalibrationButton);
             this.advancedPanel.Controls.Add(this.clearLogsButton);
-            this.advancedPanel.Controls.Add(this.textBox1);
+            this.advancedPanel.Controls.Add(this.textGCode);
             this.advancedPanel.Controls.Add(this.label1);
             this.advancedPanel.Controls.Add(this.sendGCodeButton);
             this.advancedPanel.Controls.Add(this.resetPrinterButton);
@@ -591,6 +591,7 @@
             this.textzyOppPerc.Size = new System.Drawing.Size(83, 20);
             this.textzyOppPerc.TabIndex = 35;
             this.textzyOppPerc.Text = "0.25";
+            this.textzyOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textzyOppPerc_Validating);
             // 
             // textzyPerc
             // 
@@ -599,6 +600,7 @@
             this.textzyPerc.Size = new System.Drawing.Size(83, 20);
             this.textzyPerc.TabIndex = 34;
             this.textzyPerc.Text = "0.25";
+            this.textzyPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textzyPerc_Validating);
             // 
             // textzxOppPerc
             // 
@@ -607,6 +609,7 @@
             this.textzxOppPerc.Size = new System.Drawing.Size(82, 20);
             this.textzxOppPerc.TabIndex = 33;
             this.textzxOppPerc.Text = "0.25";
+            this.textzxOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textzxOppPerc_Validating);
             // 
             // textzxPerc
             // 
@@ -615,6 +618,7 @@
             this.textzxPerc.Size = new System.Drawing.Size(84, 20);
             this.textzxPerc.TabIndex = 32;
             this.textzxPerc.Text = "0.25";
+            this.textzxPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textzxPerc_Validating);
             // 
             // textzzOppPerc
             // 
@@ -623,6 +627,7 @@
             this.textzzOppPerc.Size = new System.Drawing.Size(79, 20);
             this.textzzOppPerc.TabIndex = 31;
             this.textzzOppPerc.Text = "0.5";
+            this.textzzOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textzzOppPerc_Validating);
             // 
             // textyzOppPerc
             // 
@@ -631,6 +636,7 @@
             this.textyzOppPerc.Size = new System.Drawing.Size(83, 20);
             this.textyzOppPerc.TabIndex = 29;
             this.textyzOppPerc.Text = "0.25";
+            this.textyzOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textyzOppPerc_Validating);
             // 
             // textyzPerc
             // 
@@ -639,6 +645,7 @@
             this.textyzPerc.Size = new System.Drawing.Size(83, 20);
             this.textyzPerc.TabIndex = 28;
             this.textyzPerc.Text = "0.25";
+            this.textyzPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textyzPerc_Validating);
             // 
             // textyxOppPerc
             // 
@@ -647,6 +654,7 @@
             this.textyxOppPerc.Size = new System.Drawing.Size(82, 20);
             this.textyxOppPerc.TabIndex = 27;
             this.textyxOppPerc.Text = "0.25";
+            this.textyxOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textyxOppPerc_Validating);
             // 
             // textyxPerc
             // 
@@ -663,6 +671,7 @@
             this.textyyOppPerc.Size = new System.Drawing.Size(79, 20);
             this.textyyOppPerc.TabIndex = 25;
             this.textyyOppPerc.Text = "0.5";
+            this.textyyOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textyyOppPerc_Validating);
             // 
             // textxzOppPerc
             // 
@@ -671,6 +680,7 @@
             this.textxzOppPerc.Size = new System.Drawing.Size(83, 20);
             this.textxzOppPerc.TabIndex = 23;
             this.textxzOppPerc.Text = "0.25";
+            this.textxzOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textxzOppPerc_Validating);
             // 
             // textxzPerc
             // 
@@ -679,6 +689,7 @@
             this.textxzPerc.Size = new System.Drawing.Size(83, 20);
             this.textxzPerc.TabIndex = 22;
             this.textxzPerc.Text = "0.25";
+            this.textxzPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textxzPerc_Validating);
             // 
             // textxyOppPerc
             // 
@@ -687,6 +698,7 @@
             this.textxyOppPerc.Size = new System.Drawing.Size(82, 20);
             this.textxyOppPerc.TabIndex = 21;
             this.textxyOppPerc.Text = "0.25";
+            this.textxyOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textxyOppPerc_Validating);
             // 
             // textxyPerc
             // 
@@ -695,6 +707,7 @@
             this.textxyPerc.Size = new System.Drawing.Size(84, 20);
             this.textxyPerc.TabIndex = 20;
             this.textxyPerc.Text = "0.25";
+            this.textxyPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textxyPerc_Validating);
             // 
             // textxxOppPerc
             // 
@@ -703,6 +716,7 @@
             this.textxxOppPerc.Size = new System.Drawing.Size(79, 20);
             this.textxxOppPerc.TabIndex = 19;
             this.textxxOppPerc.Text = "0.5";
+            this.textxxOppPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textxxOppPerc_Validating);
             // 
             // setVariables
             // 
@@ -766,6 +780,7 @@
             this.textDeltaOpp.Size = new System.Drawing.Size(100, 20);
             this.textDeltaOpp.TabIndex = 4;
             this.textDeltaOpp.Text = "0.21083";
+            this.textDeltaOpp.Validating += new System.ComponentModel.CancelEventHandler(this.textDeltaOpp_Validating);
             // 
             // textDeltaTower
             // 
@@ -774,6 +789,7 @@
             this.textDeltaTower.Size = new System.Drawing.Size(100, 20);
             this.textDeltaTower.TabIndex = 3;
             this.textDeltaTower.Text = "0.13083";
+            this.textDeltaTower.Validating += new System.ComponentModel.CancelEventHandler(this.textDeltaTower_Validating);
             // 
             // textAccuracy2
             // 
@@ -782,6 +798,7 @@
             this.textAccuracy2.Size = new System.Drawing.Size(100, 20);
             this.textAccuracy2.TabIndex = 2;
             this.textAccuracy2.Text = "0.025";
+            this.textAccuracy2.Validating += new System.ComponentModel.CancelEventHandler(this.textAccuracy2_Validating);
             // 
             // textAccuracy
             // 
@@ -790,6 +807,7 @@
             this.textAccuracy.Size = new System.Drawing.Size(100, 20);
             this.textAccuracy.TabIndex = 1;
             this.textAccuracy.Text = "0.001";
+            this.textAccuracy.Validating += new System.ComponentModel.CancelEventHandler(this.textAccuracy_Validating);
             // 
             // textHRadRatio
             // 
@@ -798,6 +816,7 @@
             this.textHRadRatio.Size = new System.Drawing.Size(100, 20);
             this.textHRadRatio.TabIndex = 0;
             this.textHRadRatio.Text = "-0.5";
+            this.textHRadRatio.Validating += new System.ComponentModel.CancelEventHandler(this.textHRadRatio_Validating);
             // 
             // label4
             // 
@@ -910,9 +929,9 @@
             this.label61.AutoSize = true;
             this.label61.Location = new System.Drawing.Point(-3, 521);
             this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(46, 13);
+            this.label61.Size = new System.Drawing.Size(43, 13);
             this.label61.TabIndex = 93;
-            this.label61.Text = "Y(Main)]";
+            this.label61.Text = "Y(Main)";
             // 
             // label62
             // 
@@ -930,6 +949,7 @@
             this.textzzPerc.Size = new System.Drawing.Size(79, 20);
             this.textzzPerc.TabIndex = 91;
             this.textzzPerc.Text = "1.5";
+            this.textzzPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textzzPerc_Validating);
             // 
             // textyyPerc
             // 
@@ -938,6 +958,7 @@
             this.textyyPerc.Size = new System.Drawing.Size(79, 20);
             this.textyyPerc.TabIndex = 90;
             this.textyyPerc.Text = "1.5";
+            this.textyyPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textyyPerc_Validating);
             // 
             // textxxPerc
             // 
@@ -946,6 +967,7 @@
             this.textxxPerc.Size = new System.Drawing.Size(79, 20);
             this.textxxPerc.TabIndex = 89;
             this.textxxPerc.Text = "1.5";
+            this.textxxPerc.Validating += new System.ComponentModel.CancelEventHandler(this.textxxPerc_Validating);
             // 
             // label36
             // 
@@ -963,6 +985,7 @@
             this.textZProbeHeight.Size = new System.Drawing.Size(100, 20);
             this.textZProbeHeight.TabIndex = 85;
             this.textZProbeHeight.Text = "0";
+            this.textZProbeHeight.Validating += new System.ComponentModel.CancelEventHandler(this.textZProbeHeight_Validating);
             // 
             // label35
             // 
@@ -980,6 +1003,7 @@
             this.textProbingHeight.Size = new System.Drawing.Size(100, 20);
             this.textProbingHeight.TabIndex = 83;
             this.textProbingHeight.Text = "10";
+            this.textProbingHeight.Validating += new System.ComponentModel.CancelEventHandler(this.textProbingHeight_Validating);
             // 
             // label34
             // 
@@ -997,6 +1021,7 @@
             this.textProbingSpeed.Size = new System.Drawing.Size(100, 20);
             this.textProbingSpeed.TabIndex = 81;
             this.textProbingSpeed.Text = "5";
+            this.textProbingSpeed.Validating += new System.ComponentModel.CancelEventHandler(this.textProbingSpeed_Validating);
             // 
             // textPauseTimeSet
             // 
@@ -1005,6 +1030,7 @@
             this.textPauseTimeSet.Size = new System.Drawing.Size(100, 20);
             this.textPauseTimeSet.TabIndex = 80;
             this.textPauseTimeSet.Text = "500";
+            this.textPauseTimeSet.Validating += new System.ComponentModel.CancelEventHandler(this.textPauseTimeSet_Validating);
             // 
             // label33
             // 
@@ -1031,7 +1057,7 @@
             this.textMaxIterations.Size = new System.Drawing.Size(100, 20);
             this.textMaxIterations.TabIndex = 77;
             this.textMaxIterations.Text = "50";
-            this.textMaxIterations.TextChanged += new System.EventHandler(this.textMaxIterations_TextChanged);
+            this.textMaxIterations.Validating += new System.ComponentModel.CancelEventHandler(this.textMaxIterations_Validating);
             // 
             // textFSRPlateOffset
             // 
@@ -1040,6 +1066,7 @@
             this.textFSRPlateOffset.Size = new System.Drawing.Size(100, 20);
             this.textFSRPlateOffset.TabIndex = 76;
             this.textFSRPlateOffset.Text = "0.6";
+            this.textFSRPlateOffset.Validating += new System.ComponentModel.CancelEventHandler(this.textFSRPlateOffset_Validating);
             // 
             // label31
             // 
@@ -1648,7 +1675,7 @@
             this.Controls.Add(this.portComboBox);
             this.Controls.Add(this.contactButton);
             this.Controls.Add(this.donateButton);
-            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.textBuildDiameter);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -1681,7 +1708,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textGCode;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button sendGCodeButton;
         private System.Windows.Forms.Label label2;
@@ -1694,7 +1721,7 @@
         private System.Windows.Forms.Button calibrateButton;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBuildDiameter;
         private System.Windows.Forms.Button donateButton;
         private System.Windows.Forms.Button contactButton;
         private System.Windows.Forms.ComboBox portComboBox;

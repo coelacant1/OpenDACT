@@ -358,7 +358,7 @@ namespace deltaKinematics
             
             if (!double.TryParse(inValue, out tempDbl)) {
                 errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
-                errorProvider.SetIconAlignment(textField, ErrorIconAlignment.TopRight);
+                //errorProvider.SetIconAlignment(textField, ErrorIconAlignment.TopRight);
                 LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
                 return false;
             } else
@@ -552,8 +552,8 @@ namespace deltaKinematics
             else
             {
                 advancedPanel.Visible = false;
-                panelAdvancedMore.Visible = false;
-                XYPanel1.Visible = false;
+                //panelAdvancedMore.Visible = false;
+                //XYPanel1.Visible = false;
             }
         }
 
@@ -594,18 +594,18 @@ namespace deltaKinematics
         }
 
         // Open "more" panel.
-        private void openMorePanelButton_Click(object sender, EventArgs e)
-        {
-            if (panelAdvancedMore.Visible == false)
-            {
-                panelAdvancedMore.Visible = true;
-            }
-            else
-            {
-                panelAdvancedMore.Visible = false;
-                XYPanel1.Visible = false;
-            }
-        }
+        //private void openMorePanelButton_Click(object sender, EventArgs e)
+        //{
+        //    if (panelAdvancedMore.Visible == false)
+        //    {
+        //        panelAdvancedMore.Visible = true;
+        //    }
+        //    else
+        //    {
+        //        panelAdvancedMore.Visible = false;
+        //        XYPanel1.Visible = false;
+        //    }
+        //}
 
         // The reader thread. Continue reading as long as _continue is true.
         void Read()
@@ -2607,6 +2607,13 @@ namespace deltaKinematics
             ValidateDoubleField((TextBox)sender, "X Opposite");
             e.Cancel = false;
         }
+
+         private void textyxPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y");
+            e.Cancel = false;
+
+        }
+                
     }
 }
 

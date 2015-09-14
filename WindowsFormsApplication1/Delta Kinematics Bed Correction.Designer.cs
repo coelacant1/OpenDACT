@@ -184,7 +184,7 @@
             // 
             this.textGCode.Location = new System.Drawing.Point(47, 38);
             this.textGCode.Name = "textGCode";
-            this.textGCode.Size = new System.Drawing.Size(270, 20);
+            this.textGCode.Size = new System.Drawing.Size(262, 20);
             this.textGCode.TabIndex = 0;
             // 
             // label1
@@ -198,9 +198,9 @@
             // 
             // sendGCodeButton
             // 
-            this.sendGCodeButton.Location = new System.Drawing.Point(323, 36);
+            this.sendGCodeButton.Location = new System.Drawing.Point(315, 36);
             this.sendGCodeButton.Name = "sendGCodeButton";
-            this.sendGCodeButton.Size = new System.Drawing.Size(99, 23);
+            this.sendGCodeButton.Size = new System.Drawing.Size(107, 23);
             this.sendGCodeButton.TabIndex = 2;
             this.sendGCodeButton.Text = "Send GCode";
             this.sendGCodeButton.UseVisualStyleBackColor = true;

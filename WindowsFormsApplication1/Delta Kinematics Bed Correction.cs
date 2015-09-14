@@ -128,6 +128,7 @@ namespace deltaKinematics
         //diagonal rod
         private double deltaTower = 0.13083;
         private double deltaOpp = 0.21083;
+        private double diagonalRodLength;
 
         //alpha rotation
         private double alphaRotationPercentageX = 1.725;
@@ -143,6 +144,15 @@ namespace deltaKinematics
         double DBSA;
         double DCSA;
 
+        //calc
+        double[] known_yDR;
+        double[] known_xDR;
+
+        /*
+        List<string> ls = new List<string>();
+        ls.Add("Hello");
+        */
+
         //////////////////////////
         static SerialPort _serialPort;
         static bool _continue;
@@ -150,6 +160,8 @@ namespace deltaKinematics
         string message;
         Boolean _initiatingCalibration = false;
         string _eepromString;
+
+        ErrorProvider errorProvider = new ErrorProvider();
 
         private void setVariablesAll()
         {
@@ -160,7 +172,7 @@ namespace deltaKinematics
 
                 maxIterations = int.Parse(textMaxIterations.Text);
                 pauseTimeSet = int.Parse(textPauseTimeSet.Text);
-                probingHeight = int.Parse(textProbingHeight.Text);
+                probingHeight = double.Parse(textProbingHeight.Text);
 
                 HRadRatio = Convert.ToDouble(textHRadRatio.Text);
 
@@ -189,8 +201,9 @@ namespace deltaKinematics
                 //diagonal rod
                 deltaTower = Convert.ToDouble(textDeltaTower.Text);
                 deltaOpp = Convert.ToDouble(textDeltaOpp.Text);
+                diagonalRodLength = Convert.ToDouble(textDiagonalRod.Text);
 
-                zProbeSpeed = int.Parse(textProbingSpeed.Text);
+                zProbeSpeed = double.Parse(textProbingSpeed.Text);
 
                 _serialPort.WriteLine("M206 T3 P812 X" + textProbingSpeed.Text.ToString());
                 _serialPort.WriteLine("M206 T3 808 X" + textZProbeHeight.Text.ToString());
@@ -270,12 +283,7 @@ namespace deltaKinematics
         }
 
 
-        private void setVariables_Click(object sender, EventArgs e)
-        {
-            setVariablesAll();
-        }
-
-        public Form1()
+         public Form1()
         {
             InitializeComponent();
             Init();
@@ -296,7 +304,7 @@ namespace deltaKinematics
 
             String[] zMinArray = { "FSR", "Z-Probe" };
             comboZMin.DataSource = zMinArray;
-
+         
             // Build the combobox of available ports.
             string[] ports = SerialPort.GetPortNames();
 
@@ -321,8 +329,79 @@ namespace deltaKinematics
             {
                 LogConsole("No ports available\n");
             }
+            // Basic set of standard baud rates.
+            cboBaudRate.Items.Add("250000");
+            cboBaudRate.Items.Add("115200");
+            cboBaudRate.Items.Add("57600");
+            cboBaudRate.Items.Add("38400");
+            cboBaudRate.Items.Add("19200");
+            cboBaudRate.Items.Add("9600");
+            cboBaudRate.Text = "250000";  // This is the default for most RAMBo controllers.
+
+            // clear the result labels.
+            lblXAngleTower.Text = "";
+            lblXPlate.Text = "";
+            lblXAngleTop.Text = "";
+            lblXPlateTop.Text = "";
+
+            lblYAngleTower.Text = "";
+            lblYPlate.Text = "";
+            lblYAngleTop.Text = "";
+            lblYPlateTop.Text = "";
+
+            lblZAngleTower.Text = "";
+            lblZPlate.Text = "";
+            lblZAngleTop.Text = "";
+            lblZPlateTop.Text = "";
+
+            lblScaleOffset.Text = "";
+
         }
 
+
+        private bool ValidateDoubleField(string inValue, string fieldName) {
+            double tempDbl = 0.0;
+            if (!double.TryParse(inValue, out tempDbl)) {
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            } else
+                return true;
+        }
+
+        private bool ValidateIntField(string inValue, string fieldName) {
+            int tempInt = 0;
+            if (!int.TryParse(inValue, out tempInt)) {
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            } else
+                return true;
+        }
+
+        private bool ValidateDoubleField(TextBox textField, string fieldName) {
+            double tempDbl = 0.0;
+            string inValue = textField.Text;
+            
+            if (!double.TryParse(inValue, out tempDbl)) {
+                errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
+                //errorProvider.SetIconAlignment(textField, ErrorIconAlignment.TopRight);
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            } else
+                errorProvider.Clear();
+                return true;
+        }
+
+        private bool ValidateIntField(TextBox textField, string fieldName) {
+            int tempInt = 0;
+            string inValue = textField.Text;
+            if (!int.TryParse(inValue, out tempInt)) {
+                errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            } else
+                errorProvider.Clear();
+                return true;
+        }
         // Connect to printer.
         private void connectButton_Click(object sender, EventArgs e)
         {
@@ -342,7 +421,7 @@ namespace deltaKinematics
                     }
 
                     _serialPort.PortName = portComboBox.Text;
-                    _serialPort.BaudRate = int.Parse(textBox5.Text);
+                    _serialPort.BaudRate = int.Parse(cboBaudRate.Text);
 
                     // Set the read/write timeouts.
                     _serialPort.ReadTimeout = 500;
@@ -384,7 +463,7 @@ namespace deltaKinematics
                     _continue = false;
                     readThread.Join();
                     _serialPort.Close();
-                    LogConsole("Disonnected\n");
+                    LogConsole("Disconnected\n");
                 }
                 catch (Exception e1)
                 {
@@ -402,7 +481,7 @@ namespace deltaKinematics
         {
             if (_serialPort.IsOpen)
             {
-                string text = textBox1.Text.ToString().ToUpper();
+                string text = textGCode.Text.ToString().ToUpper();
                 _serialPort.WriteLine(text + "\n");
             }
             else
@@ -483,7 +562,7 @@ namespace deltaKinematics
         // Version information.
         private void versionButton_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.MessageBox.Show("Version: " + versionState + "\n\nCreated by Coela Can't\ncoelacannot@gmail.com\n");
+            System.Windows.Forms.MessageBox.Show("Version: " + versionState + "\n\nCreated by Coela Can't\n\nWith help from Gene Buckle and Michael Hackney\n");
         }
 
         // Open advanced panel.
@@ -494,12 +573,14 @@ namespace deltaKinematics
             if (advancedPanel.Visible == false)
             {
                 advancedPanel.Visible = true;
+                tabControl1.Visible = true;
             }
             else
             {
                 advancedPanel.Visible = false;
-                panelAdvancedMore.Visible = false;
-                XYPanel1.Visible = false;
+                tabControl1.Visible = false;
+                //panelAdvancedMore.Visible = false;
+                //XYPanel1.Visible = false;
             }
         }
 
@@ -536,20 +617,6 @@ namespace deltaKinematics
             else
             {
                 LogConsole("Not Connected\n");
-            }
-        }
-
-        // Open "more" panel.
-        private void openMorePanelButton_Click(object sender, EventArgs e)
-        {
-            if (panelAdvancedMore.Visible == false)
-            {
-                panelAdvancedMore.Visible = true;
-            }
-            else
-            {
-                panelAdvancedMore.Visible = false;
-                XYPanel1.Visible = false;
             }
         }
 
@@ -1115,21 +1182,23 @@ namespace deltaKinematics
 
         private void fetchEEProm()
         {
-            if (int.Parse(textBox4.Text) > 50)
-            {
-                // TODO: make sure the user has entered a plate diameter!
-                plateDiameter = int.Parse(textBox4.Text);
+            // If a .Parse() call fails, it will throw an exception.  If you use .TryParse(),
+            // it will return false on a failure as well as populate the plateDiameter value with 
+            // zero.  If it succeeds, it will return true and populate plateDiameter with the 
+            // converted value.
+            if (double.TryParse(textBuildDiameter.Text, out plateDiameter)) {
+                if (plateDiameter > 50) {
+                    // Replace later
+                    comboBoxZMinimumValue = comboZMin.SelectedItem.ToString();
 
-                // Replace later
-                comboBoxZMinimumValue = comboZMin.SelectedItem.ToString();
-
-                // Read EEPROM
-                _serialPort.WriteLine("M205");
-                LogConsole("Request to read EEPROM sent\n");
-                _initiatingCalibration = true;
-            }
-            else
-            {
+                    // Read EEPROM
+                    _serialPort.WriteLine("M205");
+                    LogConsole("Request to read EEPROM sent\n");
+                    _initiatingCalibration = true;
+                } else {
+                    LogConsole("The minimum plate diameter is 50mm.  Please re-enter.\n");
+                }
+            } else {
                 LogConsole("Please enter your build plate diameter and try again\n");
             }
         }
@@ -1643,6 +1712,26 @@ namespace deltaKinematics
                             {
                                 i = 100;
                                 diagonalRod = checkZero(diagonalRod);
+                                /*
+                                if (diagonalRod > diagonalRodLength)
+                                {
+                                    //value is increased from static value
+                                    //slope,intercept,r2
+                                    known_xDR = { diagonalRod };
+                                    known_yDR = { stepsPerMM };
+
+                                    Array.add(known_xDR, diagonalRod);
+
+                                    double[] lr = linearRegression(known_xDR, known_yDR);
+
+                                    stepsPerMM = lr[1] * diagonalRodLength;
+                                }
+                                else
+                                {
+                                    //value is decreased from static value
+
+                                }
+                                */
                             }
                             else
                             {
@@ -2265,12 +2354,6 @@ namespace deltaKinematics
         }
 
         //
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        //
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -2284,30 +2367,7 @@ namespace deltaKinematics
         }
 
         //
-        private void textMaxIterations_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        //
-        private void scalingXYDisplay_Click(object sender, EventArgs e)
-        {
-            if (XYPanel1.Visible == false)
-            {
-                XYPanel1.Visible = true;
-            }
-            else
-            {
-                XYPanel1.Visible = false;
-            }
-        }
-
-        //
-        private void consoleTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+    
         //analyzes the geometry/accuracies of the printers frame
         private void analyzeGeometry()
         {
@@ -2344,14 +2404,14 @@ namespace deltaKinematics
             }
 
             //bottom
-            Invoke((MethodInvoker)delegate { this.textXAngleTower.Text = towerXRotation.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textYAngleTower.Text = towerYRotation.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textZAngleTower.Text = towerZRotation.ToString(); });
+            lblXAngleTower.Text = towerXRotation.ToString();
+            lblYAngleTower.Text = towerYRotation.ToString();
+            lblZAngleTower.Text = towerZRotation.ToString();
 
             //top
-            Invoke((MethodInvoker)delegate { this.textXAngleTop.Text = (180 - towerXRotation).ToString(); });
-            Invoke((MethodInvoker)delegate { this.textYAngleTop.Text = (180 - towerYRotation).ToString(); });
-            Invoke((MethodInvoker)delegate { this.textZAngleTop.Text = (180 - towerZRotation).ToString(); });
+            lblXAngleTop.Text = (180 - towerXRotation).ToString();
+            lblYAngleTop.Text = (180 - towerYRotation).ToString();
+            lblZAngleTop.Text = (180 - towerZRotation).ToString();
 
             //Calculates the radii for each tower at the top and bottom of the towers
             //X
@@ -2361,8 +2421,8 @@ namespace deltaKinematics
             double topX = HRad - radiusSideX;
 
             //Top
-            Invoke((MethodInvoker)delegate { this.textXPlate.Text = bottomX.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textXPlateTop.Text = topX.ToString(); });
+            lblXPlate.Text = bottomX.ToString();
+            lblXPlateTop.Text = topX.ToString();
 
             //Y
             double hypotenuseY = (Math.Sin(90) / Math.Sin(Math.PI - towerYRotation - (180 - towerYRotation))) * centerHeight;
@@ -2371,8 +2431,8 @@ namespace deltaKinematics
             double topY = HRad - radiusSideY;
 
             //Top
-            Invoke((MethodInvoker)delegate { this.textYPlate.Text = bottomY.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textYPlateTop.Text = topY.ToString(); });
+            lblYPlate.Text = bottomY.ToString();
+            lblYPlateTop.Text = topY.ToString();
 
             //Z
             double hypotenuseZ = (Math.Sin(90) / Math.Sin(Math.PI - towerZRotation - (180 - towerZRotation))) * centerHeight;
@@ -2381,26 +2441,183 @@ namespace deltaKinematics
             double topZ = HRad - radiusSideZ;
 
             //Top
-            Invoke((MethodInvoker)delegate { this.textZPlate.Text = bottomZ.ToString(); });
-            Invoke((MethodInvoker)delegate { this.textZPlateTop.Text = topZ.ToString(); });
+            lblZPlate.Text = bottomZ.ToString();
+            lblZPlateTop.Text = topZ.ToString();
 
             //find max offset in Xy scaling with current tower offsets
             double AScaling = Math.Max(Math.Max(Math.Abs(90 - hypotenuseX), Math.Abs(90 - hypotenuseY)), Math.Abs(90 - hypotenuseZ));
             double offsetScalingMax = (Math.Sin(90) / Math.Sin(Math.PI - 90 - AScaling)) * centerHeight;
 
             //set scaling offset
-            Invoke((MethodInvoker)delegate { this.textScaleOffset.Text = offsetScalingMax.ToString(); });
+            lblScaleOffset.Text = offsetScalingMax.ToString();
         }
 
-        private void label14_Click(object sender, EventArgs e)
-        {
+        
+        #region Field Validation checks.
+
+        private void cboBaudRate_Validating(object sender, CancelEventArgs e) {
+            if (!cboBaudRate.Items.Contains(cboBaudRate.Text)) {
+                LogConsole("Invalid baud rate selected!\n");
+                e.Cancel = false; // if this is true, the user can't leave the control.
+            }
+        }
+
+        private void textAccuracy_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Calculation Accuracy");
+            e.Cancel = false;
+        }
+
+        private void textAccuracy2_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Heightmap Accuracy");
+            e.Cancel = false;
+        }
+
+        private void textHRadRatio_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Horizontal Radius Change");
+            e.Cancel = false;
+        }
+
+        private void textFSRPlateOffset_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "FSR Plate Offset");
+            e.Cancel = false;
+        }
+
+        private void textPauseTimeSet_Validating(object sender, CancelEventArgs e) {
+            ValidateIntField((TextBox)sender, "Pause-Time COM");
+            e.Cancel = false;
+        }
+
+        private void textProbingHeight_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z-Probe Start Height");
+            e.Cancel = false;
+        }
+
+        private void textDeltaTower_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Tower Diag Rod");
+            e.Cancel = false;
+        }
+
+        private void textDeltaOpp_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Opp Diag Rod");
+            e.Cancel = false;
+        }
+
+        private void textMaxIterations_Validating(object sender, CancelEventArgs e) {
+            ValidateIntField((TextBox)sender, "Max Iterations");
+            e.Cancel = false;
+        }
+
+        private void textProbingSpeed_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Probing Speed");
+            e.Cancel = false;
+        }
+
+        private void textZProbeHeight_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z-Probe Height");
+            e.Cancel = false;
+        }
+
+        private void textxxPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X(Main)");
+            e.Cancel = false;
+        }
+        
+        private void textxxOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X Opposite");
+            e.Cancel = false;
+        }
+
+        private void textxyPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y");
+            e.Cancel = false;
+        }
+
+        private void textxyOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y Opposite");
+            e.Cancel = false;
+        }
+
+        private void textxzPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z");
+            e.Cancel = false;
+        }
+
+        private void textxzOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z Opposite");
+            e.Cancel = false;
+        }
+
+        private void textyyPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y(Main)");
+            e.Cancel = false;
+        }
+
+        private void textyyOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y Opposite");
+            e.Cancel = false;
+        }
+        
+
+        private void textyxOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X Opposite");
+            e.Cancel = false;
+        }
+
+        private void textyzPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z");
+            e.Cancel = false;
+        }
+
+        private void textyzOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z Opposite");
+            e.Cancel = false;
+        }
+
+        private void textzzPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z(Main)");
+            e.Cancel = false;
+        }
+
+        private void textzzOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Z Opposite");
+            e.Cancel = false;
+        }
+
+        private void textzxPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X");
+            e.Cancel = false;
+        }
+
+        private void textzyPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y");
+            e.Cancel = false;
+        }
+
+        private void textzyOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y Opposite");
+            e.Cancel = false;
+        }
+
+        private void textzxOppPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "X Opposite");
+            e.Cancel = false;
+        }
+
+         private void textyxPerc_Validating(object sender, CancelEventArgs e) {
+            ValidateDoubleField((TextBox)sender, "Y");
+            e.Cancel = false;
 
         }
 
-        private void label21_Click(object sender, EventArgs e)
-        {
-
+        private void comboZMin_Validating(object sender, CancelEventArgs e) {
+            if (!comboZMin.Items.Contains(comboZMin.Text)) {
+                errorProvider.SetError(comboZMin, "Invalid Z-Minimum Type!");
+                LogConsole("Invalid Z-Minimum Type!");
+            } else {
+                errorProvider.Clear();
+            }
         }
+        #endregion
     }
 }
 

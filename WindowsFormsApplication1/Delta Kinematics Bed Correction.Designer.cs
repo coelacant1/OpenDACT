@@ -439,7 +439,7 @@
             this.tabAdvanced.Padding = new System.Windows.Forms.Padding(3);
             this.tabAdvanced.Size = new System.Drawing.Size(614, 654);
             this.tabAdvanced.TabIndex = 0;
-            this.tabAdvanced.Text = "Advanced Settings";
+            this.tabAdvanced.Text = "Settings";
             this.tabAdvanced.UseVisualStyleBackColor = true;
             // 
             // panelAdvancedMore
@@ -587,7 +587,7 @@
             // 
             this.scalingXYDisplay.Location = new System.Drawing.Point(259, 615);
             this.scalingXYDisplay.Name = "scalingXYDisplay";
-            this.scalingXYDisplay.Size = new System.Drawing.Size(257, 23);
+            this.scalingXYDisplay.Size = new System.Drawing.Size(263, 23);
             this.scalingXYDisplay.TabIndex = 56;
             this.scalingXYDisplay.Text = "XY Delta Analysis";
             this.scalingXYDisplay.UseVisualStyleBackColor = true;
@@ -1021,11 +1021,11 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(176, 446);
+            this.label12.Location = new System.Drawing.Point(196, 456);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(172, 13);
+            this.label12.Size = new System.Drawing.Size(119, 13);
             this.label12.TabIndex = 36;
-            this.label12.Text = "Tower Offset Percentages (Max: 1)";
+            this.label12.Text = "Tower Offset Correction";
             // 
             // pictureBox2
             // 
@@ -1226,7 +1226,7 @@
             this.tabInitialAnalysis.Padding = new System.Windows.Forms.Padding(3);
             this.tabInitialAnalysis.Size = new System.Drawing.Size(614, 654);
             this.tabInitialAnalysis.TabIndex = 1;
-            this.tabInitialAnalysis.Text = "Initial Delta Geometry Analysis";
+            this.tabInitialAnalysis.Text = "Delta Geometry Analysis";
             this.tabInitialAnalysis.UseVisualStyleBackColor = true;
             // 
             // XYPanel1

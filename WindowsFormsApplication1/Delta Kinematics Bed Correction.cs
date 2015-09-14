@@ -200,6 +200,7 @@ namespace deltaKinematics
                 deltaTower = Convert.ToDouble(textDeltaTower.Text);
                 deltaOpp = Convert.ToDouble(textDeltaOpp.Text);
                 diagonalRodLength = Convert.ToDouble(textDiagonalRod.Text);
+                
 
                 zProbeSpeed = double.Parse(textProbingSpeed.Text);
 
@@ -1100,6 +1101,11 @@ namespace deltaKinematics
                             else if (intParse == 881)
                             {
                                 diagonalRod = doubleParse2;
+
+                                if (diagonalRodLength == 0 || diagonalRodLength == Convert.ToDouble(""))
+                                {
+                                    diagonalRodLength = diagonalRod;
+                                }
                             }
                             else if (intParse == 885)
                             {
@@ -2181,18 +2187,16 @@ namespace deltaKinematics
                         //Diagonal Rod Calibration******************************************************
                         double XYZ2 = (X + Y + Z) / 3;
                         double XYZOpp2 = (XOpp + YOpp + ZOpp) / 3;
-                        XYZ2 = checkZero(XYZ2);
-                        XYZOpp2 = checkZero(XYZOpp2);
-
                         double hTow2 = Math.Max(Math.Max(X, Y), Z);
                         double lTow2 = Math.Min(Math.Min(X, Y), Z);
                         double towDiff2 = hTow2 - lTow2;
 
+                        XYZ2 = checkZero(XYZ2);
+                        XYZOpp2 = checkZero(XYZOpp2);
                         XYZAvg = (X + Y + Z) / 3;
 
                         if (towDiff2 < 0.1 && towDiff2 > -0.1)
                         {
-
                             if (XYZOpp2 < accuracy && XYZOpp2 > -accuracy && XYZ2 < accuracy && XYZ2 > -accuracy || t >= 2)
                             {
                                 LogConsole("Diagonal Rod Calibration Success; checking height-map\n");
@@ -2329,7 +2333,7 @@ namespace deltaKinematics
                         }//end XYZ offset check
                         else
                         {
-                            LogConsole("Recalculating previous steps due to change in height-map");//due to steps per millimeter fix
+                            LogConsole("Recalculating previous steps due to change in steps per millimeter.");//due to steps per millimeter fix
                             calculationCount = 0;
                             initiateCal();
                         }

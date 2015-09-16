@@ -138,6 +138,19 @@
             this.textxzOppPerc = new System.Windows.Forms.TextBox();
             this.tabInitialAnalysis = new System.Windows.Forms.TabPage();
             this.XYPanel1 = new System.Windows.Forms.Panel();
+            this.lblZPlateTop = new System.Windows.Forms.Label();
+            this.lblZAngleTop = new System.Windows.Forms.Label();
+            this.lblZPlate = new System.Windows.Forms.Label();
+            this.lblZAngleTower = new System.Windows.Forms.Label();
+            this.lblScaleOffset = new System.Windows.Forms.Label();
+            this.lblYPlateTop = new System.Windows.Forms.Label();
+            this.lblYAngleTop = new System.Windows.Forms.Label();
+            this.lblYPlate = new System.Windows.Forms.Label();
+            this.lblYAngleTower = new System.Windows.Forms.Label();
+            this.lblXPlateTop = new System.Windows.Forms.Label();
+            this.lblXAngleTop = new System.Windows.Forms.Label();
+            this.lblXPlate = new System.Windows.Forms.Label();
+            this.lblXAngleTower = new System.Windows.Forms.Label();
             this.label52 = new System.Windows.Forms.Label();
             this.label51 = new System.Windows.Forms.Label();
             this.label50 = new System.Windows.Forms.Label();
@@ -154,19 +167,8 @@
             this.label48 = new System.Windows.Forms.Label();
             this.label49 = new System.Windows.Forms.Label();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.lblXAngleTower = new System.Windows.Forms.Label();
-            this.lblXPlate = new System.Windows.Forms.Label();
-            this.lblXAngleTop = new System.Windows.Forms.Label();
-            this.lblXPlateTop = new System.Windows.Forms.Label();
-            this.lblYAngleTower = new System.Windows.Forms.Label();
-            this.lblYPlate = new System.Windows.Forms.Label();
-            this.lblYAngleTop = new System.Windows.Forms.Label();
-            this.lblYPlateTop = new System.Windows.Forms.Label();
-            this.lblScaleOffset = new System.Windows.Forms.Label();
-            this.lblZAngleTower = new System.Windows.Forms.Label();
-            this.lblZPlate = new System.Windows.Forms.Label();
-            this.lblZAngleTop = new System.Windows.Forms.Label();
-            this.lblZPlateTop = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.textDiagonalRod = new System.Windows.Forms.TextBox();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
@@ -182,7 +184,7 @@
             // 
             this.textGCode.Location = new System.Drawing.Point(47, 38);
             this.textGCode.Name = "textGCode";
-            this.textGCode.Size = new System.Drawing.Size(270, 20);
+            this.textGCode.Size = new System.Drawing.Size(262, 20);
             this.textGCode.TabIndex = 0;
             // 
             // label1
@@ -196,9 +198,9 @@
             // 
             // sendGCodeButton
             // 
-            this.sendGCodeButton.Location = new System.Drawing.Point(323, 36);
+            this.sendGCodeButton.Location = new System.Drawing.Point(315, 36);
             this.sendGCodeButton.Name = "sendGCodeButton";
-            this.sendGCodeButton.Size = new System.Drawing.Size(99, 23);
+            this.sendGCodeButton.Size = new System.Drawing.Size(107, 23);
             this.sendGCodeButton.TabIndex = 2;
             this.sendGCodeButton.Text = "Send GCode";
             this.sendGCodeButton.UseVisualStyleBackColor = true;
@@ -219,22 +221,22 @@
             this.printerConsoleTextBox.Multiline = true;
             this.printerConsoleTextBox.Name = "printerConsoleTextBox";
             this.printerConsoleTextBox.ReadOnly = true;
-            this.printerConsoleTextBox.Size = new System.Drawing.Size(418, 152);
+            this.printerConsoleTextBox.Size = new System.Drawing.Size(418, 181);
             this.printerConsoleTextBox.TabIndex = 5;
             // 
             // consoleTextBox
             // 
-            this.consoleTextBox.Location = new System.Drawing.Point(6, 102);
+            this.consoleTextBox.Location = new System.Drawing.Point(6, 129);
             this.consoleTextBox.Multiline = true;
             this.consoleTextBox.Name = "consoleTextBox";
             this.consoleTextBox.ReadOnly = true;
-            this.consoleTextBox.Size = new System.Drawing.Size(422, 243);
+            this.consoleTextBox.Size = new System.Drawing.Size(422, 216);
             this.consoleTextBox.TabIndex = 6;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 86);
+            this.label3.Location = new System.Drawing.Point(7, 113);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 13);
             this.label3.TabIndex = 7;
@@ -242,9 +244,9 @@
             // 
             // connectButton
             // 
-            this.connectButton.Location = new System.Drawing.Point(169, 31);
+            this.connectButton.Location = new System.Drawing.Point(6, 60);
             this.connectButton.Name = "connectButton";
-            this.connectButton.Size = new System.Drawing.Size(122, 23);
+            this.connectButton.Size = new System.Drawing.Size(210, 23);
             this.connectButton.TabIndex = 8;
             this.connectButton.Text = "Connect";
             this.connectButton.UseVisualStyleBackColor = true;
@@ -252,9 +254,9 @@
             // 
             // disconnectButton
             // 
-            this.disconnectButton.Location = new System.Drawing.Point(297, 32);
+            this.disconnectButton.Location = new System.Drawing.Point(218, 60);
             this.disconnectButton.Name = "disconnectButton";
-            this.disconnectButton.Size = new System.Drawing.Size(131, 23);
+            this.disconnectButton.Size = new System.Drawing.Size(210, 23);
             this.disconnectButton.TabIndex = 9;
             this.disconnectButton.Text = "Disconnect";
             this.disconnectButton.UseVisualStyleBackColor = true;
@@ -262,9 +264,9 @@
             // 
             // clearLogsButton
             // 
-            this.clearLogsButton.Location = new System.Drawing.Point(255, 3);
+            this.clearLogsButton.Location = new System.Drawing.Point(212, 3);
             this.clearLogsButton.Name = "clearLogsButton";
-            this.clearLogsButton.Size = new System.Drawing.Size(167, 23);
+            this.clearLogsButton.Size = new System.Drawing.Size(210, 23);
             this.clearLogsButton.TabIndex = 10;
             this.clearLogsButton.Text = "Clear Logs";
             this.clearLogsButton.UseVisualStyleBackColor = true;
@@ -272,7 +274,7 @@
             // 
             // calibrateButton
             // 
-            this.calibrateButton.Location = new System.Drawing.Point(6, 60);
+            this.calibrateButton.Location = new System.Drawing.Point(6, 87);
             this.calibrateButton.Name = "calibrateButton";
             this.calibrateButton.Size = new System.Drawing.Size(422, 23);
             this.calibrateButton.TabIndex = 11;
@@ -307,9 +309,9 @@
             // 
             // donateButton
             // 
-            this.donateButton.Location = new System.Drawing.Point(297, 351);
+            this.donateButton.Location = new System.Drawing.Point(321, 351);
             this.donateButton.Name = "donateButton";
-            this.donateButton.Size = new System.Drawing.Size(131, 23);
+            this.donateButton.Size = new System.Drawing.Size(107, 23);
             this.donateButton.TabIndex = 23;
             this.donateButton.Text = "Donate";
             this.donateButton.UseVisualStyleBackColor = true;
@@ -317,9 +319,9 @@
             // 
             // contactButton
             // 
-            this.contactButton.Location = new System.Drawing.Point(206, 351);
+            this.contactButton.Location = new System.Drawing.Point(218, 352);
             this.contactButton.Name = "contactButton";
-            this.contactButton.Size = new System.Drawing.Size(85, 23);
+            this.contactButton.Size = new System.Drawing.Size(97, 23);
             this.contactButton.TabIndex = 24;
             this.contactButton.Text = "Contact";
             this.contactButton.UseVisualStyleBackColor = true;
@@ -335,9 +337,9 @@
             // 
             // versionButton
             // 
-            this.versionButton.Location = new System.Drawing.Point(112, 351);
+            this.versionButton.Location = new System.Drawing.Point(118, 352);
             this.versionButton.Name = "versionButton";
-            this.versionButton.Size = new System.Drawing.Size(88, 23);
+            this.versionButton.Size = new System.Drawing.Size(98, 23);
             this.versionButton.TabIndex = 26;
             this.versionButton.Text = "About";
             this.versionButton.UseVisualStyleBackColor = true;
@@ -345,9 +347,9 @@
             // 
             // openAdvancedPanelButton
             // 
-            this.openAdvancedPanelButton.Location = new System.Drawing.Point(6, 351);
+            this.openAdvancedPanelButton.Location = new System.Drawing.Point(6, 352);
             this.openAdvancedPanelButton.Name = "openAdvancedPanelButton";
-            this.openAdvancedPanelButton.Size = new System.Drawing.Size(100, 23);
+            this.openAdvancedPanelButton.Size = new System.Drawing.Size(106, 23);
             this.openAdvancedPanelButton.TabIndex = 27;
             this.openAdvancedPanelButton.Text = "Advanced";
             this.openAdvancedPanelButton.UseVisualStyleBackColor = true;
@@ -357,7 +359,7 @@
             // 
             this.resetPrinterButton.Location = new System.Drawing.Point(0, 3);
             this.resetPrinterButton.Name = "resetPrinterButton";
-            this.resetPrinterButton.Size = new System.Drawing.Size(248, 23);
+            this.resetPrinterButton.Size = new System.Drawing.Size(210, 23);
             this.resetPrinterButton.TabIndex = 12;
             this.resetPrinterButton.Text = "Reset Printer";
             this.resetPrinterButton.UseVisualStyleBackColor = true;
@@ -382,9 +384,9 @@
             // 
             // basicCalibration
             // 
-            this.basicCalibration.Location = new System.Drawing.Point(0, 240);
+            this.basicCalibration.Location = new System.Drawing.Point(0, 269);
             this.basicCalibration.Name = "basicCalibration";
-            this.basicCalibration.Size = new System.Drawing.Size(122, 23);
+            this.basicCalibration.Size = new System.Drawing.Size(210, 23);
             this.basicCalibration.TabIndex = 56;
             this.basicCalibration.Text = "A.I. Calibration";
             this.basicCalibration.UseVisualStyleBackColor = true;
@@ -392,9 +394,9 @@
             // 
             // advancedCalibrationButton
             // 
-            this.advancedCalibrationButton.Location = new System.Drawing.Point(126, 240);
+            this.advancedCalibrationButton.Location = new System.Drawing.Point(212, 268);
             this.advancedCalibrationButton.Name = "advancedCalibrationButton";
-            this.advancedCalibrationButton.Size = new System.Drawing.Size(122, 23);
+            this.advancedCalibrationButton.Size = new System.Drawing.Size(210, 23);
             this.advancedCalibrationButton.TabIndex = 54;
             this.advancedCalibrationButton.Text = "H.A.I. Calibration";
             this.advancedCalibrationButton.UseVisualStyleBackColor = true;
@@ -427,6 +429,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(622, 680);
             this.tabControl1.TabIndex = 34;
+            this.tabControl1.Visible = false;
             // 
             // tabAdvanced
             // 
@@ -436,7 +439,7 @@
             this.tabAdvanced.Padding = new System.Windows.Forms.Padding(3);
             this.tabAdvanced.Size = new System.Drawing.Size(614, 654);
             this.tabAdvanced.TabIndex = 0;
-            this.tabAdvanced.Text = "Advanced Settings";
+            this.tabAdvanced.Text = "Settings";
             this.tabAdvanced.UseVisualStyleBackColor = true;
             // 
             // panelAdvancedMore
@@ -584,7 +587,7 @@
             // 
             this.scalingXYDisplay.Location = new System.Drawing.Point(259, 615);
             this.scalingXYDisplay.Name = "scalingXYDisplay";
-            this.scalingXYDisplay.Size = new System.Drawing.Size(257, 23);
+            this.scalingXYDisplay.Size = new System.Drawing.Size(263, 23);
             this.scalingXYDisplay.TabIndex = 56;
             this.scalingXYDisplay.Text = "XY Delta Analysis";
             this.scalingXYDisplay.UseVisualStyleBackColor = true;
@@ -1018,11 +1021,11 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(176, 446);
+            this.label12.Location = new System.Drawing.Point(196, 456);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(172, 13);
+            this.label12.Size = new System.Drawing.Size(119, 13);
             this.label12.TabIndex = 36;
-            this.label12.Text = "Tower Offset Percentages (Max: 1)";
+            this.label12.Text = "Tower Offset Correction";
             // 
             // pictureBox2
             // 
@@ -1223,7 +1226,7 @@
             this.tabInitialAnalysis.Padding = new System.Windows.Forms.Padding(3);
             this.tabInitialAnalysis.Size = new System.Drawing.Size(614, 654);
             this.tabInitialAnalysis.TabIndex = 1;
-            this.tabInitialAnalysis.Text = "Initial Delta Geometry Analysis";
+            this.tabInitialAnalysis.Text = "Delta Geometry Analysis";
             this.tabInitialAnalysis.UseVisualStyleBackColor = true;
             // 
             // XYPanel1
@@ -1262,6 +1265,136 @@
             this.XYPanel1.Name = "XYPanel1";
             this.XYPanel1.Size = new System.Drawing.Size(602, 645);
             this.XYPanel1.TabIndex = 33;
+            // 
+            // lblZPlateTop
+            // 
+            this.lblZPlateTop.AutoSize = true;
+            this.lblZPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZPlateTop.Location = new System.Drawing.Point(488, 597);
+            this.lblZPlateTop.Name = "lblZPlateTop";
+            this.lblZPlateTop.Size = new System.Drawing.Size(79, 13);
+            this.lblZPlateTop.TabIndex = 107;
+            this.lblZPlateTop.Text = "lblZPlateTop";
+            // 
+            // lblZAngleTop
+            // 
+            this.lblZAngleTop.AutoSize = true;
+            this.lblZAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZAngleTop.Location = new System.Drawing.Point(488, 571);
+            this.lblZAngleTop.Name = "lblZAngleTop";
+            this.lblZAngleTop.Size = new System.Drawing.Size(82, 13);
+            this.lblZAngleTop.TabIndex = 106;
+            this.lblZAngleTop.Text = "lblZAngleTop";
+            // 
+            // lblZPlate
+            // 
+            this.lblZPlate.AutoSize = true;
+            this.lblZPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZPlate.Location = new System.Drawing.Point(488, 545);
+            this.lblZPlate.Name = "lblZPlate";
+            this.lblZPlate.Size = new System.Drawing.Size(57, 13);
+            this.lblZPlate.TabIndex = 105;
+            this.lblZPlate.Text = "lblZPlate";
+            // 
+            // lblZAngleTower
+            // 
+            this.lblZAngleTower.AutoSize = true;
+            this.lblZAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZAngleTower.Location = new System.Drawing.Point(488, 519);
+            this.lblZAngleTower.Name = "lblZAngleTower";
+            this.lblZAngleTower.Size = new System.Drawing.Size(95, 13);
+            this.lblZAngleTower.TabIndex = 104;
+            this.lblZAngleTower.Text = "lblZAngleTower";
+            // 
+            // lblScaleOffset
+            // 
+            this.lblScaleOffset.AutoSize = true;
+            this.lblScaleOffset.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblScaleOffset.Location = new System.Drawing.Point(295, 623);
+            this.lblScaleOffset.Name = "lblScaleOffset";
+            this.lblScaleOffset.Size = new System.Drawing.Size(86, 13);
+            this.lblScaleOffset.TabIndex = 103;
+            this.lblScaleOffset.Text = "lblScaleOffset";
+            // 
+            // lblYPlateTop
+            // 
+            this.lblYPlateTop.AutoSize = true;
+            this.lblYPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYPlateTop.Location = new System.Drawing.Point(290, 598);
+            this.lblYPlateTop.Name = "lblYPlateTop";
+            this.lblYPlateTop.Size = new System.Drawing.Size(79, 13);
+            this.lblYPlateTop.TabIndex = 102;
+            this.lblYPlateTop.Text = "lblYPlateTop";
+            // 
+            // lblYAngleTop
+            // 
+            this.lblYAngleTop.AutoSize = true;
+            this.lblYAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYAngleTop.Location = new System.Drawing.Point(290, 571);
+            this.lblYAngleTop.Name = "lblYAngleTop";
+            this.lblYAngleTop.Size = new System.Drawing.Size(82, 13);
+            this.lblYAngleTop.TabIndex = 101;
+            this.lblYAngleTop.Text = "lblYAngleTop";
+            // 
+            // lblYPlate
+            // 
+            this.lblYPlate.AutoSize = true;
+            this.lblYPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYPlate.Location = new System.Drawing.Point(290, 545);
+            this.lblYPlate.Name = "lblYPlate";
+            this.lblYPlate.Size = new System.Drawing.Size(57, 13);
+            this.lblYPlate.TabIndex = 100;
+            this.lblYPlate.Text = "lblYPlate";
+            // 
+            // lblYAngleTower
+            // 
+            this.lblYAngleTower.AutoSize = true;
+            this.lblYAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYAngleTower.Location = new System.Drawing.Point(290, 519);
+            this.lblYAngleTower.Name = "lblYAngleTower";
+            this.lblYAngleTower.Size = new System.Drawing.Size(95, 13);
+            this.lblYAngleTower.TabIndex = 99;
+            this.lblYAngleTower.Text = "lblYAngleTower";
+            // 
+            // lblXPlateTop
+            // 
+            this.lblXPlateTop.AutoSize = true;
+            this.lblXPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblXPlateTop.Location = new System.Drawing.Point(92, 597);
+            this.lblXPlateTop.Name = "lblXPlateTop";
+            this.lblXPlateTop.Size = new System.Drawing.Size(79, 13);
+            this.lblXPlateTop.TabIndex = 98;
+            this.lblXPlateTop.Text = "lblXPlateTop";
+            // 
+            // lblXAngleTop
+            // 
+            this.lblXAngleTop.AutoSize = true;
+            this.lblXAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblXAngleTop.Location = new System.Drawing.Point(92, 571);
+            this.lblXAngleTop.Name = "lblXAngleTop";
+            this.lblXAngleTop.Size = new System.Drawing.Size(82, 13);
+            this.lblXAngleTop.TabIndex = 97;
+            this.lblXAngleTop.Text = "lblXAngleTop";
+            // 
+            // lblXPlate
+            // 
+            this.lblXPlate.AutoSize = true;
+            this.lblXPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblXPlate.Location = new System.Drawing.Point(92, 545);
+            this.lblXPlate.Name = "lblXPlate";
+            this.lblXPlate.Size = new System.Drawing.Size(57, 13);
+            this.lblXPlate.TabIndex = 96;
+            this.lblXPlate.Text = "lblXPlate";
+            // 
+            // lblXAngleTower
+            // 
+            this.lblXAngleTower.AutoSize = true;
+            this.lblXAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblXAngleTower.Location = new System.Drawing.Point(92, 519);
+            this.lblXAngleTower.Name = "lblXAngleTower";
+            this.lblXAngleTower.Size = new System.Drawing.Size(95, 13);
+            this.lblXAngleTower.TabIndex = 95;
+            this.lblXAngleTower.Text = "lblXAngleTower";
             // 
             // label52
             // 
@@ -1408,135 +1541,21 @@
             this.pictureBox6.TabIndex = 58;
             this.pictureBox6.TabStop = false;
             // 
-            // lblXAngleTower
+            // label37
             // 
-            this.lblXAngleTower.AutoSize = true;
-            this.lblXAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblXAngleTower.Location = new System.Drawing.Point(92, 519);
-            this.lblXAngleTower.Name = "lblXAngleTower";
-            this.lblXAngleTower.Size = new System.Drawing.Size(95, 13);
-            this.lblXAngleTower.TabIndex = 95;
-            this.lblXAngleTower.Text = "lblXAngleTower";
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(169, 36);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(75, 13);
+            this.label37.TabIndex = 35;
+            this.label37.Text = "Diagonal Rod:";
             // 
-            // lblXPlate
+            // textDiagonalRod
             // 
-            this.lblXPlate.AutoSize = true;
-            this.lblXPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblXPlate.Location = new System.Drawing.Point(92, 545);
-            this.lblXPlate.Name = "lblXPlate";
-            this.lblXPlate.Size = new System.Drawing.Size(57, 13);
-            this.lblXPlate.TabIndex = 96;
-            this.lblXPlate.Text = "lblXPlate";
-            // 
-            // lblXAngleTop
-            // 
-            this.lblXAngleTop.AutoSize = true;
-            this.lblXAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblXAngleTop.Location = new System.Drawing.Point(92, 571);
-            this.lblXAngleTop.Name = "lblXAngleTop";
-            this.lblXAngleTop.Size = new System.Drawing.Size(82, 13);
-            this.lblXAngleTop.TabIndex = 97;
-            this.lblXAngleTop.Text = "lblXAngleTop";
-            // 
-            // lblXPlateTop
-            // 
-            this.lblXPlateTop.AutoSize = true;
-            this.lblXPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblXPlateTop.Location = new System.Drawing.Point(92, 597);
-            this.lblXPlateTop.Name = "lblXPlateTop";
-            this.lblXPlateTop.Size = new System.Drawing.Size(79, 13);
-            this.lblXPlateTop.TabIndex = 98;
-            this.lblXPlateTop.Text = "lblXPlateTop";
-            // 
-            // lblYAngleTower
-            // 
-            this.lblYAngleTower.AutoSize = true;
-            this.lblYAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblYAngleTower.Location = new System.Drawing.Point(290, 519);
-            this.lblYAngleTower.Name = "lblYAngleTower";
-            this.lblYAngleTower.Size = new System.Drawing.Size(95, 13);
-            this.lblYAngleTower.TabIndex = 99;
-            this.lblYAngleTower.Text = "lblYAngleTower";
-            // 
-            // lblYPlate
-            // 
-            this.lblYPlate.AutoSize = true;
-            this.lblYPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblYPlate.Location = new System.Drawing.Point(290, 545);
-            this.lblYPlate.Name = "lblYPlate";
-            this.lblYPlate.Size = new System.Drawing.Size(57, 13);
-            this.lblYPlate.TabIndex = 100;
-            this.lblYPlate.Text = "lblYPlate";
-            // 
-            // lblYAngleTop
-            // 
-            this.lblYAngleTop.AutoSize = true;
-            this.lblYAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblYAngleTop.Location = new System.Drawing.Point(290, 571);
-            this.lblYAngleTop.Name = "lblYAngleTop";
-            this.lblYAngleTop.Size = new System.Drawing.Size(82, 13);
-            this.lblYAngleTop.TabIndex = 101;
-            this.lblYAngleTop.Text = "lblYAngleTop";
-            // 
-            // lblYPlateTop
-            // 
-            this.lblYPlateTop.AutoSize = true;
-            this.lblYPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblYPlateTop.Location = new System.Drawing.Point(290, 598);
-            this.lblYPlateTop.Name = "lblYPlateTop";
-            this.lblYPlateTop.Size = new System.Drawing.Size(79, 13);
-            this.lblYPlateTop.TabIndex = 102;
-            this.lblYPlateTop.Text = "lblYPlateTop";
-            // 
-            // lblScaleOffset
-            // 
-            this.lblScaleOffset.AutoSize = true;
-            this.lblScaleOffset.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblScaleOffset.Location = new System.Drawing.Point(295, 623);
-            this.lblScaleOffset.Name = "lblScaleOffset";
-            this.lblScaleOffset.Size = new System.Drawing.Size(86, 13);
-            this.lblScaleOffset.TabIndex = 103;
-            this.lblScaleOffset.Text = "lblScaleOffset";
-            // 
-            // lblZAngleTower
-            // 
-            this.lblZAngleTower.AutoSize = true;
-            this.lblZAngleTower.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblZAngleTower.Location = new System.Drawing.Point(488, 519);
-            this.lblZAngleTower.Name = "lblZAngleTower";
-            this.lblZAngleTower.Size = new System.Drawing.Size(95, 13);
-            this.lblZAngleTower.TabIndex = 104;
-            this.lblZAngleTower.Text = "lblZAngleTower";
-            // 
-            // lblZPlate
-            // 
-            this.lblZPlate.AutoSize = true;
-            this.lblZPlate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblZPlate.Location = new System.Drawing.Point(488, 545);
-            this.lblZPlate.Name = "lblZPlate";
-            this.lblZPlate.Size = new System.Drawing.Size(57, 13);
-            this.lblZPlate.TabIndex = 105;
-            this.lblZPlate.Text = "lblZPlate";
-            // 
-            // lblZAngleTop
-            // 
-            this.lblZAngleTop.AutoSize = true;
-            this.lblZAngleTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblZAngleTop.Location = new System.Drawing.Point(488, 571);
-            this.lblZAngleTop.Name = "lblZAngleTop";
-            this.lblZAngleTop.Size = new System.Drawing.Size(82, 13);
-            this.lblZAngleTop.TabIndex = 106;
-            this.lblZAngleTop.Text = "lblZAngleTop";
-            // 
-            // lblZPlateTop
-            // 
-            this.lblZPlateTop.AutoSize = true;
-            this.lblZPlateTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblZPlateTop.Location = new System.Drawing.Point(488, 597);
-            this.lblZPlateTop.Name = "lblZPlateTop";
-            this.lblZPlateTop.Size = new System.Drawing.Size(79, 13);
-            this.lblZPlateTop.TabIndex = 107;
-            this.lblZPlateTop.Text = "lblZPlateTop";
+            this.textDiagonalRod.Location = new System.Drawing.Point(250, 33);
+            this.textDiagonalRod.Name = "textDiagonalRod";
+            this.textDiagonalRod.Size = new System.Drawing.Size(98, 20);
+            this.textDiagonalRod.TabIndex = 36;
             // 
             // Form1
             // 
@@ -1544,7 +1563,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1662, 715);
+            this.ClientSize = new System.Drawing.Size(1055, 684);
+            this.Controls.Add(this.textDiagonalRod);
+            this.Controls.Add(this.label37);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.cboBaudRate);
             this.Controls.Add(this.advancedPanel);
@@ -1723,6 +1744,8 @@
         private System.Windows.Forms.Label lblXAngleTop;
         private System.Windows.Forms.Label lblXPlate;
         private System.Windows.Forms.Label lblXAngleTower;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.TextBox textDiagonalRod;
     }
 }
 

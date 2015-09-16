@@ -1,6 +1,4 @@
-﻿// Version 3.0
-//
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -128,6 +126,7 @@ namespace deltaKinematics
         //diagonal rod
         private double deltaTower = 0.13083;
         private double deltaOpp = 0.21083;
+        private double diagonalRodLength;
 
         //alpha rotation
         private double alphaRotationPercentageX = 1.725;
@@ -142,6 +141,15 @@ namespace deltaKinematics
         double DASA;
         double DBSA;
         double DCSA;
+
+        //calc steps per mm
+        List<double> known_yDR = new List<double>();
+        List<double> known_xDR = new List<double>();
+        private int stepsCalcNumber = 0;
+        double[] XDiag;
+        double[] YSteps;
+        double[] lr;
+
 
         //////////////////////////
         static SerialPort _serialPort;
@@ -191,6 +199,8 @@ namespace deltaKinematics
                 //diagonal rod
                 deltaTower = Convert.ToDouble(textDeltaTower.Text);
                 deltaOpp = Convert.ToDouble(textDeltaOpp.Text);
+                diagonalRodLength = Convert.ToDouble(textDiagonalRod.Text);
+                
 
                 zProbeSpeed = double.Parse(textProbingSpeed.Text);
 
@@ -222,7 +232,7 @@ namespace deltaKinematics
                 Invoke((MethodInvoker)delegate { this.textYOppTemp.Text = Math.Round(YOpp, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.textZTemp.Text = Math.Round(Z, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.textZOppTemp.Text = Math.Round(ZOpp, 3).ToString(); });
-                
+
                 //calculate parameters
                 tempX = X;
                 tempXOpp = XOpp;
@@ -272,7 +282,7 @@ namespace deltaKinematics
         }
 
 
-         public Form1()
+        public Form1()
         {
             InitializeComponent();
             Init();
@@ -293,7 +303,7 @@ namespace deltaKinematics
 
             String[] zMinArray = { "FSR", "Z-Probe" };
             comboZMin.DataSource = zMinArray;
-         
+
             // Build the combobox of available ports.
             string[] ports = SerialPort.GetPortNames();
 
@@ -348,48 +358,60 @@ namespace deltaKinematics
         }
 
 
-        private bool ValidateDoubleField(string inValue, string fieldName) {
+        private bool ValidateDoubleField(string inValue, string fieldName)
+        {
             double tempDbl = 0.0;
-            if (!double.TryParse(inValue, out tempDbl)) {
+            if (!double.TryParse(inValue, out tempDbl))
+            {
                 LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
                 return false;
-            } else
+            }
+            else
                 return true;
         }
 
-        private bool ValidateIntField(string inValue, string fieldName) {
+        private bool ValidateIntField(string inValue, string fieldName)
+        {
             int tempInt = 0;
-            if (!int.TryParse(inValue, out tempInt)) {
+            if (!int.TryParse(inValue, out tempInt))
+            {
                 LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
                 return false;
-            } else
+            }
+            else
                 return true;
         }
 
-        private bool ValidateDoubleField(TextBox textField, string fieldName) {
+        private bool ValidateDoubleField(TextBox textField, string fieldName)
+        {
             double tempDbl = 0.0;
             string inValue = textField.Text;
-            
-            if (!double.TryParse(inValue, out tempDbl)) {
+
+            if (!double.TryParse(inValue, out tempDbl))
+            {
                 errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
                 //errorProvider.SetIconAlignment(textField, ErrorIconAlignment.TopRight);
                 LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
                 return false;
-            } else
+            }
+            else
                 errorProvider.Clear();
-                return true;
+            return true;
         }
 
-        private bool ValidateIntField(TextBox textField, string fieldName) {
+        private bool ValidateIntField(TextBox textField, string fieldName)
+        {
             int tempInt = 0;
             string inValue = textField.Text;
-            if (!int.TryParse(inValue, out tempInt)) {
+            if (!int.TryParse(inValue, out tempInt))
+            {
                 errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
                 LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
                 return false;
-            } else
+            }
+            else
                 errorProvider.Clear();
-                return true;
+            return true;
         }
         // Connect to printer.
         private void connectButton_Click(object sender, EventArgs e)
@@ -551,7 +573,7 @@ namespace deltaKinematics
         // Version information.
         private void versionButton_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.MessageBox.Show("Version: " + versionState + "\n\nCreated by Coela Can't\ncoelacannot@gmail.com\n");
+            System.Windows.Forms.MessageBox.Show("Version: " + versionState + "\n\nCreated by Coela Can't\n\nWith help from Gene Buckle and Michael Hackney\n");
         }
 
         // Open advanced panel.
@@ -562,10 +584,12 @@ namespace deltaKinematics
             if (advancedPanel.Visible == false)
             {
                 advancedPanel.Visible = true;
+                tabControl1.Visible = true;
             }
             else
             {
                 advancedPanel.Visible = false;
+                tabControl1.Visible = false;
                 //panelAdvancedMore.Visible = false;
                 //XYPanel1.Visible = false;
             }
@@ -1077,6 +1101,11 @@ namespace deltaKinematics
                             else if (intParse == 881)
                             {
                                 diagonalRod = doubleParse2;
+
+                                if (diagonalRodLength == 0 || diagonalRodLength == Convert.ToDouble(""))
+                                {
+                                    diagonalRodLength = diagonalRod;
+                                }
                             }
                             else if (intParse == 885)
                             {
@@ -1173,8 +1202,10 @@ namespace deltaKinematics
             // it will return false on a failure as well as populate the plateDiameter value with 
             // zero.  If it succeeds, it will return true and populate plateDiameter with the 
             // converted value.
-            if (double.TryParse(textBuildDiameter.Text, out plateDiameter)) {
-                if (plateDiameter > 50) {
+            if (double.TryParse(textBuildDiameter.Text, out plateDiameter))
+            {
+                if (plateDiameter > 50)
+                {
                     // Replace later
                     comboBoxZMinimumValue = comboZMin.SelectedItem.ToString();
 
@@ -1182,10 +1213,14 @@ namespace deltaKinematics
                     _serialPort.WriteLine("M205");
                     LogConsole("Request to read EEPROM sent\n");
                     _initiatingCalibration = true;
-                } else {
+                }
+                else
+                {
                     LogConsole("The minimum plate diameter is 50mm.  Please re-enter.\n");
                 }
-            } else {
+            }
+            else
+            {
                 LogConsole("Please enter your build plate diameter and try again\n");
             }
         }
@@ -1223,7 +1258,7 @@ namespace deltaKinematics
         private void calibratePrinter()
         {
             //check accuracy of current height-map and determine to end or procede
-            if (X <= accuracy2 && X >= -accuracy2 && XOpp <= accuracy2 && XOpp >= -accuracy2 && Y <= accuracy2 && Y >= -accuracy2 && YOpp <= accuracy2 && YOpp >= -accuracy2 && Z <= accuracy2 && Z >= -accuracy2 && ZOpp <= accuracy2 && ZOpp >= -accuracy2)
+            if (X <= accuracy2 && X >= -accuracy2 && XOpp <= accuracy2 && XOpp >= -accuracy2 && Y <= accuracy2 && Y >= -accuracy2 && YOpp <= accuracy2 && YOpp >= -accuracy2 && Z <= accuracy2 && Z >= -accuracy2 && ZOpp <= accuracy2 && ZOpp >= -accuracy2 && (diagonalRod - diagonalRodLength) <= accuracy2 && (diagonalRod - diagonalRodLength) >= -accuracy2)
             {
                 //fsr plate offset
                 if (comboBoxZMinimumValue == "FSR")
@@ -1306,7 +1341,7 @@ namespace deltaKinematics
                     ZOpp = ZOpp + ((DCSA) / HRadRatio) * 0.225;
 
                     LogConsole("Delta Radii Offsets: " + DA.ToString() + ", " + DB.ToString() + ", " + DC.ToString());
-                    
+
                     _serialPort.WriteLine("M206 T3 P913 X" + ToLongString(DA));
                     Thread.Sleep(pauseTimeSet);
                     _serialPort.WriteLine("M206 T3 P917 X" + ToLongString(DB));
@@ -1697,8 +1732,54 @@ namespace deltaKinematics
                             //XYZ is zero
                             if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
                             {
+                                //end calculation
                                 i = 100;
                                 diagonalRod = checkZero(diagonalRod);
+
+                                //check if diagonal rod is accurate or not
+                                if (diagonalRod > diagonalRodLength || diagonalRod < diagonalRodLength)
+                                {
+                                    //add diagonal rod and steps per millimeter to list to use later for linear regression
+                                    known_xDR.Add(diagonalRod);
+                                    known_yDR.Add(stepsPerMM);
+
+                                    //prevent using linear regression if there are not two values store
+                                    if (stepsCalcNumber >= 3)
+                                    {
+                                        //list to array and call linear regression function
+                                        XDiag = known_xDR.ToArray();
+                                        YSteps = known_xDR.ToArray();
+                                        lr = linearRegression(XDiag, YSteps);
+
+                                        //use slope of generate line to find the value of stepsPerMM where the diagonal rod is equivalent
+                                        //to the actual length of the diagonal rod
+                                        stepsPerMM = lr[1] * diagonalRodLength;
+
+                                        //logs corrected value
+                                        LogConsole("Steps Per Millimeter Correction: " + stepsPerMM);
+                                    }
+                                    else if (stepsCalcNumber == 1)
+                                    {
+                                        //add one to steps calnumber
+                                        stepsCalcNumber++;
+
+                                        //adds a point to the array below the stepsPerMM
+                                        stepsPerMM = stepsPerMM - (1 / stepsPerMM) * 20;
+                                    }
+                                    else if (stepsCalcNumber == 2)
+                                    {
+                                        //add one to steps calnumber
+                                        stepsCalcNumber++;
+
+                                        //adds a point to the array above the stepsPerMM
+                                        stepsPerMM = stepsPerMM + (1 / stepsPerMM) * 40;//*2 to compensate for the subtraction
+                                    }
+                                    else
+                                    {//stepsCalcNumber == 0
+                                        //add one to steps calnumber
+                                        stepsCalcNumber++;
+                                    }
+                                }
                             }
                             else
                             {
@@ -1706,7 +1787,7 @@ namespace deltaKinematics
                             }
                         }
 
-                        if (diagonalRod < 500 && diagonalRod > 100)
+                        if (diagonalRod < 10000 && diagonalRod > 1)
                         {
                             //send obtained values back to the printer*************************************
                             LogConsole("Diagonal Rod:" + diagonalRod + "\n");
@@ -1896,7 +1977,7 @@ namespace deltaKinematics
                             LogConsole("XYZ Offset Average Before Calibration: " + calculationXYZAvg);
                             LogConsole("XYZ Offset Average Afer Calibration: " + XYZAvg);
                             LogConsole("XYZ Offset Calibration Success; checking height-map\n");
-                            //                        calculationCount++;
+
                             calculationCount++;
                             calculationCheckCount = 0;
                             initiateCal();
@@ -1976,7 +2057,7 @@ namespace deltaKinematics
                                 offsetY = offsetY - Z * stepsPerMM * offsetYCorrection * 2;
                                 offsetX = offsetX - Z * stepsPerMM * offsetXCorrection * 2;
                             }
-                            
+
                             //send data back to printer
 
                             offsetX = Math.Round(offsetX);
@@ -2106,98 +2187,156 @@ namespace deltaKinematics
                         //Diagonal Rod Calibration******************************************************
                         double XYZ2 = (X + Y + Z) / 3;
                         double XYZOpp2 = (XOpp + YOpp + ZOpp) / 3;
+                        double hTow2 = Math.Max(Math.Max(X, Y), Z);
+                        double lTow2 = Math.Min(Math.Min(X, Y), Z);
+                        double towDiff2 = hTow2 - lTow2;
+
                         XYZ2 = checkZero(XYZ2);
                         XYZOpp2 = checkZero(XYZOpp2);
+                        XYZAvg = (X + Y + Z) / 3;
 
-                        if (XYZOpp2 < accuracy && XYZOpp2 > -accuracy && XYZ2 < accuracy && XYZ2 > -accuracy || t >= 2)
+                        if (towDiff2 < 0.1 && towDiff2 > -0.1)
                         {
-                            LogConsole("Diagonal Rod Calibration Success; checking height-map\n");
-                            LogConsole("Calibration Complete; Homing Printer");
-                            _serialPort.WriteLine("G28");
+                            if (XYZOpp2 < accuracy && XYZOpp2 > -accuracy && XYZ2 < accuracy && XYZ2 > -accuracy || t >= 2)
+                            {
+                                LogConsole("Diagonal Rod Calibration Success; checking height-map\n");
+                                LogConsole("Calibration Complete; Homing Printer");
+                                _serialPort.WriteLine("G28");
 
-                            calculationCount = 0;
-                            advancedCalibration = 0;
-                            advancedCalCount = 0;
-                        }
+                                calculationCount = 0;
+                                advancedCalibration = 0;
+                                advancedCalCount = 0;
+                            }
+                            else
+                            {
+                                double diagChange = 1 / deltaOpp;
+                                double towOppDiff = deltaTower / deltaOpp; //0.5
+
+                                int i = 0;
+                                while (i < 100)
+                                {
+                                    double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+                                    diagonalRod = diagonalRod + (XYZOpp * diagChange);
+                                    X = X - towOppDiff * XYZOpp;
+                                    Y = Y - towOppDiff * XYZOpp;
+                                    Z = Z - towOppDiff * XYZOpp;
+                                    XOpp = XOpp - XYZOpp;
+                                    YOpp = YOpp - XYZOpp;
+                                    ZOpp = ZOpp - XYZOpp;
+                                    XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+                                    XYZOpp = checkZero(XYZOpp);
+
+                                    double XYZ = (X + Y + Z) / 3;
+                                    //hrad
+                                    HRad = HRad + (XYZ / HRadRatio);
+
+                                    if (XYZOpp >= 0)
+                                    {
+                                        X = X - XYZ;
+                                        Y = Y - XYZ;
+                                        Z = Z - XYZ;
+                                        XOpp = XOpp - XYZ;
+                                        YOpp = YOpp - XYZ;
+                                        ZOpp = ZOpp - XYZ;
+                                    }
+                                    else
+                                    {
+                                        X = X + XYZ;
+                                        Y = Y + XYZ;
+                                        Z = Z + XYZ;
+                                        XOpp = XOpp + XYZ;
+                                        YOpp = YOpp + XYZ;
+                                        ZOpp = ZOpp + XYZ;
+                                    }
+
+                                    X = checkZero(X);
+                                    Y = checkZero(Y);
+                                    Z = checkZero(Z);
+                                    XOpp = checkZero(XOpp);
+                                    YOpp = checkZero(YOpp);
+                                    ZOpp = checkZero(ZOpp);
+
+                                    //XYZ is zero
+                                    if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
+                                    {
+                                        i = 100;
+                                        diagonalRod = checkZero(diagonalRod);
+
+                                        //check if diagonal rod is accurate or not
+                                        if (diagonalRod > diagonalRodLength || diagonalRod < diagonalRodLength)
+                                        {
+                                            //add diagonal rod and steps per millimeter to list to use later for linear regression
+                                            known_xDR.Add(diagonalRod);
+                                            known_yDR.Add(stepsPerMM);
+
+                                            //prevent using linear regression if there are not two values store
+                                            if (stepsCalcNumber >= 3)
+                                            {
+                                                //list to array and call linear regression function
+                                                XDiag = known_xDR.ToArray();
+                                                YSteps = known_xDR.ToArray();
+                                                lr = linearRegression(XDiag, YSteps);
+
+                                                //use slope of generate line to find the value of stepsPerMM where the diagonal rod is equivalent
+                                                //to the actual length of the diagonal rod
+                                                stepsPerMM = lr[1] * diagonalRodLength;
+
+                                                //logs corrected value
+                                                LogConsole("Steps Per Millimeter Correction: " + stepsPerMM);
+                                            }
+                                            else if (stepsCalcNumber == 1)
+                                            {
+                                                //add one to steps calnumber
+                                                stepsCalcNumber++;
+
+                                                //adds a point to the array below the stepsPerMM
+                                                stepsPerMM = stepsPerMM - (1 / stepsPerMM) * 20;
+                                            }
+                                            else if (stepsCalcNumber == 2)
+                                            {
+                                                //add one to steps calnumber
+                                                stepsCalcNumber++;
+
+                                                //adds a point to the array above the stepsPerMM
+                                                stepsPerMM = stepsPerMM + (1 / stepsPerMM) * 40;//*2 to compensate for the subtraction
+                                            }
+                                            else
+                                            {//stepsCalcNumber == 0
+                                             //add one to steps calnumber
+                                                stepsCalcNumber++;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        i++;
+                                    }
+                                }
+
+                                LogConsole("Diagonal Rod:" + diagonalRod + "\n");
+                                LogConsole("Heights: X:" + X + ", XOpp:" + XOpp + ", Y:" + Y + ", YOpp:" + YOpp + ", Z:" + Z + ", and ZOpp:" + ZOpp + "\n");
+
+                                //send obtained values back to the printer*************************************
+                                //Thread.Sleep(5000);
+                                _serialPort.WriteLine("M206 T3 P881 X" + diagonalRod.ToString());
+                                LogConsole("Setting diagonal rod\n");
+                                Thread.Sleep(pauseTimeSet);
+                                _serialPort.WriteLine("M206 T3 P885 X" + checkZero(HRad).ToString());
+                                LogConsole("Setting Horizontal Radius\n");
+                                Thread.Sleep(pauseTimeSet);
+
+                                //rechecks calibration to either restart or finish
+                                LogConsole("Checking height-map\n");
+                                t++;
+                                initiateCal();
+                            }//end accuracy check
+                        }//end XYZ offset check
                         else
                         {
-
-                            double diagChange = 1 / deltaOpp;
-                            double towOppDiff = deltaTower / deltaOpp; //0.5
-
-                            int i = 0;
-                            while (i < 100)
-                            {
-                                double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                                diagonalRod = diagonalRod + (XYZOpp * diagChange);
-                                X = X - towOppDiff * XYZOpp;
-                                Y = Y - towOppDiff * XYZOpp;
-                                Z = Z - towOppDiff * XYZOpp;
-                                XOpp = XOpp - XYZOpp;
-                                YOpp = YOpp - XYZOpp;
-                                ZOpp = ZOpp - XYZOpp;
-                                XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                                XYZOpp = checkZero(XYZOpp);
-
-                                double XYZ = (X + Y + Z) / 3;
-                                //hrad
-                                HRad = HRad + (XYZ / HRadRatio);
-
-                                if (XYZOpp >= 0)
-                                {
-                                    X = X - XYZ;
-                                    Y = Y - XYZ;
-                                    Z = Z - XYZ;
-                                    XOpp = XOpp - XYZ;
-                                    YOpp = YOpp - XYZ;
-                                    ZOpp = ZOpp - XYZ;
-                                }
-                                else
-                                {
-                                    X = X + XYZ;
-                                    Y = Y + XYZ;
-                                    Z = Z + XYZ;
-                                    XOpp = XOpp + XYZ;
-                                    YOpp = YOpp + XYZ;
-                                    ZOpp = ZOpp + XYZ;
-                                }
-
-                                X = checkZero(X);
-                                Y = checkZero(Y);
-                                Z = checkZero(Z);
-                                XOpp = checkZero(XOpp);
-                                YOpp = checkZero(YOpp);
-                                ZOpp = checkZero(ZOpp);
-
-                                //XYZ is zero
-                                if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
-                                {
-                                    i = 100;
-                                    diagonalRod = checkZero(diagonalRod);
-                                }
-                                else
-                                {
-                                    i++;
-                                }
-                            }
-
-                            LogConsole("Diagonal Rod:" + diagonalRod + "\n");
-                            LogConsole("Heights: X:" + X + ", XOpp:" + XOpp + ", Y:" + Y + ", YOpp:" + YOpp + ", Z:" + Z + ", and ZOpp:" + ZOpp + "\n");
-
-                            //send obtained values back to the printer*************************************
-                            //Thread.Sleep(5000);
-                            _serialPort.WriteLine("M206 T3 P881 X" + diagonalRod.ToString());
-                            LogConsole("Setting diagonal rod\n");
-                            Thread.Sleep(pauseTimeSet);
-                            _serialPort.WriteLine("M206 T3 P885 X" + checkZero(HRad).ToString());
-                            LogConsole("Setting Horizontal Radius\n");
-                            Thread.Sleep(pauseTimeSet);
-
-                            //rechecks calibration to either restart or finish
-                            LogConsole("Checking height-map\n");
-                            t++;
+                            LogConsole("Recalculating previous steps due to change in steps per millimeter.");//due to steps per millimeter fix
+                            calculationCount = 0;
                             initiateCal();
-                        }//end accuracy check
+                        }
                     }// end diagonal rod calibration
 
                 }// end else
@@ -2334,7 +2473,7 @@ namespace deltaKinematics
         }
 
         //
-    
+
         //analyzes the geometry/accuracies of the printers frame
         private void analyzeGeometry()
         {
@@ -2419,168 +2558,203 @@ namespace deltaKinematics
             lblScaleOffset.Text = offsetScalingMax.ToString();
         }
 
-        
+
         #region Field Validation checks.
 
-        private void cboBaudRate_Validating(object sender, CancelEventArgs e) {
-            if (!cboBaudRate.Items.Contains(cboBaudRate.Text)) {
+        private void cboBaudRate_Validating(object sender, CancelEventArgs e)
+        {
+            if (!cboBaudRate.Items.Contains(cboBaudRate.Text))
+            {
                 LogConsole("Invalid baud rate selected!\n");
                 e.Cancel = false; // if this is true, the user can't leave the control.
             }
         }
 
-        private void textAccuracy_Validating(object sender, CancelEventArgs e) {
+        private void textAccuracy_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Calculation Accuracy");
             e.Cancel = false;
         }
 
-        private void textAccuracy2_Validating(object sender, CancelEventArgs e) {
+        private void textAccuracy2_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Heightmap Accuracy");
             e.Cancel = false;
         }
 
-        private void textHRadRatio_Validating(object sender, CancelEventArgs e) {
+        private void textHRadRatio_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Horizontal Radius Change");
             e.Cancel = false;
         }
 
-        private void textFSRPlateOffset_Validating(object sender, CancelEventArgs e) {
+        private void textFSRPlateOffset_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "FSR Plate Offset");
             e.Cancel = false;
         }
 
-        private void textPauseTimeSet_Validating(object sender, CancelEventArgs e) {
+        private void textPauseTimeSet_Validating(object sender, CancelEventArgs e)
+        {
             ValidateIntField((TextBox)sender, "Pause-Time COM");
             e.Cancel = false;
         }
 
-        private void textProbingHeight_Validating(object sender, CancelEventArgs e) {
+        private void textProbingHeight_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Z-Probe Start Height");
             e.Cancel = false;
         }
 
-        private void textDeltaTower_Validating(object sender, CancelEventArgs e) {
+        private void textDeltaTower_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Tower Diag Rod");
             e.Cancel = false;
         }
 
-        private void textDeltaOpp_Validating(object sender, CancelEventArgs e) {
+        private void textDeltaOpp_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Opp Diag Rod");
             e.Cancel = false;
         }
 
-        private void textMaxIterations_Validating(object sender, CancelEventArgs e) {
+        private void textMaxIterations_Validating(object sender, CancelEventArgs e)
+        {
             ValidateIntField((TextBox)sender, "Max Iterations");
             e.Cancel = false;
         }
 
-        private void textProbingSpeed_Validating(object sender, CancelEventArgs e) {
+        private void textProbingSpeed_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Probing Speed");
             e.Cancel = false;
         }
 
-        private void textZProbeHeight_Validating(object sender, CancelEventArgs e) {
+        private void textZProbeHeight_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Z-Probe Height");
             e.Cancel = false;
         }
 
-        private void textxxPerc_Validating(object sender, CancelEventArgs e) {
+        private void textxxPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "X(Main)");
             e.Cancel = false;
         }
-        
-        private void textxxOppPerc_Validating(object sender, CancelEventArgs e) {
+
+        private void textxxOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "X Opposite");
             e.Cancel = false;
         }
 
-        private void textxyPerc_Validating(object sender, CancelEventArgs e) {
+        private void textxyPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Y");
             e.Cancel = false;
         }
 
-        private void textxyOppPerc_Validating(object sender, CancelEventArgs e) {
+        private void textxyOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Y Opposite");
             e.Cancel = false;
         }
 
-        private void textxzPerc_Validating(object sender, CancelEventArgs e) {
+        private void textxzPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Z");
             e.Cancel = false;
         }
 
-        private void textxzOppPerc_Validating(object sender, CancelEventArgs e) {
+        private void textxzOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Z Opposite");
             e.Cancel = false;
         }
 
-        private void textyyPerc_Validating(object sender, CancelEventArgs e) {
+        private void textyyPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Y(Main)");
             e.Cancel = false;
         }
 
-        private void textyyOppPerc_Validating(object sender, CancelEventArgs e) {
+        private void textyyOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Y Opposite");
             e.Cancel = false;
         }
-        
 
-        private void textyxOppPerc_Validating(object sender, CancelEventArgs e) {
+
+        private void textyxOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "X Opposite");
             e.Cancel = false;
         }
 
-        private void textyzPerc_Validating(object sender, CancelEventArgs e) {
+        private void textyzPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Z");
             e.Cancel = false;
         }
 
-        private void textyzOppPerc_Validating(object sender, CancelEventArgs e) {
+        private void textyzOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Z Opposite");
             e.Cancel = false;
         }
 
-        private void textzzPerc_Validating(object sender, CancelEventArgs e) {
+        private void textzzPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Z(Main)");
             e.Cancel = false;
         }
 
-        private void textzzOppPerc_Validating(object sender, CancelEventArgs e) {
+        private void textzzOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Z Opposite");
             e.Cancel = false;
         }
 
-        private void textzxPerc_Validating(object sender, CancelEventArgs e) {
+        private void textzxPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "X");
             e.Cancel = false;
         }
 
-        private void textzyPerc_Validating(object sender, CancelEventArgs e) {
+        private void textzyPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Y");
             e.Cancel = false;
         }
 
-        private void textzyOppPerc_Validating(object sender, CancelEventArgs e) {
+        private void textzyOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Y Opposite");
             e.Cancel = false;
         }
 
-        private void textzxOppPerc_Validating(object sender, CancelEventArgs e) {
+        private void textzxOppPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "X Opposite");
             e.Cancel = false;
         }
 
-         private void textyxPerc_Validating(object sender, CancelEventArgs e) {
+        private void textyxPerc_Validating(object sender, CancelEventArgs e)
+        {
             ValidateDoubleField((TextBox)sender, "Y");
             e.Cancel = false;
 
         }
 
-        private void comboZMin_Validating(object sender, CancelEventArgs e) {
-            if (!comboZMin.Items.Contains(comboZMin.Text)) {
+        private void comboZMin_Validating(object sender, CancelEventArgs e)
+        {
+            if (!comboZMin.Items.Contains(comboZMin.Text))
+            {
                 errorProvider.SetError(comboZMin, "Invalid Z-Minimum Type!");
                 LogConsole("Invalid Z-Minimum Type!");
-            } else {
+            }
+            else
+            {
                 errorProvider.Clear();
             }
         }

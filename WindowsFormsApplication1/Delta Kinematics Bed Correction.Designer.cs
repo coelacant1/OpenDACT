@@ -169,6 +169,7 @@
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.label37 = new System.Windows.Forms.Label();
             this.textDiagonalRod = new System.Windows.Forms.TextBox();
+            this.deltaAnalysisDesc = new System.Windows.Forms.Label();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
@@ -1232,6 +1233,7 @@
             // XYPanel1
             // 
             this.XYPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.XYPanel1.Controls.Add(this.deltaAnalysisDesc);
             this.XYPanel1.Controls.Add(this.lblZPlateTop);
             this.XYPanel1.Controls.Add(this.lblZAngleTop);
             this.XYPanel1.Controls.Add(this.lblZPlate);
@@ -1557,6 +1559,15 @@
             this.textDiagonalRod.Size = new System.Drawing.Size(98, 20);
             this.textDiagonalRod.TabIndex = 36;
             // 
+            // deltaAnalysisDesc
+            // 
+            this.deltaAnalysisDesc.AutoSize = true;
+            this.deltaAnalysisDesc.Location = new System.Drawing.Point(0, 279);
+            this.deltaAnalysisDesc.Name = "deltaAnalysisDesc";
+            this.deltaAnalysisDesc.Size = new System.Drawing.Size(41, 13);
+            this.deltaAnalysisDesc.TabIndex = 108;
+            this.deltaAnalysisDesc.Text = "label38";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1746,6 +1757,7 @@
         private System.Windows.Forms.Label lblXAngleTower;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.TextBox textDiagonalRod;
+        private System.Windows.Forms.Label deltaAnalysisDesc;
     }
 }
 

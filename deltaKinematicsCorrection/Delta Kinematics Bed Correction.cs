@@ -15,164 +15,464 @@ namespace deltaKinematics
 {
     public partial class Form1 : Form
     {
-        string versionState = "2.0.4PA";
+        //majority of the variables used and modified by the program
+        #region Variables
+        string versionState = "2.0.5A";
         string wait = "wait";
-        //////////////////////////
-        private double centerHeight;
-        private int zProbeSet = 0;
-        private int advancedCalibration = 0;
-        private int advancedCalCount = 0;
-        private int maxIterations = 20;
-        private int calculationCount = 0;
-        private int calculationCheckCount = 0;
-        private int pauseTimeSet = 1000;
-        private int iterationNum = 0;
-        private int j = 0;
-        private double centerIterations = 0;
-        private double xIterations = 0;
-        private double xOppIterations = 0;
-        private double yIterations = 0;
-        private double yOppIterations = 0;
-        private double zIterations = 0;
-        private double zOppIterations = 0;
-        private double X;
-        private double XOpp;
-        private double Y;
-        private double YOpp;
-        private double Z;
-        private double ZOpp;
-        private double tempX;
-        private double tempXOpp;
-        private double tempY;
-        private double tempYOpp;
-        private double tempZ;
-        private double tempZOpp;
-        private double tempX2;
-        private double tempXOpp2;
-        private double tempY2;
-        private double tempYOpp2;
-        private double tempZ2;
-        private double tempZOpp2;
-        private double calculationX;
-        private double calculationXOpp;
-        private double calculationY;
-        private double calculationYOpp;
-        private double calculationZ;
-        private double calculationZOpp;
-        private double calculationTemp1;
-        private double HRadCorrection;
-        private double plateDiameter;
-        private double valueZ;
-        private double valueXYLarge;
-        private double valueXYSmall;
-        private double stepsPerMM;
-        private double xMaxLength;
-        private double yMaxLength;
-        private double zMaxLength;
-        private double diagonalRod;
-        private double HRad;
-        private double HRadSA;
-        private double offsetX;
-        private double offsetY;
-        private double offsetZ;
-        private double offsetXCorrection = 1 / 0.7;
-        private double offsetYCorrection = 1 / 0.7;
-        private double offsetZCorrection = 1 / 0.7;
-        private double xxPerc;
-        private double yyPerc;
-        private double zzPerc;
-        private double A;
-        private double B;
-        private double C;
-        private double DA;
-        private double DB;
-        private double DC;
-        private double zProbe;
-        private double probingHeight = 100;
-        private double HRadRatio = -0.5;
-        private double accuracy = 0.001;
-        private double accuracy2 = 0.025;
-        private double XYZAvg;
-        private double calculationXYZAvg;
-        private double offsetXYZ;
-        private int t = 0;
-        private string comboBoxZMinimumValue;
-        private double towerXRotation;
-        private double towerYRotation;
-        private double towerZRotation;
+        string message;
+        string _eepromString;
+        string comboBoxZMinimumValue;
 
-        //XYZ offset
-        //X
-        private double xxOppPerc = 0.5;
-        private double xyPerc = 0.25;
-        private double xyOppPerc = 0.25;
-        private double xzPerc = 0.25;
-        private double xzOppPerc = 0.25;
+        int zProbeSet = 0;
+        int advancedCalibration = 0;
+        int advancedCalCount = 0;
+        int maxIterations = 20;
+        int calculationCount = 0;
+        int calculationCheckCount = 0;
+        int pauseTimeSet = 1000;
+        int iterationNum = 0;
+        int j = 0;
+        int t = 0;
+        int analyzeCount = 0;
+        int calibrationState;
+        int stepsCalcNumber = 0;
 
-        //Y
-        private double yyOppPerc = 0.5;
-        private double yxPerc = 0.25;
-        private double yxOppPerc = 0.25;
-        private double yzPerc = 0.25;
-        private double yzOppPerc = 0.25;
-
-        //Z
-        private double zzOppPerc = 0.5;
-        private double zxPerc = 0.25;
-        private double zxOppPerc = 0.25;
-        private double zyPerc = 0.25;
-        private double zyOppPerc = 0.25;
-
-        //diagonal rod
-        private double deltaTower = 0.13083;
-        private double deltaOpp = 0.21083;
-        private double diagonalRodLength;
-
-        //alpha rotation
-        private double alphaRotationPercentageX = 1.725;
-        private double alphaRotationPercentageY = 1.725;
-        private double alphaRotationPercentageZ = 1.725;
-
-        private double zProbeSpeed;
-        private int analyzeCount = 0;
-        private int calibrationState;
-
-        //delta radii
+        double centerHeight;
+        double X;
+        double XOpp;
+        double Y;
+        double YOpp;
+        double Z;
+        double ZOpp;
+        double tempX;
+        double tempXOpp;
+        double tempY;
+        double tempYOpp;
+        double tempZ;
+        double tempZOpp;
+        double tempX2;
+        double tempXOpp2;
+        double tempY2;
+        double tempYOpp2;
+        double tempZ2;
+        double tempZOpp2;
+        double calculationX;
+        double calculationXOpp;
+        double calculationY;
+        double calculationYOpp;
+        double calculationZ;
+        double calculationZOpp;
+        double calculationTemp1;
+        double HRadCorrection;
+        double plateDiameter;
+        double valueZ;
+        double valueXYLarge;
+        double valueXYSmall;
+        double stepsPerMM;
+        double xMaxLength;
+        double yMaxLength;
+        double zMaxLength;
+        double diagonalRod;
+        double HRad;
+        double HRadSA;
+        double offsetX;
+        double offsetY;
+        double offsetZ;
+        double xxPerc;
+        double yyPerc;
+        double zzPerc;
+        double A;
+        double B;
+        double C;
+        double DA;
+        double DB;
+        double DC;
+        double zProbe;
+        double XYZAvg;
+        double calculationXYZAvg;
+        double offsetXYZ;
+        double towerXRotation;
+        double towerYRotation;
+        double towerZRotation;
+        double diagonalRodLength;
+        double zProbeSpeed;
         double DASA;
         double DBSA;
         double DCSA;
-
-        //calc steps per mm
-        List<double> known_yDR = new List<double>();
-        List<double> known_xDR = new List<double>();
-        private int stepsCalcNumber = 0;
+        double centerIterations = 0;
+        double xIterations = 0;
+        double xOppIterations = 0;
+        double yIterations = 0;
+        double yOppIterations = 0;
+        double zIterations = 0;
+        double zOppIterations = 0;
+        double offsetXCorrection = 1 / 0.7;
+        double offsetYCorrection = 1 / 0.7;
+        double offsetZCorrection = 1 / 0.7;
+        double probingHeight = 100;
+        double HRadRatio = -0.5;
+        double accuracy = 0.001;
+        double accuracy2 = 0.025;
+        double xxOppPerc = 0.5;
+        double xyPerc = 0.25;
+        double xyOppPerc = 0.25;
+        double xzPerc = 0.25;
+        double xzOppPerc = 0.25;
+        double yyOppPerc = 0.5;
+        double yxPerc = 0.25;
+        double yxOppPerc = 0.25;
+        double yzPerc = 0.25;
+        double yzOppPerc = 0.25;
+        double zzOppPerc = 0.5;
+        double zxPerc = 0.25;
+        double zxOppPerc = 0.25;
+        double zyPerc = 0.25;
+        double zyOppPerc = 0.25;
+        double deltaTower = 0.13083;
+        double deltaOpp = 0.21083;
+        double alphaRotationPercentageX = 1.725;
+        double alphaRotationPercentageY = 1.725;
+        double alphaRotationPercentageZ = 1.725;
         double[] XDiag;
         double[] YSteps;
         double[] lr;
 
+        List<double> known_yDR = new List<double>();
+        List<double> known_xDR = new List<double>();
 
-        //////////////////////////
         static SerialPort _serialPort;
         static bool _continue;
         Thread readThread;
-        string message;
         Boolean _initiatingCalibration = false;
-        string _eepromString;
-
         ErrorProvider errorProvider = new ErrorProvider();
+        #endregion
 
+        //calls the initializing function
+        #region Misc initializing components
+        public Form1()
+        {
+            InitializeComponent();
+            Init();
+        }
+
+        //
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        //
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        // Initialize the application.
+        private void Init()
+        {
+            readThread = new Thread(Read);
+            _serialPort = new SerialPort();
+
+            printerConsoleTextBox.Text = "";
+            printerConsoleTextBox.ScrollBars = ScrollBars.Vertical;
+
+            consoleTextBox.Text = "";
+            consoleTextBox.ScrollBars = ScrollBars.Vertical;
+
+            String[] zMinArray = { "FSR", "Z-Probe" };
+            comboZMin.DataSource = zMinArray;
+
+            // Build the combobox of available ports.
+            string[] ports = SerialPort.GetPortNames();
+
+            if (ports.Length >= 1)
+            {
+                Dictionary<string, string> comboSource =
+                    new Dictionary<string, string>();
+
+                int count = 0;
+
+                foreach (string element in ports)
+                {
+                    comboSource.Add(ports[count], ports[count]);
+                    count++;
+                }
+
+                portComboBox.DataSource = new BindingSource(comboSource, null);
+                portComboBox.DisplayMember = "Key";
+                portComboBox.ValueMember = "Value";
+            }
+            else
+            {
+                LogConsole("No ports available\n");
+            }
+
+            // Basic set of standard baud rates.
+            cboBaudRate.Items.Add("250000");
+            cboBaudRate.Items.Add("115200");
+            cboBaudRate.Items.Add("57600");
+            cboBaudRate.Items.Add("38400");
+            cboBaudRate.Items.Add("19200");
+            cboBaudRate.Items.Add("9600");
+            cboBaudRate.Text = "250000";  // This is the default for most RAMBo controllers.
+
+            // clear the result labels.
+            lblXAngleTower.Text = "";
+            lblXPlate.Text = "";
+            lblXAngleTop.Text = "";
+            lblXPlateTop.Text = "";
+            lblYAngleTower.Text = "";
+            lblYPlate.Text = "";
+            lblYAngleTop.Text = "";
+            lblYPlateTop.Text = "";
+            lblZAngleTower.Text = "";
+            lblZPlate.Text = "";
+            lblZAngleTop.Text = "";
+            lblZPlateTop.Text = "";
+            lblScaleOffset.Text = "";
+
+            //set tower analysis label
+            deltaAnalysisDesc.Text = "This analysis may not give\naccurate results. This is due to\nthe error in the steps per\nmilimeter having the same\nresult as the error in tower\nleaning.";
+        }
+
+        //Functions that deal with user interaction
+        #region User interaction: Console log, setting textboxes
+        // Connect to printer.
+        private void connectButton_Click(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                LogConsole("Already Connected\n");
+            }
+            else
+            {
+                try
+                {
+                    // Opens a new thread if there has been a previous thread that has closed.
+                    if (readThread.IsAlive == false)
+                    {
+                        readThread = new Thread(Read);
+                        _serialPort = new SerialPort();
+                    }
+
+                    _serialPort.PortName = portComboBox.Text;
+                    _serialPort.BaudRate = int.Parse(cboBaudRate.Text);
+
+                    // Set the read/write timeouts.
+                    _serialPort.ReadTimeout = 500;
+                    _serialPort.WriteTimeout = 500;
+
+                    // Open the serial port and start reading on a reader thread.
+                    // _continue is a flag used to terminate the app.
+                    
+                    if (_serialPort.BaudRate != 0 && _serialPort.PortName != "")
+                    {
+                        _serialPort.Open();
+                        _continue = true;
+
+                        readThread.Start();
+                        LogConsole("Connected\n");
+                    }
+                    else
+                    {
+                        LogConsole("Please fill all text boxes above\n");
+                    }
+                }
+                catch (Exception e1)
+                {
+                    LogConsole(e1.Message + "\n");
+                    _continue = false;
+
+                    if (readThread.IsAlive == true)
+                    {
+                        readThread.Join();
+                    }
+
+                    _serialPort.Close();
+                }
+            }
+        }
+
+        // Disconnect from printer.
+        private void disconnectButton_Click(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                try
+                {
+                    _continue = false;
+
+                    if (readThread.IsAlive == true)
+                    {
+                        readThread.Join();
+                    }
+
+                    _serialPort.Close();
+                    LogConsole("Disconnected\n");
+                }
+                catch (Exception e1)
+                {
+                    LogConsole(e1.Message + "\n");
+                }
+            }
+            else
+            {
+                LogConsole("Not Connected\n");
+            }
+        }
+
+        // Send gcode to printer.
+        private void sendGCodeButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                string text = textGCode.Text.ToString().ToUpper();
+                _serialPort.WriteLine(text + "\n");
+            }
+            else
+            {
+                LogConsole("Not Connected\n");
+            }
+        }
+
+        // Clear logs.
+        private void clearLogsButton_Click(object sender, EventArgs e)
+        {
+            printerConsoleTextBox.Text = "";
+            consoleTextBox.Text = "";
+        }
+
+        // Calibrate.
+        private void calibrateButton_Click(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                setVariablesAll();
+
+                calibrationState = 0;
+                advancedCalibration = 0;
+
+                //fetches EEProm
+                fetchEEProm();
+            }
+            else
+            {
+                LogConsole("Not Connected\n");
+            }
+        }
+
+        // Reset printer.
+        private void resetPrinterButton_Click(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                _serialPort.WriteLine("M112");
+            }
+            else
+            {
+                LogConsole("Not Connected\n");
+            }
+        }
+
+        // Donate.
+        private void donateButton_Click(object sender, EventArgs e)
+        {
+            string url = "";
+
+            string business = coelacannot@gmail.com"";
+            string description = "Donation";
+            string country = "US";
+            string currency = "USD";
+
+            url += "https://www.paypal.com/cgi-bin/webscr" +
+                "?cmd=" + "_donations" +
+                "&business=" + business +
+                "&lc=" + country +
+                "&item_name=" + description +
+                "&currency_code=" + currency +
+                "&bn=" + "PP%2dDonationsBF";
+
+            System.Diagnostics.Process.Start(url);
+        }
+
+        // Contact.
+        private void contactButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo.FileName = "mailto:coelacannot@gmail.com";
+            proc.Start();
+        }
+
+        // Version information.
+        private void versionButton_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.MessageBox.Show("Version: " + versionState + "\n\nCreated by Coela Can't\n\nWith help from Gene Buckle and Michael Hackney\n");
+        }
+
+        // Open advanced panel.
+        private void openAdvancedPanelButton_Click(object sender, EventArgs e)
+        {
+            if (advancedPanel.Visible == false)
+            {
+                advancedPanel.Visible = true;
+                tabControl1.Visible = true;
+            }
+            else
+            {
+                advancedPanel.Visible = false;
+                tabControl1.Visible = false;
+            }
+        }
+
+        //starts basic offset learning calibration
+        private void basicCalibration_Click(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                setVariablesAll();
+
+                calibrationState = 0;
+                advancedCalibration = 1;
+                //fetches EEProm
+                fetchEEProm();
+            }
+            else
+            {
+                LogConsole("Not Connected\n");
+            }
+        }
+
+        // Start heuristic calibration.
+        private void advancedCalibrationButton_Click(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+                setVariablesAll();
+
+                calibrationState = 1;
+                advancedCalibration = 1;
+                //fetches EEProm
+                fetchEEProm();
+            }
+            else
+            {
+                LogConsole("Not Connected\n");
+            }
+        }
+
+        //set variables 
         private void setVariablesAll()
         {
             if (_serialPort.IsOpen)
             {
                 accuracy = Convert.ToDouble(textAccuracy.Text);
                 accuracy2 = Convert.ToDouble(textAccuracy2.Text);
-
                 maxIterations = int.Parse(textMaxIterations.Text);
                 pauseTimeSet = int.Parse(textPauseTimeSet.Text);
                 probingHeight = double.Parse(textProbingHeight.Text);
-
                 HRadRatio = Convert.ToDouble(textHRadRatio.Text);
+                zProbeSpeed = double.Parse(textProbingSpeed.Text);
 
                 //XYZ offset
                 //X
@@ -200,8 +500,6 @@ namespace deltaKinematics
                 deltaTower = Convert.ToDouble(textDeltaTower.Text);
                 deltaOpp = Convert.ToDouble(textDeltaOpp.Text);
                 diagonalRodLength = Convert.ToDouble(textDiagonalRod.Text);
-                
-                zProbeSpeed = double.Parse(textProbingSpeed.Text);
 
                 _serialPort.WriteLine("M206 T3 P812 X" + textProbingSpeed.Text.ToString());
                 _serialPort.WriteLine("M206 T3 808 X" + textZProbeHeight.Text.ToString());
@@ -218,8 +516,29 @@ namespace deltaKinematics
             }
         }
 
+        //prints to printer console
+        public void LogMessage(string value)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(LogMessage), new object[] { value });
+                return;
+            }
+            printerConsoleTextBox.AppendText(value + "\n");
+        }
 
-        //
+        //prints to console
+        public void LogConsole(string value)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(LogConsole), new object[] { value });
+                return;
+            }
+            consoleTextBox.AppendText(value + "\n");
+        }
+
+        //set height-map values
         public void setHeights()
         {
             //set base heights for advanced calibration comparison
@@ -279,358 +598,7 @@ namespace deltaKinematics
             Invoke((MethodInvoker)delegate { this.textzyPerc.Text = Math.Round(zyPerc, 3).ToString(); });
             Invoke((MethodInvoker)delegate { this.textzyOppPerc.Text = Math.Round(zyOppPerc, 3).ToString(); });
         }
-
-
-        public Form1()
-        {
-            InitializeComponent();
-            Init();
-        }
-
-        // Initialize the application.
-        //
-        private void Init()
-        {
-            readThread = new Thread(Read);
-            _serialPort = new SerialPort();
-
-            printerConsoleTextBox.Text = "";
-            printerConsoleTextBox.ScrollBars = ScrollBars.Vertical;
-
-            consoleTextBox.Text = "";
-            consoleTextBox.ScrollBars = ScrollBars.Vertical;
-
-            String[] zMinArray = { "FSR", "Z-Probe" };
-            comboZMin.DataSource = zMinArray;
-
-            // Build the combobox of available ports.
-            string[] ports = SerialPort.GetPortNames();
-
-            if (ports.Length >= 1)
-            {
-                Dictionary<string, string> comboSource =
-                    new Dictionary<string, string>();
-
-                int count = 0;
-
-                foreach (string element in ports)
-                {
-                    comboSource.Add(ports[count], ports[count]);
-                    count++;
-                }
-
-                portComboBox.DataSource = new BindingSource(comboSource, null);
-                portComboBox.DisplayMember = "Key";
-                portComboBox.ValueMember = "Value";
-            }
-            else
-            {
-                LogConsole("No ports available\n");
-            }
-            // Basic set of standard baud rates.
-            cboBaudRate.Items.Add("250000");
-            cboBaudRate.Items.Add("115200");
-            cboBaudRate.Items.Add("57600");
-            cboBaudRate.Items.Add("38400");
-            cboBaudRate.Items.Add("19200");
-            cboBaudRate.Items.Add("9600");
-            cboBaudRate.Text = "250000";  // This is the default for most RAMBo controllers.
-
-            // clear the result labels.
-            lblXAngleTower.Text = "";
-            lblXPlate.Text = "";
-            lblXAngleTop.Text = "";
-            lblXPlateTop.Text = "";
-
-            lblYAngleTower.Text = "";
-            lblYPlate.Text = "";
-            lblYAngleTop.Text = "";
-            lblYPlateTop.Text = "";
-
-            lblZAngleTower.Text = "";
-            lblZPlate.Text = "";
-            lblZAngleTop.Text = "";
-            lblZPlateTop.Text = "";
-
-            lblScaleOffset.Text = "";
-
-            deltaAnalysisDesc.Text = "This analysis may not give\naccurate results. This is due to\nthe error in the steps per\nmilimeter having the same\nresult as the error in tower\nleaning.";
-
-        }
-
-
-        private bool ValidateDoubleField(string inValue, string fieldName)
-        {
-            double tempDbl = 0.0;
-            if (!double.TryParse(inValue, out tempDbl))
-            {
-                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
-                return false;
-            }
-            else
-                return true;
-        }
-
-        private bool ValidateIntField(string inValue, string fieldName)
-        {
-            int tempInt = 0;
-            if (!int.TryParse(inValue, out tempInt))
-            {
-                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
-                return false;
-            }
-            else
-                return true;
-        }
-
-        private bool ValidateDoubleField(TextBox textField, string fieldName)
-        {
-            double tempDbl = 0.0;
-            string inValue = textField.Text;
-
-            if (!double.TryParse(inValue, out tempDbl))
-            {
-                errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
-                //errorProvider.SetIconAlignment(textField, ErrorIconAlignment.TopRight);
-                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
-                return false;
-            }
-            else
-                errorProvider.Clear();
-            return true;
-        }
-
-        private bool ValidateIntField(TextBox textField, string fieldName)
-        {
-            int tempInt = 0;
-            string inValue = textField.Text;
-            if (!int.TryParse(inValue, out tempInt))
-            {
-                errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
-                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
-                return false;
-            }
-            else
-                errorProvider.Clear();
-            return true;
-        }
-        // Connect to printer.
-        private void connectButton_Click(object sender, EventArgs e)
-        {
-            if (_serialPort.IsOpen)
-            {
-                LogConsole("Already Connected\n");
-            }
-            else
-            {
-                try
-                {
-                    // Opens a new thread if there has been a previous thread that has closed.
-                    if (readThread.IsAlive == false)
-                    {
-                        readThread = new Thread(Read);
-                        _serialPort = new SerialPort();
-                    }
-
-                    _serialPort.PortName = portComboBox.Text;
-                    _serialPort.BaudRate = int.Parse(cboBaudRate.Text);
-
-                    // Set the read/write timeouts.
-                    _serialPort.ReadTimeout = 500;
-                    _serialPort.WriteTimeout = 500;
-
-                    // Open the serial port and start reading on a reader thread.
-                    // _continue is a flag used to terminate the app.
-
-                    if (_serialPort.BaudRate != 0 && _serialPort.PortName != "")
-                    {
-                        _serialPort.Open();
-                        _continue = true;
-
-                        readThread.Start();
-                        LogConsole("Connected\n");
-                    }
-                    else
-                    {
-                        LogConsole("Please fill all text boxes above\n");
-                    }
-                }
-                catch (Exception e1)
-                {
-                    _continue = false;
-                    readThread.Join();
-                    _serialPort.Close();
-                    LogConsole(e1.Message + "\n");
-                }
-            }
-        }
-
-        // Disconnect from printer.
-        private void disconnectButton_Click(object sender, EventArgs e)
-        {
-            if (_serialPort.IsOpen)
-            {
-                try
-                {
-                    _continue = false;
-                    readThread.Join();
-                    _serialPort.Close();
-                    LogConsole("Disconnected\n");
-                }
-                catch (Exception e1)
-                {
-                    LogConsole(e1.Message + "\n");
-                }
-            }
-            else
-            {
-                LogConsole("Not Connected\n");
-            }
-        }
-
-        // Send gcode to printer.
-        private void sendGCodeButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (_serialPort.IsOpen)
-            {
-                string text = textGCode.Text.ToString().ToUpper();
-                _serialPort.WriteLine(text + "\n");
-            }
-            else
-            {
-                LogConsole("Not Connected\n");
-            }
-        }
-
-        // Clear logs.
-        private void clearLogsButton_Click(object sender, EventArgs e)
-        {
-            printerConsoleTextBox.Text = "";
-            consoleTextBox.Text = "";
-        }
-
-        // Calibrate.
-        private void calibrateButton_Click(object sender, EventArgs e)
-        {
-            if (_serialPort.IsOpen)
-            {
-                setVariablesAll();
-
-                calibrationState = 0;
-                advancedCalibration = 0;
-
-                //fetches EEProm
-                fetchEEProm();
-                //LogMessage (_eepromString);
-            }
-            else
-            {
-                LogConsole("Not Connected\n");
-            }
-        }
-
-        // Reset printer.
-        private void resetPrinterButton_Click(object sender, EventArgs e)
-        {
-            if (_serialPort.IsOpen)
-            {
-                _serialPort.WriteLine("M112");
-            }
-            else
-            {
-                LogConsole("Not Connected\n");
-            }
-        }
-
-        // Donate.
-        private void donateButton_Click(object sender, EventArgs e)
-        {
-            string url = "";
-
-            string business = coelacannot@gmail.com"";  // your paypal email
-            string description = "Donation";            // '%20' represents a space. remember HTML!
-            string country = "US";                  // AU, US, etc.
-            string currency = "USD";                 // AUD, USD, etc.
-
-            url += "https://www.paypal.com/cgi-bin/webscr" +
-                "?cmd=" + "_donations" +
-                "&business=" + business +
-                "&lc=" + country +
-                "&item_name=" + description +
-                "&currency_code=" + currency +
-                "&bn=" + "PP%2dDonationsBF";
-
-            System.Diagnostics.Process.Start(url);
-        }
-
-        // Contact.
-        private void contactButton_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.FileName = "mailto:coelacannot@gmail.com";
-            proc.Start();
-        }
-
-        // Version information.
-        private void versionButton_Click(object sender, EventArgs e)
-        {
-            System.Windows.Forms.MessageBox.Show("Version: " + versionState + "\n\nCreated by Coela Can't\n\nWith help from Gene Buckle and Michael Hackney\n");
-        }
-
-        // Open advanced panel.
-        private void openAdvancedPanelButton_Click(object sender, EventArgs e)
-        {
-            //System.Windows.Forms.MessageBox.Show("Advanced settings will be available in Version: 2.0.1\nFeatures:\n-Accuracy control\n-Max iterations\n-Delta radius offset percentages\n-Horizontal Radius offset percentages\n-And more");
-
-            if (advancedPanel.Visible == false)
-            {
-                advancedPanel.Visible = true;
-                tabControl1.Visible = true;
-            }
-            else
-            {
-                advancedPanel.Visible = false;
-                tabControl1.Visible = false;
-                //panelAdvancedMore.Visible = false;
-                //XYPanel1.Visible = false;
-            }
-        }
-
-        //starts basic offset learning calibration
-        private void basicCalibration_Click(object sender, EventArgs e)
-        {
-            if (_serialPort.IsOpen)
-            {
-                setVariablesAll();
-
-                calibrationState = 0;
-                advancedCalibration = 1;
-                //fetches EEProm
-                fetchEEProm();
-            }
-            else
-            {
-                LogConsole("Not Connected\n");
-            }
-        }
-
-        // Start heuristic calibration.
-        private void advancedCalibrationButton_Click(object sender, EventArgs e)
-        {
-            if (_serialPort.IsOpen)
-            {
-                setVariablesAll();
-
-                calibrationState = 1;
-                advancedCalibration = 1;
-                //fetches EEProm
-                fetchEEProm();
-            }
-            else
-            {
-                LogConsole("Not Connected\n");
-            }
-        }
+        #endregion
 
         // The reader thread. Continue reading as long as _continue is true.
         void Read()
@@ -785,14 +753,6 @@ namespace deltaKinematics
                                 _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
                                 Thread.Sleep(pauseTimeSet);
 
-                                /*
-                                //prevents double homing
-                                if (advancedCalibration != 1)
-                                {
-                                    _serialPort.WriteLine("G28");
-                                }
-                                */
-
                                 centerHeight = zMaxLength - probingHeight + centerHeight;
                                 X = centerHeight - (zMaxLength - probingHeight + X);
                                 XOpp = centerHeight - (zMaxLength - probingHeight + XOpp);
@@ -800,7 +760,6 @@ namespace deltaKinematics
                                 YOpp = centerHeight - (zMaxLength - probingHeight + YOpp);
                                 Z = centerHeight - (zMaxLength - probingHeight + Z);
                                 ZOpp = centerHeight - (zMaxLength - probingHeight + ZOpp);
-                                //centerHeight = 0;
 
                                 //invert values
                                 X = -X;
@@ -1162,58 +1121,8 @@ namespace deltaKinematics
                 catch (TimeoutException) { }
             }
         }
-
-        //prints to printer console
-        public void LogMessage(string value)
-        {
-            if (InvokeRequired)
-            {
-                this.Invoke(new Action<string>(LogMessage), new object[] { value });
-                return;
-            }
-            printerConsoleTextBox.AppendText(value + "\n");
-        }
-
-        //prints to console
-        public void LogConsole(string value)
-        {
-            if (InvokeRequired)
-            {
-                this.Invoke(new Action<string>(LogConsole), new object[] { value });
-                return;
-            }
-            consoleTextBox.AppendText(value + "\n");
-        }
         
-        private void fetchEEProm()
-        {
-            // If a .Parse() call fails, it will throw an exception.  If you use .TryParse(),
-            // it will return false on a failure as well as populate the plateDiameter value with 
-            // zero.  If it succeeds, it will return true and populate plateDiameter with the 
-            // converted value.
-            if (double.TryParse(textBuildDiameter.Text, out plateDiameter))
-            {
-                if (plateDiameter > 50)
-                {
-                    // Replace later
-                    comboBoxZMinimumValue = comboZMin.SelectedItem.ToString();
-
-                    // Read EEPROM
-                    _serialPort.WriteLine("M205");
-                    LogConsole("Request to read EEPROM sent\n");
-                    _initiatingCalibration = true;
-                }
-                else
-                {
-                    LogConsole("The minimum plate diameter is 50mm.  Please re-enter.\n");
-                }
-            }
-            else
-            {
-                LogConsole("Please enter your build plate diameter and try again\n");
-            }
-        }
-
+        //Starts the calibration through sending gcode, once received by the reader then calibratePrinter will be called
         private void initiateCal()
         {
             //set gcode specifications
@@ -1244,6 +1153,7 @@ namespace deltaKinematics
             _serialPort.WriteLine("G30");
         }
 
+        //Main calculation for calibration
         private void calibratePrinter()
         {
             //check accuracy of current height-map and determine to end or procede
@@ -2329,8 +2239,8 @@ namespace deltaKinematics
                     }// end diagonal rod calibration
                 }// end else
             }// end advanced calibration
-        }//end calibrate
-
+        }
+        
         //used in previous delta radii calibration
         private double[] linearRegression(double[] y, double[] x)
         {
@@ -2429,7 +2339,7 @@ namespace deltaKinematics
             return result;
         }
 
-        //
+        //keeps input from being in scientific notation, and if the value is near zero then it will be set to zero
         private static string GetZeros(int zeroCount)
         {
             if (zeroCount < 0)
@@ -2446,21 +2356,6 @@ namespace deltaKinematics
 
             return sb.ToString();
         }
-
-        //
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-        //
-        private void Form1_Load_1(object sender, EventArgs e)
-        {
-
-        }
-
-        //
 
         //analyzes the geometry/accuracies of the printers frame
         private void analyzeGeometry()
@@ -2546,8 +2441,93 @@ namespace deltaKinematics
             lblScaleOffset.Text = offsetScalingMax.ToString();
         }
 
-
+        //field validators to check user input
         #region Field Validation checks.
+        //
+        private void fetchEEProm()
+        {
+            // If a .Parse() call fails, it will throw an exception.  If you use .TryParse(),
+            // it will return false on a failure as well as populate the plateDiameter value with 
+            // zero.  If it succeeds, it will return true and populate plateDiameter with the 
+            // converted value.
+            if (double.TryParse(textBuildDiameter.Text, out plateDiameter))
+            {
+                if (plateDiameter > 50)
+                {
+                    // Replace later
+                    comboBoxZMinimumValue = comboZMin.SelectedItem.ToString();
+
+                    // Read EEPROM
+                    _serialPort.WriteLine("M205");
+                    LogConsole("Request to read EEPROM sent\n");
+                    _initiatingCalibration = true;
+                }
+                else
+                {
+                    LogConsole("The minimum plate diameter is 50mm.  Please re-enter.\n");
+                }
+            }
+            else
+            {
+                LogConsole("Please enter your build plate diameter and try again\n");
+            }
+        }
+
+        private bool ValidateDoubleField(string inValue, string fieldName)
+        {
+            double tempDbl = 0.0;
+            if (!double.TryParse(inValue, out tempDbl))
+            {
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            }
+            else
+                return true;
+        }
+
+        private bool ValidateIntField(string inValue, string fieldName)
+        {
+            int tempInt = 0;
+            if (!int.TryParse(inValue, out tempInt))
+            {
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            }
+            else
+                return true;
+        }
+
+        private bool ValidateDoubleField(TextBox textField, string fieldName)
+        {
+            double tempDbl = 0.0;
+            string inValue = textField.Text;
+
+            if (!double.TryParse(inValue, out tempDbl))
+            {
+                errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
+                //errorProvider.SetIconAlignment(textField, ErrorIconAlignment.TopRight);
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            }
+            else
+                errorProvider.Clear();
+            return true;
+        }
+
+        private bool ValidateIntField(TextBox textField, string fieldName)
+        {
+            int tempInt = 0;
+            string inValue = textField.Text;
+            if (!int.TryParse(inValue, out tempInt))
+            {
+                errorProvider.SetError(textField, String.Format("Please enter a valid value for {0}.\n", fieldName));
+                LogConsole(String.Format("Please enter a valid value for {0}.\n", fieldName));
+                return false;
+            }
+            else
+                errorProvider.Clear();
+            return true;
+        }
 
         private void cboBaudRate_Validating(object sender, CancelEventArgs e)
         {
@@ -2749,337 +2729,3 @@ namespace deltaKinematics
         #endregion
     }
 }
-
-/*
-//REMOVED CODE
-//FIRST TOWER ANALYSIS
-            towerXRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + X) - (centerHeight + XOpp)));
-            towerYRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + Y) - (centerHeight + YOpp)));
-            towerZRotation = Math.Atan((plateDiameter * 0.963) / ((centerHeight + Z) - (centerHeight + ZOpp)));
-
-
-//SECOND TOWER ANALYSIS
-double XPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(X - XOpp), 2) + Math.Pow((270 * 0.963), 2));
-double hypX = Math.Sqrt(Math.Pow(XPlateRadCalc, 2) + Math.Pow((centerHeight - XOpp), 2));
-double XAngleCompl = Math.Acos(Math.Pow(XPlateRadCalc, 2) + Math.Pow((centerHeight - XOpp), 2) - Math.Pow(hypX, 2)) / (2 * XPlateRadCalc * (centerHeight - XOpp));
-
-//use complimentary angle of angle found
-towerXRotation = 180 - XAngleCompl * 57.296;
-
-double YPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(Y - YOpp), 2) + Math.Pow((270 * 0.963), 2));
-double hypY = Math.Sqrt(Math.Pow(YPlateRadCalc, 2) + Math.Pow((centerHeight - YOpp), 2));
-double YAngleCompl = Math.Acos(Math.Pow(YPlateRadCalc, 2) + Math.Pow((centerHeight - YOpp), 2) - Math.Pow(hypY, 2)) / (2 * YPlateRadCalc * (centerHeight - YOpp));
-
-//use complimentary angle of angle found
-towerYRotation = 180 - YAngleCompl * 57.296;
-
-double ZPlateRadCalc = Math.Sqrt(Math.Pow(Math.Abs(Z - ZOpp), 2) + Math.Pow((270 * 0.963), 2));
-double hypZ = Math.Sqrt(Math.Pow(ZPlateRadCalc, 2) + Math.Pow((centerHeight - ZOpp), 2));
-double ZAngleCompl = Math.Acos(Math.Pow(ZPlateRadCalc, 2) + Math.Pow((centerHeight - ZOpp), 2) - Math.Pow(hypZ, 2)) / (2 * ZPlateRadCalc * (centerHeight - ZOpp));
-
-//use complimentary angle of angle found
-towerZRotation = 180 - ZAngleCompl * 57.296;
-cos A = (b2 + c2 − a2) / 2bc
-
-a = centerheight
-b = Math.Sqrt(Math.Pow(centerHeight, 2) + Math.Pow(plateDiameter * 0.963))
-c = plate build diameter
-
-A = 
-
-if (X < XOpp)
-{
-    LogConsole("X inverted");
-    towerXRotation = (90 - towerXRotation) + 90;
-}
-if (Y < YOpp)
-{
-    LogConsole("Y inverted");
-    towerYRotation = (90 - towerYRotation) + 90;
-}
-if (Z < ZOpp)
-{
-    LogConsole("Z inverted");
-    towerZRotation = (90 - towerZRotation) + 90;
-}
-
-//THIRD DELTA RADII
-                        //should not have large input values, or should even equal zero
-
-                        // lr.slope
-                        // lr.intercept
-                        // lr.r2
-                        //DA = X / -0.5 + DA;
-
-                        //slope,intercept,r2
-                    double[] known_yDA = { X, tempX };
-                    double[] known_xDA = { 0, 1 };
-                    double[] lrDA = linearRegression(known_yDA, known_xDA);
-                    double DATemp = DA;
-                    double DOpposingX = 1;
-                    double DOpposingXL = 1;
-                    double DOpposingXR = 1;
-
-                    double[] known_yDB = { Y, tempY };
-                    double[] known_xDB = { 0, 1 };
-                    double[] lrDB = linearRegression(known_yDB, known_xDB);
-                    double DBTemp = DB;
-                    double DOpposingY = 1;
-                    double DOpposingYL = 1;
-                    double DOpposingYR = 1;
-
-                    double[] known_yDC = { Z, tempZ };
-                    double[] known_xDC = { 0, 1 };
-                    double[] lrDC = linearRegression(known_yDC, known_xDC);
-                    double DCTemp = DC;
-                    double DOpposingZ = 1;
-                    double DOpposingZL = 1;
-                    double DOpposingZR = 1;
-
-                    double hTow3 = Math.Max(Math.Max(X, Y), Z);
-                    double lTow3 = Math.Min(Math.Min(X, Y), Z);
-                    double towDiff3 = hTow3 - lTow3;
-
-                    XYZAvg = (X + Y + Z) / 3;
-
-                    if (towDiff3 < 0.1 && towDiff3 > -0.1)
-                    {
-                        LogConsole("Delta Radius Calibration Success; checking height-map\n");
-                        calculationCount++;
-                        initiateCal();
-                    }
-                    else
-                    {
-                        j = 0;
-
-                        while (j < 0)
-                        {
-                            /////////////////////////////////////X
-                            LogConsole(lrDA[2].ToString());
-
-                            DA = lrDA[2] * -2 + DA;
-                            DA = checkZero(DA);
-                            XOpp = ((lrDA[2] * DOpposingX) - XOpp) * -1;
-                            YOpp = ((lrDA[2] * DOpposingXL) - YOpp) * -1;
-                            ZOpp = ((lrDA[2] * DOpposingXR) - ZOpp) * -1;
-                            X = lrDA[2] - X;
-                            X = checkZero(X);
-
-                            /////////////////////////////////////Y
-                            LogConsole(lrDB[2].ToString());
-
-                            DB = lrDB[2] * -2 + DB + (lrDB[2] * 0.125);
-                            DB = checkZero(DB);
-                            XOpp = ((lrDB[2] * DOpposingYR) - XOpp) * -1;
-                            YOpp = ((lrDB[2] * DOpposingY) - YOpp) * -1;
-                            ZOpp = ((lrDB[2] * DOpposingYL) - ZOpp) * -1;
-                            Y = lrDB[2] - Y;
-                            Y = checkZero(Y);
-
-                            /////////////////////////////////////Z
-                            LogConsole(lrDC[2].ToString());
-
-                            DC = lrDC[2] * -2 + DC + (lrDC[2] * 0.25);
-                            DC = checkZero(DC);
-                            XOpp = ((lrDC[2] * DOpposingZL) - XOpp) * -1;
-                            YOpp = ((lrDC[2] * DOpposingZR) - YOpp) * -1;
-                            ZOpp = ((lrDC[2] * DOpposingZ) - ZOpp) * -1;
-                            Z = lrDC[2] - Z;
-                            Z = checkZero(Z);
-
-                            if (X < accuracy && X > -accuracy && Y < accuracy && Y > -accuracy && Z < accuracy && Z > -accuracy)
-                            {
-                                j = 1;
-                            }
-                        }
-                    }
-
-    
-                            while (j != 1)
-                            {
-                                //XYZ offset
-                                xxPerc = 1;
-                                yyPerc = 1;
-                                zzPerc = 1;
-
-                                //X
-                                xxOppPerc = 0.5;
-                                xyPerc = 0.25;
-                                xyOppPerc = 0.25;
-                                xzPerc = 0.25;
-                                xzOppPerc = 0.25;
-
-                                //Y
-                                yyOppPerc = 0.5;
-                                yxPerc = 0.25;
-                                yxOppPerc = 0.25;
-                                yzPerc = 0.25;
-                                yzOppPerc = 0.25;
-
-                                //Z
-                                zzOppPerc = 0.5;
-                                zxPerc = 0.25;
-                                zxOppPerc = 0.25;
-                                zyPerc = 0.25;
-                                zyOppPerc = 0.25;
-
-                                //correction
-                                offsetXCorrection = 1 / 1.4;
-                                offsetYCorrection = 1 / 1.4;
-                                offsetZCorrection = 1 / 1.4;
-
-                                double theoryX = offsetX + X * stepsPerMM * offsetXCorrection;
-
-                                //correction of one tower allows for XY dimensional accuracy
-                                if (X > 0)
-                                {
-                                    //if x is positive
-                                    offsetX = offsetX + X * stepsPerMM * offsetXCorrection;
-
-                                    XOpp = XOpp + (X * xxOppPerc);//0.5
-                                    Z = Z + (X * xzPerc);//0.25
-                                    Y = Y + (X * xyPerc);//0.25
-                                    ZOpp = ZOpp - (X * xzOppPerc);//0.25
-                                    YOpp = YOpp - (X * xyOppPerc);//0.25
-                                    X = X - X;
-                                }
-                                else if (theoryX > 0 && X < 0)
-                                {
-                                    //if x is negative and can be decreased
-                                    offsetX = offsetX + X * stepsPerMM * offsetXCorrection;
-
-                                    XOpp = XOpp + (X * xxOppPerc);//0.5
-                                    Z = Z + (X * xzPerc);//0.25
-                                    Y = Y + (X * xyPerc);//0.25
-                                    ZOpp = ZOpp - (X * xzOppPerc);//0.25
-                                    YOpp = YOpp - (X * xyOppPerc);//0.25
-                                    X = X - X;
-                                }
-                                else
-                                {
-                                    //if X is negative
-                                    offsetY = offsetY - X * stepsPerMM * offsetYCorrection * 2;
-                                    offsetZ = offsetZ - X * stepsPerMM * offsetZCorrection * 2;
-
-                                    YOpp = YOpp - (X * 2 * yyOppPerc);
-                                    X = X - (X * 2 * yxPerc);
-                                    Z = Z - (X * 2 * yxPerc);
-                                    XOpp = XOpp + (X * 2 * yxOppPerc);
-                                    ZOpp = ZOpp + (X * 2 * yxOppPerc);
-                                    Y = Y + X * 2;
-
-                                    ZOpp = ZOpp - (X * 2 * zzOppPerc);
-                                    X = X - (X * 2 * zxPerc);
-                                    Y = Y - (X * 2 * zyPerc);
-                                    XOpp = XOpp + (X * 2 * yxOppPerc);
-                                    YOpp = YOpp + (X * 2 * zyOppPerc);
-                                    Z = Z + X * 2;
-                                }
-
-                                double theoryY = offsetY + Y * stepsPerMM * offsetYCorrection;
-
-                                //Y
-                                if (Y > 0)
-                                {
-                                    offsetY = offsetY + Y * stepsPerMM * offsetYCorrection;
-
-                                    YOpp = YOpp + (Y * yyOppPerc);
-                                    X = X + (Y * yxPerc);
-                                    Z = Z + (Y * yxPerc);
-                                    XOpp = XOpp - (Y * yxOppPerc);
-                                    ZOpp = ZOpp - (Y * yxOppPerc);
-                                    Y = Y - Y;
-                                }
-                                else if (theoryY > 0 && Y < 0)
-                                {
-                                    offsetY = offsetY + Y * stepsPerMM * offsetYCorrection;
-
-                                    YOpp = YOpp + (Y * yyOppPerc);
-                                    X = X + (Y * yxPerc);
-                                    Z = Z + (Y * yxPerc);
-                                    XOpp = XOpp - (Y * yxOppPerc);
-                                    ZOpp = ZOpp - (Y * yxOppPerc);
-                                    Y = Y - Y;
-                                }
-                                else
-                                {
-                                    offsetX = offsetX - Y * stepsPerMM * offsetXCorrection * 2;
-                                    offsetZ = offsetZ - Y * stepsPerMM * offsetZCorrection * 2;
-
-                                    XOpp = XOpp - (Y * 2 * xxOppPerc);//0.5
-                                    Z = Z - (Y * 2 * xzPerc);//0.25
-                                    Y = Y - (Y * 2 * xyPerc);//0.25
-                                    ZOpp = ZOpp + (Y * 2 * xzOppPerc);//0.25
-                                    YOpp = YOpp + (Y * 2 * xyOppPerc);//0.25
-                                    X = X + Y * 2;
-
-                                    ZOpp = ZOpp - (Y * 2 * zzOppPerc);
-                                    X = X - (Y * 2 * zxPerc);
-                                    Y = Y - (Y * 2 * zyPerc);
-                                    XOpp = XOpp + (Y * 2 * yxOppPerc);
-                                    YOpp = YOpp + (Y * 2 * zyOppPerc);
-                                    Z = Z + Y * 2;
-                                }
-
-                                double theoryZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
-
-                                //Z
-                                if (Z > 0)
-                                {
-                                    offsetZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
-
-                                    ZOpp = ZOpp + (Z * zzOppPerc);
-                                    X = X + (Z * zxPerc);
-                                    Y = Y + (Z * zyPerc);
-                                    XOpp = XOpp - (Z * yxOppPerc);
-                                    YOpp = YOpp - (Z * zyOppPerc);
-                                    Z = Z - Z;
-                                }
-                                else if (theoryZ > 0 && Z < 0)
-                                {
-                                    offsetZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
-
-                                    ZOpp = ZOpp + (Z * zzOppPerc);
-                                    X = X + (Z * zxPerc);
-                                    Y = Y + (Z * zyPerc);
-                                    XOpp = XOpp - (Z * yxOppPerc);
-                                    YOpp = YOpp - (Z * zyOppPerc);
-                                    Z = Z - Z;
-                                }
-                                else
-                                {
-                                    offsetY = offsetY - Z * stepsPerMM * offsetYCorrection * 2;
-                                    offsetX = offsetX - Z * stepsPerMM * offsetXCorrection * 2;
-
-                                    XOpp = XOpp - (Z * 2 * xxOppPerc);//0.5
-                                    Z = Z - (Z * 2 * xzPerc);//0.25
-                                    Y = Y - (Z * 2 * xyPerc);//0.25
-                                    ZOpp = ZOpp + (Z * 2 * xzOppPerc);//0.25
-                                    YOpp = YOpp + (Z * 2 * xyOppPerc);//0.25
-                                    X = X + Z * 2;
-
-                                    YOpp = YOpp - (Z * 2 * yyOppPerc);
-                                    X = X - (Z * 2 * yxPerc);
-                                    Z = Z - (Z * 2 * yxPerc);
-                                    XOpp = XOpp + (Z * 2 * yxOppPerc);
-                                    ZOpp = ZOpp + (Z * 2 * yxOppPerc);
-                                    Y = Y + Z * 2;
-                                }
-
-                                X = checkZero(X);
-                                Y = checkZero(Y);
-                                Z = checkZero(Z);
-                                XOpp = checkZero(XOpp);
-                                YOpp = checkZero(YOpp);
-                                ZOpp = checkZero(ZOpp);
-
-                                if (X < accuracy && X > -accuracy && Y < accuracy && Y > -accuracy && Z < accuracy && Z > -accuracy)
-                                {
-                                    j = 1;
-                                }
-                                else
-                                {
-                                    LogConsole("Calculation XYZ:" + ToLongString(offsetX) + " " + ToLongString(offsetY) + " " + ToLongString(offsetZ) + "\n");
-                                }
-                            }
-*/

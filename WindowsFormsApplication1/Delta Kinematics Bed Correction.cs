@@ -201,7 +201,6 @@ namespace deltaKinematics
                 deltaOpp = Convert.ToDouble(textDeltaOpp.Text);
                 diagonalRodLength = Convert.ToDouble(textDiagonalRod.Text);
                 
-
                 zProbeSpeed = double.Parse(textProbingSpeed.Text);
 
                 _serialPort.WriteLine("M206 T3 P812 X" + textProbingSpeed.Text.ToString());
@@ -354,6 +353,8 @@ namespace deltaKinematics
             lblZPlateTop.Text = "";
 
             lblScaleOffset.Text = "";
+
+            deltaAnalysisDesc.Text = "This analysis may not give\naccurate results. This is due to\nthe error in the steps per\nmilimeter having the same\nresult as the error in tower\nleaning.";
 
         }
 
@@ -1102,9 +1103,10 @@ namespace deltaKinematics
                             {
                                 diagonalRod = doubleParse2;
 
-                                if (diagonalRodLength == 0 || diagonalRodLength == Convert.ToDouble(""))
+                                //check if diag rod textbox was used, else use the eeprom value
+                                if (diagonalRodLength == 0)
                                 {
-                                    diagonalRodLength = diagonalRod;
+                                    diagonalRodLength = doubleParse2;
                                 }
                             }
                             else if (intParse == 885)
@@ -1182,20 +1184,7 @@ namespace deltaKinematics
             }
             consoleTextBox.AppendText(value + "\n");
         }
-
-        /*
-        //
-        private void displaydata_event(object sender, EventArgs e)
-        {
-            string testInData = message.ToString();
-
-            if (testInData != wait)
-            {
-                //printerConsoleTextBox.AppendText(inData + "\n");
-            }
-        }
-        */
-
+        
         private void fetchEEProm()
         {
             // If a .Parse() call fails, it will throw an exception.  If you use .TryParse(),
@@ -1787,7 +1776,7 @@ namespace deltaKinematics
                             }
                         }
 
-                        if (diagonalRod < 10000 && diagonalRod > 1)
+                        if (diagonalRod < 1000 && diagonalRod > 1)
                         {
                             //send obtained values back to the printer*************************************
                             LogConsole("Diagonal Rod:" + diagonalRod + "\n");
@@ -2005,7 +1994,7 @@ namespace deltaKinematics
                                 LogConsole("XYZ Offset Average Before Calibration: " + calculationXYZAvg);
                                 LogConsole("XYZ Offset Average Afer Calibration: " + XYZAvg);
                             }
-
+                            
                             double theoryX = offsetX + X * stepsPerMM * offsetXCorrection;
                             double theoryY = offsetY + Y * stepsPerMM * offsetYCorrection;
                             double theoryZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
@@ -2338,7 +2327,6 @@ namespace deltaKinematics
                             initiateCal();
                         }
                     }// end diagonal rod calibration
-
                 }// end else
             }// end advanced calibration
         }//end calibrate

@@ -284,7 +284,8 @@ namespace deltaKinematics
                     LogConsole(e1.Message + "\n");
                     _continue = false;
 
-                    if (readThread.IsAlive == true)
+                    //check if connection is open
+                    if (readThread.IsAlive)
                     {
                         readThread.Join();
                     }
@@ -297,17 +298,12 @@ namespace deltaKinematics
         // Disconnect from printer.
         private void disconnectButton_Click(object sender, EventArgs e)
         {
-            if (_serialPort.IsOpen)
+            if (_serialPort.IsOpen && readThread.IsAlive)
             {
                 try
                 {
                     _continue = false;
-
-                    if (readThread.IsAlive == true)
-                    {
-                        readThread.Join();
-                    }
-
+                    readThread.Join();
                     _serialPort.Close();
                     LogConsole("Disconnected\n");
                 }

@@ -37,6 +37,7 @@ namespace deltaKinematics
         int calibrationState;
         int stepsCalcNumber = 0;
 
+        double tempSPM;
         double centerHeight;
         double X;
         double XOpp;
@@ -133,9 +134,6 @@ namespace deltaKinematics
         double alphaRotationPercentageX = 1.725;
         double alphaRotationPercentageY = 1.725;
         double alphaRotationPercentageZ = 1.725;
-        double[] XDiag;
-        double[] YSteps;
-        double[] lr;
 
         List<double> known_yDR = new List<double>();
         List<double> known_xDR = new List<double>();
@@ -265,7 +263,7 @@ namespace deltaKinematics
 
                     // Open the serial port and start reading on a reader thread.
                     // _continue is a flag used to terminate the app.
-                    
+
                     if (_serialPort.BaudRate != 0 && _serialPort.PortName != "")
                     {
                         _serialPort.Open();
@@ -1037,6 +1035,7 @@ namespace deltaKinematics
                             {
                                 LogConsole("EEProm capture initiated\n");
                                 stepsPerMM = doubleParse2;
+                                tempSPM = stepsPerMM;
                             }
                             else if (intParse == 145)
                             {
@@ -1117,7 +1116,7 @@ namespace deltaKinematics
                 catch (TimeoutException) { }
             }
         }
-        
+
         //Starts the calibration through sending gcode, once received by the reader then calibratePrinter will be called
         private void initiateCal()
         {
@@ -1234,6 +1233,10 @@ namespace deltaKinematics
                     YOpp = YOpp + ((DCSA) / HRadRatio) * 0.1375;
                     Z = Z + ((DCSA) / HRadRatio) * 0.5;
                     ZOpp = ZOpp + ((DCSA) / HRadRatio) * 0.225;
+
+                    DA = checkZero(DA);
+                    DB = checkZero(DB);
+                    DC = checkZero(DC);
 
                     LogConsole("Delta Radii Offsets: " + DA.ToString() + ", " + DB.ToString() + ", " + DC.ToString());
 
@@ -1409,9 +1412,6 @@ namespace deltaKinematics
                         tempXOpp2 = checkZero(tempXOpp2);
                         tempYOpp2 = checkZero(tempYOpp2);
                         tempZOpp2 = checkZero(tempZOpp2);
-
-                        LogConsole("XYZ Calc: " + offsetX + " " + offsetY + " " + offsetZ);
-                        LogConsole("Height-Map: " + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
 
                         if (tempX2 < accuracy && tempX2 > -accuracy && tempY2 < accuracy && tempY2 > -accuracy && tempZ2 < accuracy && tempZ2 > -accuracy && offsetX < 1000 && offsetY < 1000 && offsetZ < 1000)
                         {
@@ -1628,53 +1628,84 @@ namespace deltaKinematics
                             if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
                             {
                                 //end calculation
-                                i = 100;
                                 diagonalRod = checkZero(diagonalRod);
 
-                                //check if diagonal rod is accurate or not
-                                if (diagonalRod > diagonalRodLength || diagonalRod < diagonalRodLength)
+                                //add diagonal rod and steps per millimeter to list to use later for linear regression
+                                known_xDR.Add(diagonalRod);
+                                known_yDR.Add(stepsPerMM);
+
+                                //prevent using linear regression if there are not two values store
+                                if (stepsCalcNumber >= 2)
                                 {
-                                    //add diagonal rod and steps per millimeter to list to use later for linear regression
-                                    known_xDR.Add(diagonalRod);
-                                    known_yDR.Add(stepsPerMM);
+                                    /*
+                                    //list to array and call linear regression function
+                                    double[] slopeIntersect = linearRegression(known_xDR.ToArray(), known_xDR.ToArray());
 
-                                    //prevent using linear regression if there are not two values store
-                                    if (stepsCalcNumber >= 3)
-                                    {
-                                        //list to array and call linear regression function
-                                        XDiag = known_xDR.ToArray();
-                                        YSteps = known_xDR.ToArray();
-                                        lr = linearRegression(XDiag, YSteps);
+                                    //use slope of generate line to find the value of stepsPerMM where the diagonal rod is equivalent
+                                    //to the actual length of the diagonal rod
+                                    stepsPerMM = slopeIntersect[1] * diagonalRodLength + slopeIntersect[2];
+                                    //diagonalRod = diagonalRodLength;
 
-                                        //use slope of generate line to find the value of stepsPerMM where the diagonal rod is equivalent
-                                        //to the actual length of the diagonal rod
-                                        stepsPerMM = lr[1] * diagonalRodLength;
+                                    //logs corrected value
+                                    LogConsole("Steps Per Millimeter Correction: " + stepsPerMM);
+                                    
+                                    LogConsole("SPM lr[1]: " + slopeIntersect[1]);
+                                    LogConsole("SPM lr[2]: " + slopeIntersect[2]);
 
-                                        //logs corrected value
-                                        LogConsole("Steps Per Millimeter Correction: " + stepsPerMM);
-                                    }
-                                    else if (stepsCalcNumber == 1)
-                                    {
-                                        //add one to steps calnumber
-                                        stepsCalcNumber++;
+                                    LogConsole("Diag: " + string.Join(",", known_xDR.ToArray()));
+                                    LogConsole("SPM: " + string.Join(",", known_yDR.ToArray()));
+                                    */
+                                    
+                                    double rsquared = 0;
+                                    double yintercept = 0;
+                                    double slope = 0;
 
-                                        //adds a point to the array below the stepsPerMM
-                                        stepsPerMM = stepsPerMM - (1 / stepsPerMM) * 20;
-                                    }
-                                    else if (stepsCalcNumber == 2)
-                                    {
-                                        //add one to steps calnumber
-                                        stepsCalcNumber++;
+                                    LinearRegression(known_xDR.ToArray(), known_yDR.ToArray(), 0, known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
+                                    double stepsPerMM = slope * 269 + yintercept;
 
-                                        //adds a point to the array above the stepsPerMM
-                                        stepsPerMM = stepsPerMM + (1 / stepsPerMM) * 40;//*2 to compensate for the subtraction
-                                    }
-                                    else
-                                    {//stepsCalcNumber == 0
-                                        //add one to steps calnumber
-                                        stepsCalcNumber++;
-                                    }
+                                    Thread.Sleep(pauseTimeSet);
+                                    _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                                    LogConsole("Steps Per Millimeter Changed: " + stepsPerMM.ToString());
+
+                                    LogConsole("SPM lr[1]: " + yintercept);
+                                    LogConsole("SPM lr[2]: " + slope);
                                 }
+                                else if (stepsCalcNumber == 0)
+                                {
+                                    //add one to steps calnumber
+                                    stepsCalcNumber++;
+
+                                    //adds a point to the array below the stepsPerMM
+                                    stepsPerMM = tempSPM - (1 / tempSPM) * 80;
+                                    LogConsole("Steps Per Millimeter Decreased: " + stepsPerMM.ToString());
+                                    
+                                    Thread.Sleep(pauseTimeSet);
+                                    _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                                    LogConsole("Setting steps per millimeter\n");
+                                }
+                                else if (stepsCalcNumber == 1)
+                                {
+                                    //INCREASE Z HIEGHT by 5mm
+
+                                    //add one to steps calnumber
+                                    stepsCalcNumber++;
+
+                                    //adds a point to the array above the stepsPerMM
+                                    stepsPerMM = tempSPM + (1 / tempSPM) * 80;//*2 to compensate for the subtraction
+                                    LogConsole("Steps Per Millimeter Increased: " + stepsPerMM.ToString());
+                                    
+                                    Thread.Sleep(pauseTimeSet);
+                                    _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                                    LogConsole("Setting steps per millimeter\n");
+                                }
+                                else
+                                {//stepsCalcNumber == 0
+                                 //add one to steps calnumber
+                                    stepsCalcNumber++;
+                                    LogConsole("Steps Per Millimeter Correction Initiated.");
+                                }
+
+                                i = 100;
                             }
                             else
                             {
@@ -1900,7 +1931,7 @@ namespace deltaKinematics
                                 LogConsole("XYZ Offset Average Before Calibration: " + calculationXYZAvg);
                                 LogConsole("XYZ Offset Average Afer Calibration: " + XYZAvg);
                             }
-                            
+
                             double theoryX = offsetX + X * stepsPerMM * offsetXCorrection;
                             double theoryY = offsetY + Y * stepsPerMM * offsetYCorrection;
                             double theoryZ = offsetZ + Z * stepsPerMM * offsetZCorrection;
@@ -2168,13 +2199,11 @@ namespace deltaKinematics
                                             if (stepsCalcNumber >= 3)
                                             {
                                                 //list to array and call linear regression function
-                                                XDiag = known_xDR.ToArray();
-                                                YSteps = known_xDR.ToArray();
-                                                lr = linearRegression(XDiag, YSteps);
+                                                double[] slopeIntersect = linearRegression(known_xDR.ToArray(), known_xDR.ToArray());
 
                                                 //use slope of generate line to find the value of stepsPerMM where the diagonal rod is equivalent
                                                 //to the actual length of the diagonal rod
-                                                stepsPerMM = lr[1] * diagonalRodLength;
+                                                stepsPerMM = slopeIntersect[1] * diagonalRodLength;
 
                                                 //logs corrected value
                                                 LogConsole("Steps Per Millimeter Correction: " + stepsPerMM);
@@ -2236,11 +2265,50 @@ namespace deltaKinematics
                 }// end else
             }// end advanced calibration
         }
-        
+
+
+        public void LinearRegression(double[] xVals, double[] yVals, int inclusiveStart, int exclusiveEnd, out double rsquared, out double yintercept, out double slope)
+        {
+            double sumOfX = 0;
+            double sumOfY = 0;
+            double sumOfXSq = 0;
+            double sumOfYSq = 0;
+            double ssX = 0;
+            double ssY = 0;
+            double sumCodeviates = 0;
+            double sCo = 0;
+            double count = exclusiveEnd - inclusiveStart;
+
+            for (int ctr = inclusiveStart; ctr < exclusiveEnd; ctr++)
+            {
+                double x = xVals[ctr];
+                double y = yVals[ctr];
+                sumCodeviates += x * y;
+                sumOfX += x;
+                sumOfY += y;
+                sumOfXSq += x * x;
+                sumOfYSq += y * y;
+            }
+
+            ssX = sumOfXSq - ((sumOfX * sumOfX) / count);
+            ssY = sumOfYSq - ((sumOfY * sumOfY) / count);
+            double RNumerator = (count * sumCodeviates) - (sumOfX * sumOfY);
+            double RDenom = (count * sumOfXSq - (sumOfX * sumOfX))
+             * (count * sumOfYSq - (sumOfY * sumOfY));
+            sCo = sumCodeviates - ((sumOfX * sumOfY) / count);
+
+            double meanX = sumOfX / count;
+            double meanY = sumOfY / count;
+            double dblR = RNumerator / Math.Sqrt(RDenom);
+            rsquared = dblR * dblR;
+            yintercept = meanY - ((sCo / ssX) * meanX);
+            slope = sCo / ssX;
+        }
+
         //used in previous delta radii calibration
         private double[] linearRegression(double[] y, double[] x)
         {
-            double[] lr = { };
+            double[] lr = new double[4];
             int n = y.Length;
             double sum_x = 0;
             double sum_y = 0;
@@ -2256,6 +2324,7 @@ namespace deltaKinematics
                 sum_xx += (x[i] * x[i]);
                 sum_yy += (y[i] * y[i]);
             }
+
 
             lr[1] = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);//slope
             lr[2] = (sum_y - lr[1] * sum_x) / n;//intercept

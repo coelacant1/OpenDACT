@@ -36,6 +36,7 @@ namespace deltaKinematics
         int analyzeCount = 0;
         int calibrationState;
         int stepsCalcNumber = 0;
+        int l = 0;
 
         double tempSPM;
         double centerHeight;
@@ -1152,7 +1153,7 @@ namespace deltaKinematics
         private void calibratePrinter()
         {
             //check accuracy of current height-map and determine to end or procede
-            if (X <= accuracy2 && X >= -accuracy2 && XOpp <= accuracy2 && XOpp >= -accuracy2 && Y <= accuracy2 && Y >= -accuracy2 && YOpp <= accuracy2 && YOpp >= -accuracy2 && Z <= accuracy2 && Z >= -accuracy2 && ZOpp <= accuracy2 && ZOpp >= -accuracy2 && (diagonalRod - diagonalRodLength) <= accuracy2 && (diagonalRod - diagonalRodLength) >= -accuracy2)
+            if (X <= accuracy2 && X >= -accuracy2 && XOpp <= accuracy2 && XOpp >= -accuracy2 && Y <= accuracy2 && Y >= -accuracy2 && YOpp <= accuracy2 && YOpp >= -accuracy2 && Z <= accuracy2 && Z >= -accuracy2 && ZOpp <= accuracy2 && ZOpp >= -accuracy2 && (diagonalRod - diagonalRodLength) <= 0.25 && (diagonalRod - diagonalRodLength) >= -0.25)
             {
                 //fsr plate offset
                 if (comboBoxZMinimumValue == "FSR")
@@ -1637,38 +1638,36 @@ namespace deltaKinematics
                                 //prevent using linear regression if there are not two values store
                                 if (stepsCalcNumber >= 2)
                                 {
-                                    /*
-                                    //list to array and call linear regression function
-                                    double[] slopeIntersect = linearRegression(known_xDR.ToArray(), known_xDR.ToArray());
+                                    if (stepsCalcNumber >= 3)
+                                    {
+                                        known_xDR.RemoveAt(l);
+                                        known_yDR.RemoveAt(l);
+                                        l++;
+                                    }
 
-                                    //use slope of generate line to find the value of stepsPerMM where the diagonal rod is equivalent
-                                    //to the actual length of the diagonal rod
-                                    stepsPerMM = slopeIntersect[1] * diagonalRodLength + slopeIntersect[2];
-                                    //diagonalRod = diagonalRodLength;
-
-                                    //logs corrected value
-                                    LogConsole("Steps Per Millimeter Correction: " + stepsPerMM);
-                                    
-                                    LogConsole("SPM lr[1]: " + slopeIntersect[1]);
-                                    LogConsole("SPM lr[2]: " + slopeIntersect[2]);
-
-                                    LogConsole("Diag: " + string.Join(",", known_xDR.ToArray()));
-                                    LogConsole("SPM: " + string.Join(",", known_yDR.ToArray()));
-                                    */
-                                    
                                     double rsquared = 0;
                                     double yintercept = 0;
                                     double slope = 0;
 
                                     LinearRegression(known_xDR.ToArray(), known_yDR.ToArray(), 0, known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
-                                    double stepsPerMM = slope * 269 + yintercept;
+                                    double stepsPerMM = slope * diagonalRodLength + yintercept;
 
                                     Thread.Sleep(pauseTimeSet);
                                     _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
                                     LogConsole("Steps Per Millimeter Changed: " + stepsPerMM.ToString());
 
-                                    LogConsole("SPM lr[1]: " + yintercept);
-                                    LogConsole("SPM lr[2]: " + slope);
+                                    LogConsole("SPM yintercept: " + yintercept);
+                                    LogConsole("SPM slope: " + slope);
+
+                                    double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
+
+                                    LogConsole("zMaxLength changed by: " + changeInMM);
+                                    LogConsole("zMaxLength before: " + centerHeight);
+                                    LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                                    _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                                    LogConsole("Resetting Z Max Length\n");
+                                    Thread.Sleep(pauseTimeSet);
                                 }
                                 else if (stepsCalcNumber == 0)
                                 {
@@ -1676,33 +1675,45 @@ namespace deltaKinematics
                                     stepsCalcNumber++;
 
                                     //adds a point to the array below the stepsPerMM
-                                    stepsPerMM = tempSPM - (1 / tempSPM) * 80;
+                                    stepsPerMM = tempSPM - (1 / tempSPM) * 160;
                                     LogConsole("Steps Per Millimeter Decreased: " + stepsPerMM.ToString());
                                     
                                     Thread.Sleep(pauseTimeSet);
                                     _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
                                     LogConsole("Setting steps per millimeter\n");
+                                    
+                                    double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
+
+                                    LogConsole("zMaxLength changed by: " + changeInMM);
+                                    LogConsole("zMaxLength before: " + centerHeight);
+                                    LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                                    _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                                    LogConsole("Resetting Z Max Length\n");
+                                    Thread.Sleep(pauseTimeSet);
                                 }
                                 else if (stepsCalcNumber == 1)
                                 {
-                                    //INCREASE Z HIEGHT by 5mm
-
                                     //add one to steps calnumber
                                     stepsCalcNumber++;
 
                                     //adds a point to the array above the stepsPerMM
-                                    stepsPerMM = tempSPM + (1 / tempSPM) * 80;//*2 to compensate for the subtraction
+                                    stepsPerMM = tempSPM + (1 / tempSPM) * 160;//*2 to compensate for the subtraction
                                     LogConsole("Steps Per Millimeter Increased: " + stepsPerMM.ToString());
                                     
                                     Thread.Sleep(pauseTimeSet);
                                     _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
                                     LogConsole("Setting steps per millimeter\n");
-                                }
-                                else
-                                {//stepsCalcNumber == 0
-                                 //add one to steps calnumber
-                                    stepsCalcNumber++;
-                                    LogConsole("Steps Per Millimeter Correction Initiated.");
+                                    
+                                    double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
+
+                                    LogConsole("zMaxLength changed by: " + changeInMM);
+                                    LogConsole("zMaxLength before: " + centerHeight);
+                                    LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                                    _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                                    LogConsole("Resetting Z Max Length\n");
+                                    Thread.Sleep(pauseTimeSet);
                                 }
 
                                 i = 100;
@@ -2185,51 +2196,95 @@ namespace deltaKinematics
                                     //XYZ is zero
                                     if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
                                     {
-                                        i = 100;
+                                        //end calculation
                                         diagonalRod = checkZero(diagonalRod);
 
-                                        //check if diagonal rod is accurate or not
-                                        if (diagonalRod > diagonalRodLength || diagonalRod < diagonalRodLength)
-                                        {
-                                            //add diagonal rod and steps per millimeter to list to use later for linear regression
-                                            known_xDR.Add(diagonalRod);
-                                            known_yDR.Add(stepsPerMM);
+                                        //add diagonal rod and steps per millimeter to list to use later for linear regression
+                                        known_xDR.Add(diagonalRod);
+                                        known_yDR.Add(stepsPerMM);
 
-                                            //prevent using linear regression if there are not two values store
+                                        //prevent using linear regression if there are not two values store
+                                        if (stepsCalcNumber >= 2)
+                                        {
                                             if (stepsCalcNumber >= 3)
                                             {
-                                                //list to array and call linear regression function
-                                                double[] slopeIntersect = linearRegression(known_xDR.ToArray(), known_xDR.ToArray());
-
-                                                //use slope of generate line to find the value of stepsPerMM where the diagonal rod is equivalent
-                                                //to the actual length of the diagonal rod
-                                                stepsPerMM = slopeIntersect[1] * diagonalRodLength;
-
-                                                //logs corrected value
-                                                LogConsole("Steps Per Millimeter Correction: " + stepsPerMM);
+                                                known_xDR.RemoveAt(l);
+                                                known_yDR.RemoveAt(l);
+                                                l++;
                                             }
-                                            else if (stepsCalcNumber == 1)
-                                            {
-                                                //add one to steps calnumber
-                                                stepsCalcNumber++;
 
-                                                //adds a point to the array below the stepsPerMM
-                                                stepsPerMM = stepsPerMM - (1 / stepsPerMM) * 20;
-                                            }
-                                            else if (stepsCalcNumber == 2)
-                                            {
-                                                //add one to steps calnumber
-                                                stepsCalcNumber++;
+                                            double rsquared = 0;
+                                            double yintercept = 0;
+                                            double slope = 0;
 
-                                                //adds a point to the array above the stepsPerMM
-                                                stepsPerMM = stepsPerMM + (1 / stepsPerMM) * 40;//*2 to compensate for the subtraction
-                                            }
-                                            else
-                                            {//stepsCalcNumber == 0
-                                             //add one to steps calnumber
-                                                stepsCalcNumber++;
-                                            }
+                                            LinearRegression(known_xDR.ToArray(), known_yDR.ToArray(), 0, known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
+                                            double stepsPerMM = slope * diagonalRodLength + yintercept;
+
+                                            Thread.Sleep(pauseTimeSet);
+                                            _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                                            LogConsole("Steps Per Millimeter Changed: " + stepsPerMM.ToString());
+
+                                            LogConsole("SPM yintercept: " + yintercept);
+                                            LogConsole("SPM slope: " + slope);
+
+                                            double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
+
+                                            LogConsole("zMaxLength changed by: " + changeInMM);
+                                            LogConsole("zMaxLength before: " + centerHeight);
+                                            LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                                            _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                                            LogConsole("Resetting Z Max Length\n");
+                                            Thread.Sleep(pauseTimeSet);
                                         }
+                                        else if (stepsCalcNumber == 0)
+                                        {
+                                            //add one to steps calnumber
+                                            stepsCalcNumber++;
+
+                                            //adds a point to the array below the stepsPerMM
+                                            stepsPerMM = tempSPM - (1 / tempSPM) * 160;
+                                            LogConsole("Steps Per Millimeter Decreased: " + stepsPerMM.ToString());
+
+                                            Thread.Sleep(pauseTimeSet);
+                                            _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                                            LogConsole("Setting steps per millimeter\n");
+
+                                            double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
+
+                                            LogConsole("zMaxLength changed by: " + changeInMM);
+                                            LogConsole("zMaxLength before: " + centerHeight);
+                                            LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                                            _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                                            LogConsole("Resetting Z Max Length\n");
+                                            Thread.Sleep(pauseTimeSet);
+                                        }
+                                        else if (stepsCalcNumber == 1)
+                                        {
+                                            //add one to steps calnumber
+                                            stepsCalcNumber++;
+
+                                            //adds a point to the array above the stepsPerMM
+                                            stepsPerMM = tempSPM + (1 / tempSPM) * 160;//*2 to compensate for the subtraction
+                                            LogConsole("Steps Per Millimeter Increased: " + stepsPerMM.ToString());
+
+                                            Thread.Sleep(pauseTimeSet);
+                                            _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                                            LogConsole("Setting steps per millimeter\n");
+
+                                            double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
+
+                                            LogConsole("zMaxLength changed by: " + changeInMM);
+                                            LogConsole("zMaxLength before: " + centerHeight);
+                                            LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                                            _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                                            LogConsole("Resetting Z Max Length\n");
+                                            Thread.Sleep(pauseTimeSet);
+                                        }
+
+                                        i = 100;
                                     }
                                     else
                                     {
@@ -2430,6 +2485,7 @@ namespace deltaKinematics
             towerYRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(Y - YOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
             towerZRotation = Math.Acos((plateDiameter * 0.963) / Math.Sqrt(Math.Pow(Math.Abs(Z - ZOpp), 2) + Math.Pow((plateDiameter * 0.963), 2))) * 57.296 * 5;
 
+            /*
             if (X < XOpp)
             {
                 towerXRotation = 90 - towerXRotation;
@@ -2504,6 +2560,7 @@ namespace deltaKinematics
 
             //set scaling offset
             lblScaleOffset.Text = offsetScalingMax.ToString();
+            */
         }
 
         //field validators to check user input

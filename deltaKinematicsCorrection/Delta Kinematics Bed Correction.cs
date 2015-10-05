@@ -108,13 +108,13 @@ namespace deltaKinematics
         double yOppIterations = 0;
         double zIterations = 0;
         double zOppIterations = 0;
-        double offsetXCorrection = 1 / 0.7;
-        double offsetYCorrection = 1 / 0.7;
-        double offsetZCorrection = 1 / 0.7;
         double probingHeight = 100;
         double HRadRatio = -0.5;
         double accuracy = 0.001;
         double accuracy2 = 0.025;
+        double offsetXCorrection = 1.5;
+        double offsetYCorrection = 1.5;
+        double offsetZCorrection = 1.5;
         double xxOppPerc = 0.5;
         double xyPerc = 0.25;
         double xyOppPerc = 0.25;
@@ -138,6 +138,8 @@ namespace deltaKinematics
 
         List<double> known_yDR = new List<double>();
         List<double> known_xDR = new List<double>();
+
+        bool checkHeightsOnly = false;
 
         static SerialPort _serialPort;
         static bool _continue;
@@ -469,6 +471,33 @@ namespace deltaKinematics
                 HRadRatio = Convert.ToDouble(textHRadRatio.Text);
                 zProbeSpeed = double.Parse(textProbingSpeed.Text);
 
+                offsetXCorrection = 1.55;
+                offsetYCorrection = 1.55;
+                offsetZCorrection = 1.55;
+
+                //XYZ offset
+                //X
+                xxOppPerc = -0.352;
+                xyPerc = -0.232;
+                xyOppPerc = 0.163;
+                xzPerc = -0.232;
+                xzOppPerc = 0.163;
+
+                //Y
+                yyOppPerc = -0.352;
+                yxPerc = -0.232;
+                yxOppPerc = 0.163;
+                yzPerc = -0.232;
+                yzOppPerc = 0.163;
+
+                //Z
+                zzOppPerc = -0.352;
+                zxPerc = -0.232;
+                zxOppPerc = 0.163;
+                zyPerc = -0.232;
+                zyOppPerc = 0.163;
+
+                /*
                 //XYZ offset
                 //X
                 xxOppPerc = Convert.ToDouble(textxxOppPerc.Text);
@@ -490,6 +519,7 @@ namespace deltaKinematics
                 zxOppPerc = Convert.ToDouble(textzxOppPerc.Text);
                 zyPerc = Convert.ToDouble(textzyPerc.Text);
                 zyOppPerc = Convert.ToDouble(textzyOppPerc.Text);
+                */
 
                 //diagonal rod
                 deltaTower = Convert.ToDouble(textDeltaTower.Text);
@@ -646,7 +676,7 @@ namespace deltaKinematics
                             }
                             else if (centerIterations == iterationNum)
                             {
-                                //LogMessage("Z-Probe Center Height: " + parseFirstLine[1] + "\n");
+                                //LogConsole("Z-Probe Center Height: " + parseFirstLine[1] + "\n");
                                 centerHeight = Convert.ToDouble(parseFirstLine[1]);
 
                                 centerIterations++;
@@ -994,7 +1024,16 @@ namespace deltaKinematics
                                 {
                                     iterationNum++;
 
-                                    calibratePrinter();
+                                    if (checkHeightsOnly == false)
+                                    {
+                                        calibratePrinter();
+                                    }
+                                    else
+                                    {
+                                        Thread.Sleep(pauseTimeSet);
+                                        _serialPort.WriteLine("G28");
+                                        checkHeightsOnly = false;
+                                    }
                                 }
                             }
                         }
@@ -1575,29 +1614,39 @@ namespace deltaKinematics
                     }
 
                     ////////////////////////////////////////////////////////////////////////////////
-                    //Diagonal Rod Calibration******************************************************
+                    //Steps per Millimeter Calibration******************************************************
+
+                    //opp = 0.21; //4/5
+                    //tower = 0.27; //9/32
+
                     double diagChange = 1 / deltaOpp;
                     double towOppDiff = deltaTower / deltaOpp; //0.5
+                    double XYZ = (X + Y + Z) / 3;
+                    double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
 
-                    if (offsetX != 0 && offsetY != 0 && offsetZ != 0)
+                    LogConsole(X.ToString() + " " + XOpp.ToString() + " " + Y.ToString() + " " + YOpp.ToString() + " " + Z.ToString() + " " + ZOpp.ToString());
+
+                    if (Math.Abs(XYZOpp - XYZ) > accuracy*2)
                     {
                         int i = 0;
                         while (i < 100)
                         {
-                            double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                            diagonalRod = diagonalRod + (XYZOpp * diagChange);
+                            XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+                            stepsPerMM = stepsPerMM + (XYZOpp * diagChange);
+
                             X = X - towOppDiff * XYZOpp;
                             Y = Y - towOppDiff * XYZOpp;
                             Z = Z - towOppDiff * XYZOpp;
                             XOpp = XOpp - XYZOpp;
                             YOpp = YOpp - XYZOpp;
                             ZOpp = ZOpp - XYZOpp;
+
                             XYZOpp = (XOpp + YOpp + ZOpp) / 3;
                             XYZOpp = checkZero(XYZOpp);
 
-                            double XYZ = (X + Y + Z) / 3;
-                            //hrad
-                            HRad = HRad + (XYZ / HRadRatio);
+                            //HRAD recalibration
+                            XYZ = (X + Y + Z) / 3;
+                            HRad = HRad + ((XYZOpp * diagChange) / HRadRatio);
 
                             if (XYZOpp >= 0)
                             {
@@ -1629,92 +1678,23 @@ namespace deltaKinematics
                             if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
                             {
                                 //end calculation
-                                diagonalRod = checkZero(diagonalRod);
+                                stepsPerMM = checkZero(stepsPerMM);
+                                
+                                double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / tempSPM;
 
-                                //add diagonal rod and steps per millimeter to list to use later for linear regression
-                                known_xDR.Add(diagonalRod);
-                                known_yDR.Add(stepsPerMM);
+                                LogConsole("zMaxLength changed by: " + changeInMM);
+                                LogConsole("zMaxLength before: " + centerHeight);
+                                LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
 
-                                //prevent using linear regression if there are not two values store
-                                if (stepsCalcNumber >= 2)
-                                {
-                                    if (stepsCalcNumber >= 3)
-                                    {
-                                        known_xDR.RemoveAt(l);
-                                        known_yDR.RemoveAt(l);
-                                        l++;
-                                    }
+                                double tempChange = centerHeight - changeInMM;
 
-                                    double rsquared = 0;
-                                    double yintercept = 0;
-                                    double slope = 0;
+                                _serialPort.WriteLine("M206 T3 P153 X" + tempChange.ToString());
+                                LogConsole("Resetting Z Max Length\n");
+                                Thread.Sleep(pauseTimeSet);
 
-                                    LinearRegression(known_xDR.ToArray(), known_yDR.ToArray(), 0, known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
-                                    double stepsPerMM = slope * diagonalRodLength + yintercept;
-
-                                    Thread.Sleep(pauseTimeSet);
-                                    _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
-                                    LogConsole("Steps Per Millimeter Changed: " + stepsPerMM.ToString());
-
-                                    LogConsole("SPM yintercept: " + yintercept);
-                                    LogConsole("SPM slope: " + slope);
-
-                                    double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
-
-                                    LogConsole("zMaxLength changed by: " + changeInMM);
-                                    LogConsole("zMaxLength before: " + centerHeight);
-                                    LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
-
-                                    _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
-                                    LogConsole("Resetting Z Max Length\n");
-                                    Thread.Sleep(pauseTimeSet);
-                                }
-                                else if (stepsCalcNumber == 0)
-                                {
-                                    //add one to steps calnumber
-                                    stepsCalcNumber++;
-
-                                    //adds a point to the array below the stepsPerMM
-                                    stepsPerMM = tempSPM - (1 / tempSPM) * 160;
-                                    LogConsole("Steps Per Millimeter Decreased: " + stepsPerMM.ToString());
-                                    
-                                    Thread.Sleep(pauseTimeSet);
-                                    _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
-                                    LogConsole("Setting steps per millimeter\n");
-                                    
-                                    double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
-
-                                    LogConsole("zMaxLength changed by: " + changeInMM);
-                                    LogConsole("zMaxLength before: " + centerHeight);
-                                    LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
-
-                                    _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
-                                    LogConsole("Resetting Z Max Length\n");
-                                    Thread.Sleep(pauseTimeSet);
-                                }
-                                else if (stepsCalcNumber == 1)
-                                {
-                                    //add one to steps calnumber
-                                    stepsCalcNumber++;
-
-                                    //adds a point to the array above the stepsPerMM
-                                    stepsPerMM = tempSPM + (1 / tempSPM) * 160;//*2 to compensate for the subtraction
-                                    LogConsole("Steps Per Millimeter Increased: " + stepsPerMM.ToString());
-                                    
-                                    Thread.Sleep(pauseTimeSet);
-                                    _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
-                                    LogConsole("Setting steps per millimeter\n");
-                                    
-                                    double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
-
-                                    LogConsole("zMaxLength changed by: " + changeInMM);
-                                    LogConsole("zMaxLength before: " + centerHeight);
-                                    LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
-
-                                    _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
-                                    LogConsole("Resetting Z Max Length\n");
-                                    Thread.Sleep(pauseTimeSet);
-                                }
+                                _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                                LogConsole("Steps Per Millimeter Changed: " + stepsPerMM.ToString());
+                                Thread.Sleep(pauseTimeSet);
 
                                 i = 100;
                             }
@@ -1723,20 +1703,7 @@ namespace deltaKinematics
                                 i++;
                             }
                         }
-
-                        if (diagonalRod < 1000 && diagonalRod > 1)
-                        {
-                            //send obtained values back to the printer*************************************
-                            LogConsole("Diagonal Rod:" + diagonalRod + "\n");
-                            Thread.Sleep(pauseTimeSet);
-                            _serialPort.WriteLine("M206 T3 P881 X" + diagonalRod.ToString());
-                            LogConsole("Setting diagonal rod\n");
-                        }
-                        else
-                        {
-                            LogConsole("Diagonal rod not set\n");
-                        }
-
+                        
                         if (HRad < 250 && HRad > 50)
                         {
                             //send obtained values back to the printer*************************************
@@ -2196,6 +2163,7 @@ namespace deltaKinematics
                                     //XYZ is zero
                                     if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
                                     {
+                                        #region replace
                                         //end calculation
                                         diagonalRod = checkZero(diagonalRod);
 
@@ -2284,6 +2252,7 @@ namespace deltaKinematics
                                             Thread.Sleep(pauseTimeSet);
                                         }
 
+                                        #endregion
                                         i = 100;
                                     }
                                     else
@@ -2348,8 +2317,7 @@ namespace deltaKinematics
             ssX = sumOfXSq - ((sumOfX * sumOfX) / count);
             ssY = sumOfYSq - ((sumOfY * sumOfY) / count);
             double RNumerator = (count * sumCodeviates) - (sumOfX * sumOfY);
-            double RDenom = (count * sumOfXSq - (sumOfX * sumOfX))
-             * (count * sumOfYSq - (sumOfY * sumOfY));
+            double RDenom = (count * sumOfXSq - (sumOfX * sumOfX)) * (count * sumOfYSq - (sumOfY * sumOfY));
             sCo = sumCodeviates - ((sumOfX * sumOfY) / count);
 
             double meanX = sumOfX / count;
@@ -2379,7 +2347,6 @@ namespace deltaKinematics
                 sum_xx += (x[i] * x[i]);
                 sum_yy += (y[i] * y[i]);
             }
-
 
             lr[1] = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);//slope
             lr[2] = (sum_y - lr[1] * sum_x) / n;//intercept
@@ -2561,11 +2528,11 @@ namespace deltaKinematics
             //set scaling offset
             lblScaleOffset.Text = offsetScalingMax.ToString();
             */
-        }
+            }
 
         //field validators to check user input
-        #region Field Validation checks.
-        //
+            #region Field Validation checks.
+            //
         private void fetchEEProm()
         {
             // If a .Parse() call fails, it will throw an exception.  If you use .TryParse(),
@@ -2849,5 +2816,206 @@ namespace deltaKinematics
             }
         }
         #endregion
+
+        private void checkHeightsButton_Click(object sender, EventArgs e)
+        {
+            if (_serialPort.IsOpen)
+            {
+
+                checkHeightsOnly = true;
+                setVariablesAll();
+                _initiatingCalibration = true;
+
+                fetchEEProm();
+            }
+            else
+            {
+                LogConsole("Not Connected\n");
+            }
+        }
     }
 }
+
+/*
+if (offsetX != 0 && offsetY != 0 && offsetZ != 0)
+{
+    int i = 0;
+    while (i < 100)
+    {
+        double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+        diagonalRod = diagonalRod + (XYZOpp * diagChange);
+        X = X - towOppDiff * XYZOpp;
+        Y = Y - towOppDiff * XYZOpp;
+        Z = Z - towOppDiff * XYZOpp;
+        XOpp = XOpp - XYZOpp;
+        YOpp = YOpp - XYZOpp;
+        ZOpp = ZOpp - XYZOpp;
+        XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+        XYZOpp = checkZero(XYZOpp);
+
+        double XYZ = (X + Y + Z) / 3;
+        //hrad
+        HRad = HRad + (XYZ / HRadRatio);
+
+        if (XYZOpp >= 0)
+        {
+            X = X - XYZ;
+            Y = Y - XYZ;
+            Z = Z - XYZ;
+            XOpp = XOpp - XYZ;
+            YOpp = YOpp - XYZ;
+            ZOpp = ZOpp - XYZ;
+        }
+        else
+        {
+            X = X + XYZ;
+            Y = Y + XYZ;
+            Z = Z + XYZ;
+            XOpp = XOpp + XYZ;
+            YOpp = YOpp + XYZ;
+            ZOpp = ZOpp + XYZ;
+        }
+
+        X = checkZero(X);
+        Y = checkZero(Y);
+        Z = checkZero(Z);
+        XOpp = checkZero(XOpp);
+        YOpp = checkZero(YOpp);
+        ZOpp = checkZero(ZOpp);
+
+        //XYZ is zero
+        if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
+        {
+            //end calculation
+            diagonalRod = checkZero(diagonalRod);
+
+            //add diagonal rod and steps per millimeter to list to use later for linear regression
+            known_xDR.Add(diagonalRod);
+            known_yDR.Add(stepsPerMM);
+
+            //add one to steps calnumber
+            stepsCalcNumber++;
+
+            //prevent using linear regression if there are not two values store
+            if (stepsCalcNumber >= 3)
+            {
+                if (stepsCalcNumber >= 4)
+                {
+                    known_xDR.RemoveAt(l);
+                    known_yDR.RemoveAt(l);
+                    l++;
+                }
+
+                //CORRECT
+                if (((known_xDR[l] - diagonalRodLength) - (diagonalRod - diagonalRodLength)) <= 0.5 && ((known_xDR[l] - diagonalRodLength) - (diagonalRod - diagonalRodLength)) >= -0.5) {
+                    if (diagonalRod > diagonalRodLength)
+                    {
+                        stepsPerMM += 1;
+                    }
+                    else if (diagonalRod < diagonalRodLength) {
+                        stepsPerMM -= 1;
+                    }
+                }
+                else
+                {
+                    double rsquared = 0;
+                    double yintercept = 0;
+                    double slope = 0;
+
+                    LinearRegression(known_xDR.ToArray(), known_yDR.ToArray(), 0, known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
+                    double stepsPerMM = slope * diagonalRodLength + yintercept;
+
+                    Thread.Sleep(pauseTimeSet);
+                    _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                    LogConsole("Steps Per Millimeter Changed: " + stepsPerMM.ToString());
+
+                    LogConsole("SPM yintercept: " + yintercept);
+                    LogConsole("SPM slope: " + slope);
+                }
+
+                double changeInMM = (((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM) - 5;
+
+                LogConsole("zMaxLength changed by: " + changeInMM);
+                LogConsole("zMaxLength before: " + centerHeight);
+                LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                LogConsole("Resetting Z Max Length\n");
+                Thread.Sleep(pauseTimeSet);
+            }
+            else if (stepsCalcNumber == 1)
+            {
+                //adds a point to the array below the stepsPerMM
+                stepsPerMM = tempSPM - (1 / tempSPM) * 160;
+                LogConsole("Steps Per Millimeter Decreased: " + stepsPerMM.ToString());
+
+                Thread.Sleep(pauseTimeSet);
+                _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                LogConsole("Setting steps per millimeter\n");
+
+                double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
+
+                LogConsole("zMaxLength changed by: " + changeInMM);
+                LogConsole("zMaxLength before: " + centerHeight);
+                LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                LogConsole("Resetting Z Max Length\n");
+                Thread.Sleep(pauseTimeSet);
+            }
+            else if (stepsCalcNumber == 2)
+            {
+                //adds a point to the array above the stepsPerMM
+                stepsPerMM = tempSPM + (1 / tempSPM) * 160;//*2 to compensate for the subtraction
+                LogConsole("Steps Per Millimeter Increased: " + stepsPerMM.ToString());
+
+                Thread.Sleep(pauseTimeSet);
+                _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
+                LogConsole("Setting steps per millimeter\n");
+
+                double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / stepsPerMM;
+
+                LogConsole("zMaxLength changed by: " + changeInMM);
+                LogConsole("zMaxLength before: " + centerHeight);
+                LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+
+                _serialPort.WriteLine("M206 T3 P153 X" + (centerHeight - changeInMM));
+                LogConsole("Resetting Z Max Length\n");
+                Thread.Sleep(pauseTimeSet);
+            }
+
+            i = 100;
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    if (diagonalRod < 1000 && diagonalRod > 1)
+    {
+        //send obtained values back to the printer*************************************
+        LogConsole("Diagonal Rod:" + diagonalRod + "\n");
+        Thread.Sleep(pauseTimeSet);
+        _serialPort.WriteLine("M206 T3 P881 X" + diagonalRod.ToString());
+        LogConsole("Setting diagonal rod\n");
+    }
+    else
+    {
+        LogConsole("Diagonal rod not set\n");
+    }
+
+    if (HRad < 250 && HRad > 50)
+    {
+        //send obtained values back to the printer*************************************
+        LogConsole("HRad Recalibration:" + HRad + "\n");
+        _serialPort.WriteLine("M206 T3 P885 X" + checkZero(HRad).ToString());
+        LogConsole("Setting Horizontal Radius\n");
+        Thread.Sleep(pauseTimeSet);
+    }
+    else
+    {
+        LogConsole("Horizontal radius not set\n");
+    }
+}
+*/

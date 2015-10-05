@@ -138,6 +138,7 @@
             this.textxzOppPerc = new System.Windows.Forms.TextBox();
             this.tabInitialAnalysis = new System.Windows.Forms.TabPage();
             this.XYPanel1 = new System.Windows.Forms.Panel();
+            this.deltaAnalysisDesc = new System.Windows.Forms.Label();
             this.lblZPlateTop = new System.Windows.Forms.Label();
             this.lblZAngleTop = new System.Windows.Forms.Label();
             this.lblZPlate = new System.Windows.Forms.Label();
@@ -169,7 +170,7 @@
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.label37 = new System.Windows.Forms.Label();
             this.textDiagonalRod = new System.Windows.Forms.TextBox();
-            this.deltaAnalysisDesc = new System.Windows.Forms.Label();
+            this.checkHeightsButton = new System.Windows.Forms.Button();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
@@ -277,7 +278,7 @@
             // 
             this.calibrateButton.Location = new System.Drawing.Point(6, 87);
             this.calibrateButton.Name = "calibrateButton";
-            this.calibrateButton.Size = new System.Drawing.Size(422, 23);
+            this.calibrateButton.Size = new System.Drawing.Size(309, 23);
             this.calibrateButton.TabIndex = 11;
             this.calibrateButton.Text = "Calibrate";
             this.calibrateButton.UseVisualStyleBackColor = true;
@@ -760,9 +761,9 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(277, 330);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(119, 13);
+            this.label11.Size = new System.Drawing.Size(97, 13);
             this.label11.TabIndex = 14;
-            this.label11.Text = "Opp Diag Rod (Max: 1):";
+            this.label11.Text = "Opp SPM (Max: 1):";
             // 
             // textDeltaOpp
             // 
@@ -787,9 +788,9 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(276, 304);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(129, 13);
+            this.label10.Size = new System.Drawing.Size(107, 13);
             this.label10.TabIndex = 13;
-            this.label10.Text = "Tower Diag Rod (Max: 1):";
+            this.label10.Text = "Tower SPM (Max: 1):";
             // 
             // label24
             // 
@@ -1268,6 +1269,15 @@
             this.XYPanel1.Size = new System.Drawing.Size(602, 645);
             this.XYPanel1.TabIndex = 33;
             // 
+            // deltaAnalysisDesc
+            // 
+            this.deltaAnalysisDesc.AutoSize = true;
+            this.deltaAnalysisDesc.Location = new System.Drawing.Point(0, 279);
+            this.deltaAnalysisDesc.Name = "deltaAnalysisDesc";
+            this.deltaAnalysisDesc.Size = new System.Drawing.Size(41, 13);
+            this.deltaAnalysisDesc.TabIndex = 108;
+            this.deltaAnalysisDesc.Text = "label38";
+            // 
             // lblZPlateTop
             // 
             this.lblZPlateTop.AutoSize = true;
@@ -1559,14 +1569,15 @@
             this.textDiagonalRod.Size = new System.Drawing.Size(98, 20);
             this.textDiagonalRod.TabIndex = 36;
             // 
-            // deltaAnalysisDesc
+            // checkHeightsButton
             // 
-            this.deltaAnalysisDesc.AutoSize = true;
-            this.deltaAnalysisDesc.Location = new System.Drawing.Point(0, 279);
-            this.deltaAnalysisDesc.Name = "deltaAnalysisDesc";
-            this.deltaAnalysisDesc.Size = new System.Drawing.Size(41, 13);
-            this.deltaAnalysisDesc.TabIndex = 108;
-            this.deltaAnalysisDesc.Text = "label38";
+            this.checkHeightsButton.Location = new System.Drawing.Point(321, 87);
+            this.checkHeightsButton.Name = "checkHeightsButton";
+            this.checkHeightsButton.Size = new System.Drawing.Size(107, 23);
+            this.checkHeightsButton.TabIndex = 37;
+            this.checkHeightsButton.Text = "Check Heights";
+            this.checkHeightsButton.UseVisualStyleBackColor = true;
+            this.checkHeightsButton.Click += new System.EventHandler(this.checkHeightsButton_Click);
             // 
             // Form1
             // 
@@ -1575,6 +1586,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1055, 684);
+            this.Controls.Add(this.checkHeightsButton);
             this.Controls.Add(this.textDiagonalRod);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.tabControl1);
@@ -1758,6 +1770,7 @@
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.TextBox textDiagonalRod;
         private System.Windows.Forms.Label deltaAnalysisDesc;
+        private System.Windows.Forms.Button checkHeightsButton;
     }
 }
 

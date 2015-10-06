@@ -8,51 +8,100 @@ namespace OpenDACT.Class_Files
 {
     public class EEPROMClass
     {
-        public float stepsPerMM;
-        public float tempSPM;
-        public float zMaxLength;
-        public float zProbe;
-        public float HRad;
-        public float offsetX;
-        public float offsetY;
-        public float offsetZ;
-        public float A;
-        public float B;
-        public float C;
-        public float DA;
-        public float DB;
-        public float DC;
+        public static float stepsPerMM;
+        public static float tempSPM;
+        public static float zMaxLength;
+        public static float zProbe;
+        public static float HRad;
+        public static float offsetX;
+        public static float offsetY;
+        public static float offsetZ;
+        public static float A;
+        public static float B;
+        public static float C;
+        public static float DA;
+        public static float DB;
+        public static float DC;
+
+        public static void setSPM(float value)
+        {
+            stepsPerMM = value;
+        }
+        public static void setTempSPM(float value)
+        {
+            tempSPM = value;
+        }
+        public static void setZMaxLength(float value)
+        {
+            zMaxLength = value;
+        }
+        public static void setZProbe(float value)
+        {
+            zProbe = value;
+        }
+        public static void setHRad(float value)
+        {
+            HRad = value;
+        }
+        public static void setOffsetX(float value)
+        {
+            offsetX = value;
+        }
+        public static void setOffsetY(float value)
+        {
+            offsetY = value;
+        }
+        public static void setOffsetZ(float value)
+        {
+            offsetZ = value;
+        }
+        public static void setA(float value)
+        {
+            A = value;
+        }
+        public static void setB(float value)
+        {
+            B = value;
+        }
+        public static void setC(float value)
+        {
+            C = value;
+        }
+        public static void setDA(float value)
+        {
+            DA = value;
+        }
+        public static void setDB(float value)
+        {
+            DB = value;
+        }
+        public static void setDC(float value)
+        {
+            DC = value;
+        }
     }
 
     class EEPROM
     {
         UserInterface UserInterface;
-        GCode Gcode;
+        GCode GCode;
+        Heights Heights;
 
-        public EEPROM(UserInterface _UserInterface, GCode _GCode)
+        public EEPROM(UserInterface _UserInterface, GCode _GCode, Heights _Heights)
         {
             this.UserInterface = _UserInterface;
-            this.Gcode = _GCode;
+            this.GCode = _GCode;
+            this.Heights = _Heights;
         }
 
 
 
-        //public object EEPROMVariables = new object();
+        public object EEPROMVariables;
         public bool EEPROMSet = false;
+        public int iterationNum;
+        public int centerIterations;
 
-
-        public object createEEPROM()
-        {
-            object EEPROMObject = new EEPROMClass();
-            EEPROMClass EEPROMVars = (EEPROMClass)EEPROMObject;
-
-            //example
-            EEPROMVars.stepsPerMM++;
-
-            return EEPROMVars;
-        }
-
-        public void readEEPROM(string value)
+        public void readEEPROM()
         {
             GCode.sendReadEEPROMCommand();
         }
@@ -62,7 +111,7 @@ namespace OpenDACT.Class_Files
             return EEPROMVariables;
         }
 
-        public void parseEEPROM(string value)
+        public void parseEEPROM(string value, out int intParse, out float floatParse2)
         {
             //parse EEProm
             if (value.Contains("EPR"))
@@ -79,244 +128,78 @@ namespace OpenDACT.Class_Files
                     parseEPRSpace = parseEPR[0].Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 }
 
-                int intParse;
-                double doubleParse2;
+                //int intParse;
+                //float floatParse2;
 
                 //check if there is a space between
                 if (parseEPRSpace[0] == ":")
                 {
                     //Space
                     intParse = int.Parse(parseEPRSpace[2]);
-                    doubleParse2 = double.Parse(parseEPRSpace[3]);
+                    floatParse2 = float.Parse(parseEPRSpace[3]);
                 }
                 else
                 {
                     //No space
                     intParse = int.Parse(parseEPRSpace[1]);
-                    doubleParse2 = double.Parse(parseEPRSpace[2]);
-                }
-
-                switch (intParse)
-                {
-                    case 11:
-                        UserInterface.logConsole("EEPROM capture initiated\n");
-
-                        object EEPROMVariables = createEEPROM();
-
-                        EEPROMVariables.stepsPerMM = doubleParse2;
-                        tempSPM = stepsPerMM;
-                        break;
-                    case 153:
-                        zMaxLength = doubleParse2;
-                        break;
-                    case 808:
-                        zProbe = doubleParse2;
-                        break;
-                    case 885:
-                        HRad = doubleParse2;
-                        break;
-                    case 893:
-                        offsetX = doubleParse2;
-                        break;
-                    case 895:
-                        offsetY = doubleParse2;
-                        break;
-                    case 897:
-                        offsetZ = doubleParse2;
-                        break;
-                    case 901:
-                        A = doubleParse2;
-                        break;
-                    case 905:
-                        B = doubleParse2;
-                        break;
-                    case 909:
-                        C = doubleParse2;
-                        break;
-                    case 913:
-                        DA = doubleParse2;
-                        break;
-                    case 917:
-                        DB = doubleParse2;
-                        break;
-                    case 921:
-                        DC = doubleParse2;
-                        EEPROMSet = true;
-                        break;
+                    floatParse2 = float.Parse(parseEPRSpace[2]);
                 }
             }//end EEProm capture
-
-        }//end class
-        public void parseZProbe(string value)
-        {
-
-            if (value.Contains("Z-probe:"))
+            else
             {
-                //Z-probe: 10.66 zCorr: 0
+                //No space
+                intParse = 0;
+                floatParse2 = 0;
+            }
+        }
 
-                string[] parseInData = value.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                string[] parseFirstLine = parseInData[0].Split(new char[] { ':', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-                //: 10.66 zCorr: 0
-                string[] parseZProbe = value.Split(new string[] { "Z-probe", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                string[] parseZProbeSpace = parseZProbe[0].Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-                double zProbeParse;
-
-                //check if there is a space between
-                if (parseZProbeSpace[0] == ":")
-                {
-                    //Space
-                    zProbeParse = double.Parse(parseZProbeSpace[1]);
-                }
-                else
-                {
-                    //No space
-                    zProbeParse = double.Parse(parseZProbeSpace[0].Substring(1));
-                }
-
-                /*
-                //use returned probe height to calculate the actual z-Probe height
-                if (zProbeSet == 1)
-                {
-                    LogConsole("Z-Probe length set to: " + (zMaxLength - Convert.ToDouble(parseFirstLine[1])) + "\n");
-                    zProbe = zMaxLength - Convert.ToDouble(parseFirstLine[1]);
-                    zProbeSet = 0;
-                }
-                else if (centerIterations == iterationNum)
-                {
-                    //LogConsole("Z-Probe Center Height: " + parseFirstLine[1] + "\n");
-                    centerHeight = Convert.ToDouble(parseFirstLine[1]);
-
-                    centerIterations++;
-
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-
-                    Thread.Sleep(pauseTimeSet);
-                    //X axis
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G30");
-                }
-                else if (xIterations == iterationNum)
-                {
-                    //LogMessage("Z-Probe X Height: " + parseFirstLine[1] + "\n");
-                    X = Convert.ToDouble(parseFirstLine[1]);
-
-                    xIterations++;
-
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G30");
-                }
-                else if (xOppIterations == iterationNum)
-                {
-                    //LogMessage("Z-Probe X Opposite Height: " + parseFirstLine[1] + "\n");
-                    XOpp = Convert.ToDouble(parseFirstLine[1]);
-
-                    xOppIterations++;
-
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Thread.Sleep(pauseTimeSet);
-
-                    //Y axis
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G30");
-                }
-                else if (yIterations == iterationNum)
-                {
-                    //LogMessage("Z-Probe Y Height: " + parseFirstLine[1] + "\n");
-                    Y = Convert.ToDouble(parseFirstLine[1]);
-
-                    yIterations++;
-
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G30");
-                }
-                else if (yOppIterations == iterationNum)
-                {
-                    //LogMessage("Z-Probe Y Opposite Height: " + parseFirstLine[1] + "\n");
-                    YOpp = Convert.ToDouble(parseFirstLine[1]);
-
-                    yOppIterations++;
-
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Thread.Sleep(pauseTimeSet);
-
-                    //Z axis
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " Y" + valueZ.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G30");
-                }
-                else if (zIterations == iterationNum)
-                {
-                    //LogMessage("Z-Probe Z Height: " + parseFirstLine[1] + "\n");
-                    Z = Convert.ToDouble(parseFirstLine[1]);
-
-                    zIterations++;
-
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " Y" + valueZ.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " Y-" + valueZ.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G30");
-                }
-                else if (zOppIterations == iterationNum)
-                {
-                    //LogMessage("Z-Probe Z Opposite Height: " + parseFirstLine[1] + "\n");
-                    ZOpp = Convert.ToDouble(parseFirstLine[1]);
-
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " Y-" + valueZ.ToString());
-                    Thread.Sleep(pauseTimeSet);
-                    _serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Thread.Sleep(pauseTimeSet);
-
-                    centerHeight = zMaxLength - probingHeight + centerHeight;
-                    X = centerHeight - (zMaxLength - probingHeight + X);
-                    XOpp = centerHeight - (zMaxLength - probingHeight + XOpp);
-                    Y = centerHeight - (zMaxLength - probingHeight + Y);
-                    YOpp = centerHeight - (zMaxLength - probingHeight + YOpp);
-                    Z = centerHeight - (zMaxLength - probingHeight + Z);
-                    ZOpp = centerHeight - (zMaxLength - probingHeight + ZOpp);
-
-                    //invert values
-                    X = -X;
-                    XOpp = -XOpp;
-                    Y = -Y;
-                    YOpp = -YOpp;
-                    Z = -Z;
-                    ZOpp = -ZOpp;
-
-                    // Sets height-maps in separate function
-                    setHeights();
-
-                    _serialPort.WriteLine("M206 T3 P153 X" + centerHeight);
-                    LogConsole("Setting Z Max Length\n");
-                    Thread.Sleep(pauseTimeSet);
-
-                    zMaxLength = centerHeight;
-
-                    zOppIterations++;
-
-                }
-                */
-
+        public void setEEPROM(int intParse, float floatParse2)
+        {
+            switch (intParse)
+            {
+                case 11:
+                    UserInterface.logConsole("EEPROM capture initiated\n");
+                    
+                    EEPROMClass.setSPM(floatParse2);
+                    EEPROMClass.setTempSPM(floatParse2);
+                    break;
+                case 153:
+                    EEPROMClass.setZMaxLength(floatParse2);
+                    break;
+                case 808:
+                    EEPROMClass.setZProbe(floatParse2);
+                    break;
+                case 885:
+                    EEPROMClass.setHRad(floatParse2);
+                    break;
+                case 893:
+                    EEPROMClass.setOffsetX(floatParse2);
+                    break;
+                case 895:
+                    EEPROMClass.setOffsetY(floatParse2);
+                    break;
+                case 897:
+                    EEPROMClass.setOffsetZ(floatParse2);
+                    break;
+                case 901:
+                    EEPROMClass.setA(floatParse2);
+                    break;
+                case 905:
+                    EEPROMClass.setB(floatParse2);
+                    break;
+                case 909:
+                    EEPROMClass.setC(floatParse2);
+                    break;
+                case 913:
+                    EEPROMClass.setDA(floatParse2);
+                    break;
+                case 917:
+                    EEPROMClass.setDB(floatParse2);
+                    break;
+                case 921:
+                    EEPROMClass.setDC(floatParse2);
+                    EEPROMSet = true;
+                    break;
             }
         }
     }

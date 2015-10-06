@@ -27,18 +27,18 @@ namespace OpenDACT.Class_Files
 
         public static object createUserVarObject()
         {
-            object UserVariables = new UserVariables();
-            UserVariables userVars = (UserVariables)UserVariables;
+            UserVariables UserVariables = new UserVariables();
 
             //EEPROMVariables.stepsPerMM++;
 
-            return userVars;
+            return UserVariables;
         }
 
         public void logConsole(string value)
         {
             mainForm.consoleMain.AppendText(value + "\n");
         }
+
 
         public void logPrinter(string value)
         {
@@ -53,5 +53,17 @@ namespace OpenDACT.Class_Files
 
             return userVariables;
         }
+        
+        /*
+            BUTTONS:
+            connect
+            disconnect
+            calibrate - readeeprom, checkheights, calibrate, checkheights, calibrate etc - while loop
+            checkHeights
+            
+            UI:
+            visible: console log, 
+            not: printer log, tabs: settings, advanced, calibration graph
+        */
     }
 }

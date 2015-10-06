@@ -22,7 +22,7 @@ namespace OpenDACT.Class_Files
 
 
         public bool _continue;
-
+        int i = 0;
         public void Read()
         {
             while (_continue)
@@ -33,17 +33,15 @@ namespace OpenDACT.Class_Files
                     
                     UserInterface.logConsole(message + "\n");
 
-                    if (EEPROM.EEPROMSet == true)
+                    if (EEPROM.EEPROMSet == false)
                     {
-                        //initiate
-                        //enable calibration
-                    }
-                    else
-                    {
-                        EEPROM.parseEEPROM(message);
+                        int intParse;
+                        float floatParse2;
+
+                        EEPROM.parseEEPROM(message, out intParse, out floatParse2);
+                        EEPROM.setEEPROM(intParse, floatParse2);
                     }
                     
-
                     EEPROM.parseZProbe(message);
                 }
                 catch (TimeoutException) { }

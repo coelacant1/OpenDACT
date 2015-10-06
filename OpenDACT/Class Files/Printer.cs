@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    class HeightVariables
+    class Heights
     {
         //store every set of heights
         public static float center;
@@ -18,45 +18,85 @@ namespace OpenDACT.Class_Files
         public static float Z;
         public static float ZOpp;
 
+        //set
         public static void setCenter(float value)
         {
+            value = Validation.checkZero(value);
             center = value;
         }
         public static void setX(float value)
         {
+            value = Validation.checkZero(value);
             X = value;
         }
         public static void setXOpp(float value)
         {
+            value = Validation.checkZero(value);
             XOpp = value;
         }
         public static void setY(float value)
         {
+            value = Validation.checkZero(value);
             Y = value;
         }
         public static void setYOpp(float value)
         {
+            value = Validation.checkZero(value);
             YOpp = value;
         }
         public static void setZ(float value)
         {
+            value = Validation.checkZero(value);
             Z = value;
         }
         public static void setZOpp(float value)
         {
+            value = Validation.checkZero(value);
             ZOpp = value;
+        }
+
+        //return
+        public static float returnCenter()
+        {
+            return center;
+        }
+        public static float returnX()
+        {
+            return X;
+        }
+        public static float returnXOpp()
+        {
+            return XOpp;
+        }
+        public static float returnY()
+        {
+            return Y;
+        }
+        public static float returnYOpp()
+        {
+            return YOpp;
+        }
+        public static float returnZ()
+        {
+            return Z;
+        }
+        public static float returnZOpp()
+        {
+            return ZOpp;
         }
     }
 
-    class Heights
+    class HeightFunctions
     {
         UserInterface UserInterface;
         GCode GCode;
+        UserVariables UserVariables;
 
-        public Heights(UserInterface _UserInterface, GCode _GCode)
+        public HeightFunctions(UserInterface _UserInterface, GCode _GCode, UserVariables _UserVariables)
         {
             this.UserInterface = _UserInterface;
             this.GCode = _GCode;
+            this.UserVariables = _UserVariables;
         }
 
 
@@ -65,64 +105,67 @@ namespace OpenDACT.Class_Files
 
         public void setHeights(float value)
         {
+            float zMaxLength = EEPROM.returnZMaxLength();
+            float probingHeight = UserVariables.returnProbingHeight();
+
             if (value != 200)
             {
                 switch (probePosition)
                 {
                     case 0:
                         probePosition = zMaxLength - probingHeight + probePosition;
-                        HeightVariables.setCenter(probePosition);
+                        Heights.setCenter(probePosition);
                         probePosition++;
                         break;
                     case 1:
-                        probePosition = HeightVariables.center - (zMaxLength - probingHeight + probePosition);
+                        probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
                         probePosition = -probePosition;
-                        HeightVariables.setX(probePosition);
+                        Heights.setX(probePosition);
                         probePosition++;
                         break;
                     case 2:
-                        probePosition = HeightVariables.center - (zMaxLength - probingHeight + probePosition);
+                        probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
                         probePosition = -probePosition;
-                        HeightVariables.setXOpp(probePosition);
+                        Heights.setXOpp(probePosition);
                         probePosition++;
                         break;
                     case 3:
-                        probePosition = HeightVariables.center - (zMaxLength - probingHeight + probePosition);
+                        probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
                         probePosition = -probePosition;
-                        HeightVariables.setY(probePosition);
+                        Heights.setY(probePosition);
                         probePosition++;
                         break;
                     case 4:
-                        probePosition = HeightVariables.center - (zMaxLength - probingHeight + probePosition);
+                        probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
                         probePosition = -probePosition;
-                        HeightVariables.setYOpp(probePosition);
+                        Heights.setYOpp(probePosition);
                         probePosition++;
                         break;
                     case 5:
-                        probePosition = HeightVariables.center - (zMaxLength - probingHeight + probePosition);
+                        probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
                         probePosition = -probePosition;
-                        HeightVariables.setZ(probePosition);
+                        Heights.setZ(probePosition);
                         probePosition++;
                         break;
                     case 6:
-                        probePosition = HeightVariables.center - (zMaxLength - probingHeight + probePosition);
+                        probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
                         probePosition = -probePosition;
-                        HeightVariables.setZOpp(probePosition);
+                        Heights.setZOpp(probePosition);
                         probePosition = 0;
 
                         setHeights();
 
-                        GCode.sendEEPROMVariable(3, 153, HeightVariables.center);
+                        GCode.sendEEPROMVariable(3, 153, Heights.center);
                         UserInterface.logConsole("Setting Z Max Length\n");
                         Thread.Sleep(pauseTimeSet);
 
-                        EEPROMClass.zMaxLength = HeightVariables.center;
+                        EEPROMClass.zMaxLength = Heights.center;
                         break;
                 }
             }
         }
 
-        public void parseZProbe(string value, out float height)
+        public float parseZProbe(string value)
         {
             if (value.Contains("Z-probe:"))
             {
@@ -149,11 +192,11 @@ namespace OpenDACT.Class_Files
                     zProbeParse = float.Parse(parseZProbeSpace[0].Substring(1));
                 }
 
-                height = float.Parse(parseFirstLine[1]);
+                return float.Parse(parseFirstLine[1]);
             }
             else
             {
-                height = 200;
+                return 200;
             }
         }
     }

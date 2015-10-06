@@ -20,6 +20,7 @@ namespace OpenDACT.Class_Files
 
 
         public int currentPosition = 0;
+        public bool checkHeights = false;
 
         public void sendToPosition(float X, float Y, float Z)
         {
@@ -158,6 +159,7 @@ namespace OpenDACT.Class_Files
                     Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
                     Thread.Sleep(pauseTimeSet);
                     currentPosition = 0;
+                    checkHeights = false;
                     break;
             }
         }

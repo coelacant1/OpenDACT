@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
@@ -10,104 +11,144 @@ namespace OpenDACT.Class_Files
     {
         UserInterface UserInterface;
         EEPROM EEPROM;
-        Heights Heights;
+        HeightFunctions HeightFunctions;
+        UserVariables UserVariables;
+        Validation Validation;
 
-        public Calibration(UserInterface _UserInterface, EEPROM _EEPROM, Heights _Heights)
+        public Calibration(UserInterface _UserInterface, EEPROM _EEPROM, HeightFunctions _HeightFunctions, UserVariables _UserVariables, Validation _Validation)
         {
             this.UserInterface = _UserInterface;
             this.EEPROM = _EEPROM;
-            this.Heights = _Heights;
+            this.HeightFunctions = _HeightFunctions;
+            this.UserVariables = _UserVariables;
+            this.Validation = _Validation;
         }
 
+        
+
+        public bool calibrationState = false;
+        public int calibrationSelection = 0;
+
+        public void calibrate(int value)
+        {
+            switch (value)
+            {
+                case 0:
+                    basicCalibration();
+                    break;
+                case 1:
+                    learningCalibration();
+                    break;
+                case 2:
+                    iterativeCalibration();
+                    break;
+                case 3:
+                    learningIterativeCalibration();
+                    break;
+            }
+        }
 
         public void basicCalibration()
         {
 
+            float X = Heights.returnX();
+            float XOpp = Heights.returnXOpp();
+            float Y = Heights.returnY();
+            float YOpp = Heights.returnYOpp();
+            float Z = Heights.returnZ();
+            float ZOpp = Heights.returnZOpp();
+
+            HRad(ref X, ref XOpp, ref Y, ref YOpp, ref Z, ref ZOpp);
+            DRad(ref X, ref XOpp, ref Y, ref YOpp, ref Z, ref ZOpp);
+
+            UserInterface.setHeightMap();
+            /*
+            Heights.setX(X);
+            Heights.setXOpp(XOpp);
+            Heights.setY(Y);
+            Heights.setYOpp(YOpp);
+            Heights.setZ(Z);
+            Heights.setZOpp(ZOpp);
+            */
         }
-        public void heuristicCalibration()
+        public void learningCalibration()
         {
 
         }
 
-        public void normalCalibration()
+        public void iterativeCalibration()
+        {
+
+        }
+        public void learningIterativeCalibration()
         {
 
         }
 
-        public void advancedCalibration()
+        public void HRad(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
+            float HRadSA = ((X + XOpp + Y + YOpp + Z + ZOpp) / 6);
+            float HRadRatio = UserVariables.returnHRadRatio();
+            float HRadius = EEPROM.returnHRadius();
 
+            HRadius = HRadius + (HRadSA / HRadRatio);
+
+            X -= HRadSA;
+            Y -= HRadSA;
+            Z -= HRadSA;
+            XOpp -= HRadSA;
+            YOpp -= HRadSA;
+            ZOpp -= HRadSA;
+
+            UserInterface.logConsole("HRad:" + EEPROM.HRadius.ToString() + "\n");
+
+            EEPROM.setHRadius(HRadius);
         }
 
-        public float[] HRad(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
+        public float[] DRad(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
-            double HRadSA = ((X + XOpp + Y + YOpp + Z + ZOpp) / 6);
+            float DASA = ((X + XOpp) / 2);
+            float DBSA = ((Y + YOpp) / 2);
+            float DCSA = ((Z + ZOpp) / 2);
+            float DRadRatio = UserVariables.DRadRatio;
+            
+            float DA = EEPROM.DA + ((DASA) / DRadRatio);
+            float DB = EEPROM.DB + ((DBSA) / DRadRatio);
+            float DC = EEPROM.DC + ((DCSA) / DRadRatio);
 
-            HRad = HRad + (HRadSA / HRadRatio);
+            X = X + ((DASA) / DRadRatio) * 0.5F;
+            XOpp = XOpp + ((DASA) / DRadRatio) * 0.225F;
+            Y = Y + ((DASA) / DRadRatio) * 0.1375F;
+            YOpp = YOpp + ((DASA) / DRadRatio) * 0.1375F;
+            Z = Z + ((DASA) / DRadRatio) * 0.1375F;
+            ZOpp = ZOpp + ((DASA) / DRadRatio) * 0.1375F;
 
-            X = X - HRadSA;
-            Y = Y - HRadSA;
-            Z = Z - HRadSA;
-            XOpp = XOpp - HRadSA;
-            YOpp = YOpp - HRadSA;
-            ZOpp = ZOpp - HRadSA;
+            X = X + ((DBSA) / DRadRatio) * 0.1375F;
+            XOpp = XOpp + ((DBSA) / DRadRatio) * 0.1375F;
+            Y = Y + ((DBSA) / DRadRatio) * 0.5F;
+            YOpp = YOpp + ((DBSA) / DRadRatio) * 0.225F;
+            Z = Z + ((DBSA) / DRadRatio) * 0.1375F;
+            ZOpp = ZOpp + ((DBSA) / DRadRatio) * 0.1375F;
 
-            X = checkZero(X);
-            Y = checkZero(Y);
-            Z = checkZero(Z);
-            XOpp = checkZero(XOpp);
-            YOpp = checkZero(YOpp);
-            ZOpp = checkZero(ZOpp);
+            X = X + ((DCSA) / DRadRatio) * 0.1375F;
+            XOpp = XOpp + ((DCSA) / DRadRatio) * 0.1375F;
+            Y = Y + ((DCSA) / DRadRatio) * 0.1375F;
+            YOpp = YOpp + ((DCSA) / DRadRatio) * 0.1375F;
+            Z = Z + ((DCSA) / DRadRatio) * 0.5F;
+            ZOpp = ZOpp + ((DCSA) / DRadRatio) * 0.225F;
+            
+            EEPROM.setDA(DA);
+            EEPROM.setDB(DB);
+            EEPROM.setDC(DC);
 
-            LogConsole("HRad:" + HRad + "\n");
+            UserInterface.logConsole("Delta Radii Offsets: " + DA.ToString() + ", " + DB.ToString() + ", " + DC.ToString());
 
-            float[] heights = { 1 };
-            return heights;
-        }
-
-        public float[] DRad(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
-        {
-            DASA = ((X + XOpp) / 2);
-            DBSA = ((Y + YOpp) / 2);
-            DCSA = ((Z + ZOpp) / 2);
-
-            DA = DA + ((DASA) / HRadRatio);
-            DB = DB + ((DBSA) / HRadRatio);
-            DC = DC + ((DCSA) / HRadRatio);
-
-            X = X + ((DASA) / HRadRatio) * 0.5;
-            XOpp = XOpp + ((DASA) / HRadRatio) * 0.225;
-            Y = Y + ((DASA) / HRadRatio) * 0.1375;
-            YOpp = YOpp + ((DASA) / HRadRatio) * 0.1375;
-            Z = Z + ((DASA) / HRadRatio) * 0.1375;
-            ZOpp = ZOpp + ((DASA) / HRadRatio) * 0.1375;
-
-            X = X + ((DBSA) / HRadRatio) * 0.1375;
-            XOpp = XOpp + ((DBSA) / HRadRatio) * 0.1375;
-            Y = Y + ((DBSA) / HRadRatio) * 0.5;
-            YOpp = YOpp + ((DBSA) / HRadRatio) * 0.225;
-            Z = Z + ((DBSA) / HRadRatio) * 0.1375;
-            ZOpp = ZOpp + ((DBSA) / HRadRatio) * 0.1375;
-
-            X = X + ((DCSA) / HRadRatio) * 0.1375;
-            XOpp = XOpp + ((DCSA) / HRadRatio) * 0.1375;
-            Y = Y + ((DCSA) / HRadRatio) * 0.1375;
-            YOpp = YOpp + ((DCSA) / HRadRatio) * 0.1375;
-            Z = Z + ((DCSA) / HRadRatio) * 0.5;
-            ZOpp = ZOpp + ((DCSA) / HRadRatio) * 0.225;
-
-            DA = checkZero(DA);
-            DB = checkZero(DB);
-            DC = checkZero(DC);
-
-            LogConsole("Delta Radii Offsets: " + DA.ToString() + ", " + DB.ToString() + ", " + DC.ToString());
-
-            _serialPort.WriteLine("M206 T3 P913 X" + ToLongString(DA));
-            Thread.Sleep(pauseTimeSet);
-            _serialPort.WriteLine("M206 T3 P917 X" + ToLongString(DB));
-            Thread.Sleep(pauseTimeSet);
-            _serialPort.WriteLine("M206 T3 P921 X" + ToLongString(DC));
-            Thread.Sleep(pauseTimeSet);
+            Connection._serialPort.WriteLine("M206 T3 P913 X" + Validation.ToLongString(DA));
+            Thread.Sleep(UserVariables.pauseTimeSet);
+            Connection._serialPort.WriteLine("M206 T3 P917 X" + Validation.ToLongString(DB));
+            Thread.Sleep(UserVariables.pauseTimeSet);
+            Connection._serialPort.WriteLine("M206 T3 P921 X" + Validation.ToLongString(DC));
+            Thread.Sleep(UserVariables.pauseTimeSet);
 
 
             float[] heights = { 1 };
@@ -116,25 +157,50 @@ namespace OpenDACT.Class_Files
 
         public void analyzeGeometry(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
         {
-            analyzeCount++;
-            analyzeGeometry();
+            int analyzeCount = 0;
 
-            LogConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
+
+            UserInterface.logConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
         }
 
-        public float[] towerOffsets(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
+        public void towerOffsets(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
         {
             int j = 0;
-            tempX2 = X;
-            tempXOpp2 = XOpp;
-            tempY2 = Y;
-            tempYOpp2 = YOpp;
-            tempZ2 = Z;
-            tempZOpp2 = ZOpp;
+            float accuracy = 0.001F;
+            float tempX2 = X;
+            float tempXOpp2 = XOpp;
+            float tempY2 = Y;
+            float tempYOpp2 = YOpp;
+            float tempZ2 = Z;
+            float tempZOpp2 = ZOpp;
+            float offsetX = EEPROM.returnOffsetX();
+            float offsetY = EEPROM.returnOffsetY();
+            float offsetZ = EEPROM.returnOffsetZ();
+            float stepsPerMM = EEPROM.returnSPM();
+
+            //
+            float offsetXCorrection = 1.5F;
+            float offsetYCorrection = 1.5F;
+            float offsetZCorrection = 1.5F;
+            float xxOppPerc = 0.5F;
+            float xyPerc = 0.25F;
+            float xyOppPerc = 0.25F;
+            float xzPerc = 0.25F;
+            float xzOppPerc = 0.25F;
+            float yyOppPerc = 0.5F;
+            float yxPerc = 0.25F;
+            float yxOppPerc = 0.25F;
+            float yzPerc = 0.25F;
+            float yzOppPerc = 0.25F;
+            float zzOppPerc = 0.5F;
+            float zxPerc = 0.25F;
+            float zxOppPerc = 0.25F;
+            float zyPerc = 0.25F;
+            float zyOppPerc = 0.25F;
 
             while (j < 100)
             {
-                double theoryX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
+                float theoryX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
 
                 //correction of one tower allows for XY dimensional accuracy
                 if (tempX2 > 0)
@@ -169,20 +235,20 @@ namespace OpenDACT.Class_Files
 
                     tempYOpp2 = tempYOpp2 - (tempX2 * 2 * yyOppPerc);
                     tempX2 = tempX2 - (tempX2 * 2 * yxPerc);
-                    tempZ2 = tempZ2 - (tempX2 * 2 * yxPerc);
+                    tempZ2 = tempZ2 - (tempX2 * 2 * yzPerc);
                     tempXOpp2 = tempXOpp2 + (tempX2 * 2 * yxOppPerc);
-                    tempZOpp2 = tempZOpp2 + (tempX2 * 2 * yxOppPerc);
+                    tempZOpp2 = tempZOpp2 + (tempX2 * 2 * yzOppPerc);
                     tempY2 = tempY2 + tempX2 * 2;
 
                     tempZOpp2 = tempZOpp2 - (tempX2 * 2 * zzOppPerc);
                     tempX2 = tempX2 - (tempX2 * 2 * zxPerc);
                     tempY2 = tempY2 - (tempX2 * 2 * zyPerc);
-                    tempXOpp2 = tempXOpp2 + (tempX2 * 2 * yxOppPerc);
+                    tempXOpp2 = tempXOpp2 + (tempX2 * 2 * zxOppPerc);
                     tempYOpp2 = tempYOpp2 + (tempX2 * 2 * zyOppPerc);
                     tempZ2 = tempZ2 + tempX2 * 2;
                 }
 
-                double theoryY = offsetY + tempY2 * stepsPerMM * offsetYCorrection;
+                float theoryY = offsetY + tempY2 * stepsPerMM * offsetYCorrection;
 
                 //Y
                 if (tempY2 > 0)
@@ -191,9 +257,9 @@ namespace OpenDACT.Class_Files
 
                     tempYOpp2 = tempYOpp2 + (tempY2 * yyOppPerc);
                     tempX2 = tempX2 + (tempY2 * yxPerc);
-                    tempZ2 = tempZ2 + (tempY2 * yxPerc);
+                    tempZ2 = tempZ2 + (tempY2 * yzPerc);
                     tempXOpp2 = tempXOpp2 - (tempY2 * yxOppPerc);
-                    tempZOpp2 = tempZOpp2 - (tempY2 * yxOppPerc);
+                    tempZOpp2 = tempZOpp2 - (tempY2 * yzOppPerc);
                     tempY2 = tempY2 - tempY2;
                 }
                 else if (theoryY > 0 && tempY2 < 0)
@@ -202,9 +268,9 @@ namespace OpenDACT.Class_Files
 
                     tempYOpp2 = tempYOpp2 + (tempY2 * yyOppPerc);
                     tempX2 = tempX2 + (tempY2 * yxPerc);
-                    tempZ2 = tempZ2 + (tempY2 * yxPerc);
+                    tempZ2 = tempZ2 + (tempY2 * yzPerc);
                     tempXOpp2 = tempXOpp2 - (tempY2 * yxOppPerc);
-                    tempZOpp2 = tempZOpp2 - (tempY2 * yxOppPerc);
+                    tempZOpp2 = tempZOpp2 - (tempY2 * yzOppPerc);
                     tempY2 = tempY2 - tempY2;
                 }
                 else
@@ -222,12 +288,12 @@ namespace OpenDACT.Class_Files
                     tempZOpp2 = tempZOpp2 - (tempY2 * 2 * zzOppPerc);
                     tempX2 = tempX2 - (tempY2 * 2 * zxPerc);
                     tempY2 = tempY2 - (tempY2 * 2 * zyPerc);
-                    tempXOpp2 = tempXOpp2 + (tempY2 * 2 * yxOppPerc);
+                    tempXOpp2 = tempXOpp2 + (tempY2 * 2 * zxOppPerc);
                     tempYOpp2 = tempYOpp2 + (tempY2 * 2 * zyOppPerc);
                     tempZ2 = tempZ2 + tempY2 * 2;
                 }
 
-                double theoryZ = offsetZ + tempZ2 * stepsPerMM * offsetZCorrection;
+                float theoryZ = offsetZ + tempZ2 * stepsPerMM * offsetZCorrection;
 
                 //Z
                 if (tempZ2 > 0)
@@ -237,7 +303,7 @@ namespace OpenDACT.Class_Files
                     tempZOpp2 = tempZOpp2 + (tempZ2 * zzOppPerc);
                     tempX2 = tempX2 + (tempZ2 * zxPerc);
                     tempY2 = tempY2 + (tempZ2 * zyPerc);
-                    tempXOpp2 = tempXOpp2 - (tempZ2 * yxOppPerc);
+                    tempXOpp2 = tempXOpp2 - (tempZ2 * zxOppPerc);
                     tempYOpp2 = tempYOpp2 - (tempZ2 * zyOppPerc);
                     tempZ2 = tempZ2 - tempZ2;
                 }
@@ -248,7 +314,7 @@ namespace OpenDACT.Class_Files
                     tempZOpp2 = tempZOpp2 + (tempZ2 * zzOppPerc);
                     tempX2 = tempX2 + (tempZ2 * zxPerc);
                     tempY2 = tempY2 + (tempZ2 * zyPerc);
-                    tempXOpp2 = tempXOpp2 - (tempZ2 * yxOppPerc);
+                    tempXOpp2 = tempXOpp2 - (tempZ2 * zxOppPerc);
                     tempYOpp2 = tempYOpp2 - (tempZ2 * zyOppPerc);
                     tempZ2 = tempZ2 - tempZ2;
                 }
@@ -266,18 +332,19 @@ namespace OpenDACT.Class_Files
 
                     tempYOpp2 = tempYOpp2 - (tempZ2 * 2 * yyOppPerc);
                     tempX2 = tempX2 - (tempZ2 * 2 * yxPerc);
-                    tempZ2 = tempZ2 - (tempZ2 * 2 * yxPerc);
+                    tempZ2 = tempZ2 - (tempZ2 * 2 * yzPerc);
                     tempXOpp2 = tempXOpp2 + (tempZ2 * 2 * yxOppPerc);
-                    tempZOpp2 = tempZOpp2 + (tempZ2 * 2 * yxOppPerc);
+                    tempZOpp2 = tempZOpp2 + (tempZ2 * 2 * yzOppPerc);
                     tempY2 = tempY2 + tempZ2 * 2;
                 }
 
-                tempX2 = checkZero(tempX2);
-                tempY2 = checkZero(tempY2);
-                tempZ2 = checkZero(tempZ2);
-                tempXOpp2 = checkZero(tempXOpp2);
-                tempYOpp2 = checkZero(tempYOpp2);
-                tempZOpp2 = checkZero(tempZOpp2);
+                tempX2 = Validation.checkZero(tempX2);
+                tempY2 = Validation.checkZero(tempY2);
+                tempZ2 = Validation.checkZero(tempZ2);
+                tempXOpp2 = Validation.checkZero(tempXOpp2);
+                tempYOpp2 = Validation.checkZero(tempYOpp2);
+                tempZOpp2 = Validation.checkZero(tempZOpp2);
+
 
                 if (tempX2 < accuracy && tempX2 > -accuracy && tempY2 < accuracy && tempY2 > -accuracy && tempZ2 < accuracy && tempZ2 > -accuracy && offsetX < 1000 && offsetY < 1000 && offsetZ < 1000)
                 {
@@ -294,28 +361,28 @@ namespace OpenDACT.Class_Files
                     tempZOpp2 = ZOpp;
 
                     //X
-                    offsetXCorrection = 1.5;
-                    xxOppPerc = 0.5;
-                    xyPerc = 0.25;
-                    xyOppPerc = 0.25;
-                    xzPerc = 0.25;
-                    xzOppPerc = 0.25;
+                    offsetXCorrection = 1.5F;
+                    xxOppPerc = 0.5F;
+                    xyPerc = 0.25F;
+                    xyOppPerc = 0.25F;
+                    xzPerc = 0.25F;
+                    xzOppPerc = 0.25F;
 
                     //Y
-                    offsetYCorrection = 1.5;
-                    yyOppPerc = 0.5;
-                    yxPerc = 0.25;
-                    yxOppPerc = 0.25;
-                    yzPerc = 0.25;
-                    yzOppPerc = 0.25;
+                    offsetYCorrection = 1.5F;
+                    yyOppPerc = 0.5F;
+                    yxPerc = 0.25F;
+                    yxOppPerc = 0.25F;
+                    yzPerc = 0.25F;
+                    yzOppPerc = 0.25F;
 
                     //Z
-                    offsetZCorrection = 1.5;
-                    zzOppPerc = 0.5;
-                    zxPerc = 0.25;
-                    zxOppPerc = 0.25;
-                    zyPerc = 0.25;
-                    zyOppPerc = 0.25;
+                    offsetZCorrection = 1.5F;
+                    zzOppPerc = 0.5F;
+                    zxPerc = 0.25F;
+                    zxOppPerc = 0.25F;
+                    zyPerc = 0.25F;
+                    zyOppPerc = 0.25F;
 
                     offsetX = 0;
                     offsetY = 0;
@@ -331,8 +398,8 @@ namespace OpenDACT.Class_Files
 
             if (offsetX > 1000 || offsetY > 1000 || offsetZ > 1000)
             {
-                LogConsole("XYZ offset calibration error, setting default values.");
-                LogConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ + "\n");
+                UserInterface.logConsole("XYZ offset calibration error, setting default values.");
+                UserInterface.logConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ + "\n");
                 offsetX = 0;
                 offsetY = 0;
                 offsetZ = 0;
@@ -348,26 +415,22 @@ namespace OpenDACT.Class_Files
             }
 
             //round to the nearest whole number
-            offsetX = Math.Round(offsetX);
-            offsetY = Math.Round(offsetY);
-            offsetZ = Math.Round(offsetZ);
+            offsetX = Convert.ToInt32(offsetX);
+            offsetY = Convert.ToInt32(offsetY);
+            offsetZ = Convert.ToInt32(offsetZ);
 
-            LogConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ + "\n");
+            UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ + "\n");
 
             //send data back to printer
-            _serialPort.WriteLine("M206 T1 P893 S" + offsetX.ToString());
-            Thread.Sleep(pauseTimeSet);
-            _serialPort.WriteLine("M206 T1 P895 S" + offsetY.ToString());
-            Thread.Sleep(pauseTimeSet);
-            _serialPort.WriteLine("M206 T1 P897 S" + offsetZ.ToString());
-            Thread.Sleep(pauseTimeSet);
-
-
-            float[] heights = { 1 };
-            return heights;
+            Connection._serialPort.WriteLine("M206 T1 P893 S" + offsetX.ToString());
+            Thread.Sleep(UserVariables.returnPauseTimeSet());
+            Connection._serialPort.WriteLine("M206 T1 P895 S" + offsetY.ToString());
+            Thread.Sleep(UserVariables.returnPauseTimeSet());
+            Connection._serialPort.WriteLine("M206 T1 P897 S" + offsetZ.ToString());
+            Thread.Sleep(UserVariables.returnPauseTimeSet());
         }
         
-        public float[] alphaRotation(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
+        public void alphaRotation(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
         {
             if (offsetX != 0 && offsetY != 0 && offsetZ != 0)
             {
@@ -377,14 +440,14 @@ namespace OpenDACT.Class_Files
                     //X Alpha Rotation
                     if (YOpp > ZOpp)
                     {
-                        double ZYOppAvg = (YOpp - ZOpp) / 2;
+                        float ZYOppAvg = (YOpp - ZOpp) / 2;
                         A = A + (ZYOppAvg * alphaRotationPercentageX); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
                         YOpp = YOpp - ZYOppAvg;
                         ZOpp = ZOpp + ZYOppAvg;
                     }
                     else if (YOpp < ZOpp)
                     {
-                        double ZYOppAvg = (ZOpp - YOpp) / 2;
+                        float ZYOppAvg = (ZOpp - YOpp) / 2;
 
                         A = A - (ZYOppAvg * alphaRotationPercentageX);
                         YOpp = YOpp + ZYOppAvg;
@@ -394,14 +457,14 @@ namespace OpenDACT.Class_Files
                     //Y Alpha Rotation
                     if (ZOpp > XOpp)
                     {
-                        double XZOppAvg = (ZOpp - XOpp) / 2;
+                        float XZOppAvg = (ZOpp - XOpp) / 2;
                         B = B + (XZOppAvg * alphaRotationPercentageY);
                         ZOpp = ZOpp - XZOppAvg;
                         XOpp = XOpp + XZOppAvg;
                     }
                     else if (ZOpp < XOpp)
                     {
-                        double XZOppAvg = (XOpp - ZOpp) / 2;
+                        float XZOppAvg = (XOpp - ZOpp) / 2;
 
                         B = B - (XZOppAvg * alphaRotationPercentageY);
                         ZOpp = ZOpp + XZOppAvg;
@@ -410,14 +473,14 @@ namespace OpenDACT.Class_Files
                     //Z Alpha Rotation
                     if (XOpp > YOpp)
                     {
-                        double YXOppAvg = (XOpp - YOpp) / 2;
+                        float YXOppAvg = (XOpp - YOpp) / 2;
                         C = C + (YXOppAvg * alphaRotationPercentageZ);
                         XOpp = XOpp - YXOppAvg;
                         YOpp = YOpp + YXOppAvg;
                     }
                     else if (XOpp < YOpp)
                     {
-                        double YXOppAvg = (YOpp - XOpp) / 2;
+                        float YXOppAvg = (YOpp - XOpp) / 2;
 
                         C = C - (YXOppAvg * alphaRotationPercentageZ);
                         XOpp = XOpp + YXOppAvg;
@@ -425,9 +488,9 @@ namespace OpenDACT.Class_Files
                     }
 
                     //determine if value is close enough
-                    double hTow = Math.Max(Math.Max(XOpp, YOpp), ZOpp);
-                    double lTow = Math.Min(Math.Min(XOpp, YOpp), ZOpp);
-                    double towDiff = hTow - lTow;
+                    float hTow = Math.Max(Math.Max(XOpp, YOpp), ZOpp);
+                    float lTow = Math.Min(Math.Min(XOpp, YOpp), ZOpp);
+                    float towDiff = hTow - lTow;
 
                     if (towDiff < accuracy && towDiff > -accuracy)
                     {
@@ -456,16 +519,16 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public float[] SPM(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
+        public void SPM(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
         {
 
             //opp = 0.21; //4/5
             //tower = 0.27; //9/32
 
-            double diagChange = 1 / deltaOpp;
-            double towOppDiff = deltaTower / deltaOpp; //0.5
-            double XYZ = (X + Y + Z) / 3;
-            double XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+            float diagChange = 1 / deltaOpp;
+            float towOppDiff = deltaTower / deltaOpp; //0.5
+            float XYZ = (X + Y + Z) / 3;
+            float XYZOpp = (XOpp + YOpp + ZOpp) / 3;
 
             LogConsole(X.ToString() + " " + XOpp.ToString() + " " + Y.ToString() + " " + YOpp.ToString() + " " + Z.ToString() + " " + ZOpp.ToString());
 
@@ -523,13 +586,13 @@ namespace OpenDACT.Class_Files
                         //end calculation
                         stepsPerMM = checkZero(stepsPerMM);
 
-                        double changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / tempSPM;
+                        float changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / tempSPM;
 
                         LogConsole("zMaxLength changed by: " + changeInMM);
                         LogConsole("zMaxLength before: " + centerHeight);
                         LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
 
-                        double tempChange = centerHeight - changeInMM;
+                        float tempChange = centerHeight - changeInMM;
 
                         _serialPort.WriteLine("M206 T3 P153 X" + tempChange.ToString());
                         LogConsole("Resetting Z Max Length\n");

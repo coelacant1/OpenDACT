@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace OpenDACT.Class_Files
 {
-    public class EEPROMClass
+    class EEPROM
     {
         public static float stepsPerMM;
         public static float tempSPM;
         public static float zMaxLength;
         public static float zProbe;
-        public static float HRad;
+        public static float HRadius;
         public static float offsetX;
         public static float offsetY;
         public static float offsetZ;
@@ -23,75 +23,148 @@ namespace OpenDACT.Class_Files
         public static float DB;
         public static float DC;
 
+        //set
         public static void setSPM(float value)
         {
+            value = Validation.checkZero(value);
             stepsPerMM = value;
         }
         public static void setTempSPM(float value)
         {
+            value = Validation.checkZero(value);
             tempSPM = value;
         }
         public static void setZMaxLength(float value)
         {
+            value = Validation.checkZero(value);
             zMaxLength = value;
         }
         public static void setZProbe(float value)
         {
+            value = Validation.checkZero(value);
             zProbe = value;
         }
-        public static void setHRad(float value)
+        public static void setHRadius(float value)
         {
-            HRad = value;
+            value = Validation.checkZero(value);
+            HRadius = value;
         }
         public static void setOffsetX(float value)
         {
+            value = Validation.checkZero(value);
             offsetX = value;
         }
         public static void setOffsetY(float value)
         {
+            value = Validation.checkZero(value);
             offsetY = value;
         }
         public static void setOffsetZ(float value)
         {
+            value = Validation.checkZero(value);
             offsetZ = value;
         }
         public static void setA(float value)
         {
+            value = Validation.checkZero(value);
             A = value;
         }
         public static void setB(float value)
         {
+            value = Validation.checkZero(value);
             B = value;
         }
         public static void setC(float value)
         {
+            value = Validation.checkZero(value);
             C = value;
         }
         public static void setDA(float value)
         {
+            value = Validation.checkZero(value);
             DA = value;
         }
         public static void setDB(float value)
         {
+            value = Validation.checkZero(value);
             DB = value;
         }
         public static void setDC(float value)
         {
+            value = Validation.checkZero(value);
             DC = value;
+        }
+
+        //return
+        public static float returnSPM()
+        {
+            return stepsPerMM;
+        }
+        public static float returnTempSPM()
+        {
+            return tempSPM;
+        }
+        public static float returnZMaxLength()
+        {
+            return zMaxLength;
+        }
+        public static float returnZProbe()
+        {
+            return zProbe;
+        }
+        public static float returnHRadius()
+        {
+            return HRadius;
+        }
+        public static float returnOffsetX()
+        {
+            return offsetX;
+        }
+        public static float returnOffsetY()
+        {
+            return offsetY;
+        }
+        public static float returnOffsetZ()
+        {
+            return offsetZ;
+        }
+        public static float returnA()
+        {
+            return A;
+        }
+        public static float returnB()
+        {
+            return B;
+        }
+        public static float returnC()
+        {
+            return C;
+        }
+        public static float returnDA()
+        {
+            return DA;
+        }
+        public static float returnDB()
+        {
+            return DB;
+        }
+        public static float returnDC()
+        {
+            return DC;
         }
     }
 
-    class EEPROM
+    class EEPROMFunctions
     {
         UserInterface UserInterface;
         GCode GCode;
-        Heights Heights;
+        EEPROM EEPROM;
 
-        public EEPROM(UserInterface _UserInterface, GCode _GCode, Heights _Heights)
+        public EEPROMFunctions(UserInterface _UserInterface, GCode _GCode, EEPROM _EEPROM)
         {
             this.UserInterface = _UserInterface;
             this.GCode = _GCode;
-            this.Heights = _Heights;
+            this.EEPROM = _EEPROM;
         }
 
 
@@ -160,44 +233,44 @@ namespace OpenDACT.Class_Files
                 case 11:
                     UserInterface.logConsole("EEPROM capture initiated\n");
                     
-                    EEPROMClass.setSPM(floatParse2);
-                    EEPROMClass.setTempSPM(floatParse2);
+                    EEPROM.setSPM(floatParse2);
+                    EEPROM.setTempSPM(floatParse2);
                     break;
                 case 153:
-                    EEPROMClass.setZMaxLength(floatParse2);
+                    EEPROM.setZMaxLength(floatParse2);
                     break;
                 case 808:
-                    EEPROMClass.setZProbe(floatParse2);
+                    EEPROM.setZProbe(floatParse2);
                     break;
                 case 885:
-                    EEPROMClass.setHRad(floatParse2);
+                    EEPROM.setHRadius(floatParse2);
                     break;
                 case 893:
-                    EEPROMClass.setOffsetX(floatParse2);
+                    EEPROM.setOffsetX(floatParse2);
                     break;
                 case 895:
-                    EEPROMClass.setOffsetY(floatParse2);
+                    EEPROM.setOffsetY(floatParse2);
                     break;
                 case 897:
-                    EEPROMClass.setOffsetZ(floatParse2);
+                    EEPROM.setOffsetZ(floatParse2);
                     break;
                 case 901:
-                    EEPROMClass.setA(floatParse2);
+                    EEPROM.setA(floatParse2);
                     break;
                 case 905:
-                    EEPROMClass.setB(floatParse2);
+                    EEPROM.setB(floatParse2);
                     break;
                 case 909:
-                    EEPROMClass.setC(floatParse2);
+                    EEPROM.setC(floatParse2);
                     break;
                 case 913:
-                    EEPROMClass.setDA(floatParse2);
+                    EEPROM.setDA(floatParse2);
                     break;
                 case 917:
-                    EEPROMClass.setDB(floatParse2);
+                    EEPROM.setDB(floatParse2);
                     break;
                 case 921:
-                    EEPROMClass.setDC(floatParse2);
+                    EEPROM.setDC(floatParse2);
                     EEPROMSet = true;
                     break;
             }

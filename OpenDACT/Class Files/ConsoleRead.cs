@@ -10,13 +10,19 @@ namespace OpenDACT.Class_Files
     {
         Connection Connection;
         UserInterface UserInterface;
-        EEPROM EEPROM;
+        EEPROMFunctions EEPROMFunctions;
+        GCode GCode;
+        HeightFunctions HeightFunctions;
+        Calibration Calibration;
 
-        public ConsoleRead(Connection _Connection, UserInterface _UserInterface, EEPROM _EEPROM)
+        public ConsoleRead(Connection _Connection, UserInterface _UserInterface, EEPROMFunctions _EEPROMFunctions, GCode _GCode, HeightFunctions _HeightFunctions, Calibration _Calibration)
         {
             this.Connection = _Connection;
             this.UserInterface = _UserInterface;
-            this.EEPROM = _EEPROM;
+            this.EEPROMFunctions = _EEPROMFunctions;
+            this.GCode = _GCode;
+            this.HeightFunctions = _HeightFunctions;
+            this.Calibration = _Calibration;
         }
 
 
@@ -33,16 +39,26 @@ namespace OpenDACT.Class_Files
                     
                     UserInterface.logConsole(message + "\n");
 
-                    if (EEPROM.EEPROMSet == false)
+                    if (EEPROMFunctions.EEPROMSet == false)
                     {
                         int intParse;
                         float floatParse2;
 
-                        EEPROM.parseEEPROM(message, out intParse, out floatParse2);
-                        EEPROM.setEEPROM(intParse, floatParse2);
+                        EEPROMFunctions.parseEEPROM(message, out intParse, out floatParse2);
+                        EEPROMFunctions.setEEPROM(intParse, floatParse2);
                     }
                     
-                    EEPROM.parseZProbe(message);
+                    if (GCode.checkHeights == true)
+                    {
+                        GCode.positionFlow();
+                    }
+
+                    HeightFunctions.setHeights(HeightFunctions.parseZProbe(message));
+
+                    if (Calibration.calibrationState == true)
+                    {
+                        Calibration.calibrate(Calibration.calibrationSelection);
+                    }
                 }
                 catch (TimeoutException) { }
             }//end while

@@ -46,11 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class Files\Calibration.cs" />
     <Compile Include="Class Files\Connection.cs" />
     <Compile Include="Class Files\ConsoleRead.cs" />
     <Compile Include="Class Files\EEPROM.cs" />
     <Compile Include="Class Files\GCode.cs" />
+    <Compile Include="Class Files\Printer.cs" />
     <Compile Include="Class Files\UserInterface.cs" />
+    <Compile Include="Class Files\Validation.cs" />
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -9,50 +9,78 @@ namespace OpenDACT.Class_Files
     class UserVariables
     {
         //misc vars, alpha offsets, tower offsets, spm offsets, hrad offsets, drad offsets
-        public static float HRadRatio;
-        public static float DRadRatio;
-        public static float accuracy = 0.025F;
-        public static float probingHeight = 75;
-        public static float offsetXCorrection = 1.5F;
-        public static float offsetYCorrection = 1.5F;
-        public static float offsetZCorrection = 1.5F;
-        public static float xxOppPerc = 0.5F;
-        public static float xyPerc = 0.25F;
-        public static float xyOppPerc = 0.25F;
-        public static float xzPerc = 0.25F;
-        public static float xzOppPerc = 0.25F;
-        public static float yyOppPerc = 0.5F;
-        public static float yxPerc = 0.25F;
-        public static float yxOppPerc = 0.25F;
-        public static float yzPerc = 0.25F;
-        public static float yzOppPerc = 0.25F;
-        public static float zzOppPerc = 0.5F;
-        public static float zxPerc = 0.25F;
-        public static float zxOppPerc = 0.25F;
-        public static float zyPerc = 0.25F;
-        public static float zyOppPerc = 0.25F;
-        public static float alphaRotationPercentageX = 1.725F;
-        public static float alphaRotationPercentageY = 1.725F;
-        public static float alphaRotationPercentageZ = 1.725F;
+        public float HRadRatio = -0.5F;
+        public float DRadRatio = -0.5F;
+        public float accuracy = 0.025F;
+        public float calculationAccuracy = 0.001F;
+        public float probingHeight = 10;
+        public float offsetXCorrection = 1.5F;
+        public float offsetYCorrection = 1.5F;
+        public float offsetZCorrection = 1.5F;
+        public float xxOppPerc = 0.5F;
+        public float xyPerc = 0.25F;
+        public float xyOppPerc = 0.25F;
+        public float xzPerc = 0.25F;
+        public float xzOppPerc = 0.25F;
+        public float yyOppPerc = 0.5F;
+        public float yxPerc = 0.25F;
+        public float yxOppPerc = 0.25F;
+        public float yzPerc = 0.25F;
+        public float yzOppPerc = 0.25F;
+        public float zzOppPerc = 0.5F;
+        public float zxPerc = 0.25F;
+        public float zxOppPerc = 0.25F;
+        public float zyPerc = 0.25F;
+        public float zyOppPerc = 0.25F;
+        public float alphaRotationPercentageX = 1.725F;
+        public float alphaRotationPercentageY = 1.725F;
+        public float alphaRotationPercentageZ = 1.725F;
+        public float deltaTower = 0.3F;
+        public float deltaOpp = 0.2F;
+        public float plateDiameter = 100F;
 
-        public static int pauseTimeSet = 500;
+        public int pauseTimeSet = 500;
 
-        public static void setHRadRatio(float value)
+        public UserVariables() { }
+
+        public void setHRadRatio(float value)
         {
-            value = Validation.checkZero(value);
             HRadRatio = value;
         }
-        public static void setDRadRatio(float value)
+
+        public void setDRadRatio(float value)
         {
-            value = Validation.checkZero(value);
             DRadRatio = value;
         }
-        public static void setAccuracy(float value)
+        public void setAccuracy(float value)
         {
-            value = Validation.checkZero(value);
             accuracy = value;
         }
-        public static void setOffsetXCorrection(float ioffsetXCorrection, float ixxOppPerc, float ixyPerc, float ixyOppPerc, float ixzPerc, float ixzOppPerc)
+        public void setAlphaRotationPercentageX(float value)
+        {
+            value = Validation.checkZero(value);
+            alphaRotationPercentageX = value;
+        }
+        public void setAlphaRotationPercentageY(float value)
+        {
+            value = Validation.checkZero(value);
+            alphaRotationPercentageY = value;
+        }
+        public void setAlphaRotationPercentageZ(float value)
+        {
+            value = Validation.checkZero(value);
+            alphaRotationPercentageZ = value;
+        }
+        public void setPauseTimeSet(int value)
+        {
+            pauseTimeSet = value;
+        }
+        public void setPlateDiameter(int value)
+        {
+            plateDiameter = value;
+        }
+
+        public void setOffsetXCorrection(float ioffsetXCorrection, float ixxOppPerc, float ixyPerc, float ixyOppPerc, float ixzPerc, float ixzOppPerc)
         {
             offsetXCorrection = ioffsetXCorrection;
             xxOppPerc = ixxOppPerc;
@@ -62,7 +90,7 @@ namespace OpenDACT.Class_Files
             xzOppPerc = ixzOppPerc;
 
         }
-        public static void setOffsetYCorrection(float ioffsetYCorrection, float iyyOppPerc, float iyxPerc, float iyxOppPerc, float iyzPerc, float iyzOppPerc)
+        public void setOffsetYCorrection(float ioffsetYCorrection, float iyyOppPerc, float iyxPerc, float iyxOppPerc, float iyzPerc, float iyzOppPerc)
         {
             offsetYCorrection = ioffsetYCorrection;
             yyOppPerc = iyyOppPerc;
@@ -71,7 +99,7 @@ namespace OpenDACT.Class_Files
             yzPerc = iyzPerc;
             yzOppPerc = iyzOppPerc;
         }
-        public static void setOffsetZCorrection(float ioffsetZCorrection, float izzOppPerc, float izxPerc, float izxOppPerc, float izyPerc, float izyOppPerc)
+        public void setOffsetZCorrection(float ioffsetZCorrection, float izzOppPerc, float izxPerc, float izxOppPerc, float izyPerc, float izyOppPerc)
         {
             offsetZCorrection = ioffsetZCorrection;
             zzOppPerc = izzOppPerc;
@@ -80,118 +108,68 @@ namespace OpenDACT.Class_Files
             zyPerc = izyPerc;
             zyOppPerc = izyOppPerc;
         }
-        public static void setAlphaRotationPercentageX(float value)
-        {
-            value = Validation.checkZero(value);
-            alphaRotationPercentageX = value;
-        }
-        public static void setAlphaRotationPercentageY(float value)
-        {
-            value = Validation.checkZero(value);
-            alphaRotationPercentageY = value;
-        }
-        public static void setAlphaRotationPercentageZ(float value)
-        {
-            value = Validation.checkZero(value);
-            alphaRotationPercentageZ = value;
-        }
-        public static void setPauseTimeSet(int value)
-        {
-            pauseTimeSet = value;
-        }
 
 
-        public static float returnHRadRatio()
+        public float returnCalculationAccuracy()
         {
-            return HRadRatio;
-        }
-        public static float returnDRadRatio()
-        {
-            return DRadRatio;
-        }
-        public static float returnUserAccuracy()
-        {
-            return accuracy;
-        }
-        public static void returnOffsetXCorrection(out float ioffsetXCorrection, out float ixxOppPerc, out float ixyPerc, out float ixyOppPerc, out float ixzPerc, out float ixzOppPerc)
-        {
-            ioffsetXCorrection = offsetXCorrection;
-            ixxOppPerc = xxOppPerc;
-            ixyPerc = xyPerc;
-            ixyOppPerc = xyOppPerc;
-            ixzPerc = xzPerc;
-            ixzOppPerc = xzOppPerc;
-
-        }
-        public static void returnOffsetYCorrection(out float ioffsetYCorrection, out float iyyOppPerc, out float iyxPerc, out float iyxOppPerc, out float iyzPerc, out float iyzOppPerc)
-        {
-            ioffsetYCorrection = offsetYCorrection;
-            iyyOppPerc = yyOppPerc;
-            iyxPerc = yxPerc;
-            iyxOppPerc = yxOppPerc;
-            iyzPerc = yzPerc;
-            iyzOppPerc = yzOppPerc;
-        }
-        public static void returnOffsetZCorrection(out float ioffsetZCorrection, out float izzOppPerc, out float izxPerc, out float izxOppPerc, out float izyPerc, out float izyOppPerc)
-        {
-            ioffsetZCorrection = offsetZCorrection;
-            izzOppPerc = zzOppPerc;
-            izxPerc = zxPerc;
-            izxOppPerc = zxOppPerc;
-            izyPerc = zyPerc;
-            izyOppPerc = zyOppPerc;
-        }
-        public static void returnAlphaRotationPercentageX(out float ialphaRotPercX)
-        {
-            ialphaRotPercX = alphaRotationPercentageX;
-        }
-        public static void returnAlphaRotationPercentageY(out float ialphaRotPercY)
-        {
-            ialphaRotPercY = alphaRotationPercentageY;
-        }
-        public static void returnAlphaRotationPercentageZ(out float ialphaRotPercZ)
-        {
-            ialphaRotPercZ = alphaRotationPercentageZ;
-        }
-        public static int returnPauseTimeSet()
-        {
-            return pauseTimeSet;
+            return calculationAccuracy;
         }
     }
 
 
-    class UserInterface
+    static class UserInterface
     {
+        /*
         mainForm mainForm;
 
         public UserInterface(mainForm _mainForm)
         {
             this.mainForm = _mainForm;
         }
-        
+        */
 
-
-        public void logConsole(string value)
+        static public UserVariables returnUserVariablesObject()
         {
-            mainForm.consoleMain.AppendText(value + "\n");
+            UserVariables userVariables = new UserVariables();
+            return userVariables;
+        }
+        
+        static public void logConsole(string value)
+        {
+            mainForm.consoleMain.Invoke(new Action(() =>
+            {
+                mainForm.consoleMain.AppendText(value + "\n");
+            }));
         }
 
 
-        public void logPrinter(string value)
+        static public void logPrinter(string value)
         {
-            mainForm.consolePrinter.AppendText(value + "\n");
+            mainForm.consolePrinter.Invoke(new Action(() =>
+            {
+                mainForm.consolePrinter.AppendText(value + "\n");
+            }));
         }
-        
+
         /*
             BUTTONS:
             connect
             disconnect
             calibrate - readeeprom, checkheights, calibrate, checkheights, calibrate etc - while loop
             checkHeights - set gcode bool to true
-            
+
             UI:
             visible: console log, 
             not: printer log, tabs: settings, advanced, calibration graph
         */
+
+
+
+        static public void GraphAccuracy()
+        {
+            //create graph of accuracy over iterations
+
+
+        }
     }
 }

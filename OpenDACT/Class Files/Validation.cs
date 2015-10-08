@@ -16,14 +16,15 @@ namespace OpenDACT.Class_Files
             this.UserVariables = _UserVariables;
         }
 
-
+        
         public static float checkZero(float value)
         {
-            if (value > 0 && value < UserVariables.accuracy)
+
+            if (value > 0 && value < 0.0001F)
             {
                 return 0;
             }
-            else if (value < 0 && value > -UserVariables.accuracy)
+            else if (value < 0 && value > 0.0001F)
             {
                 return 0;
             }

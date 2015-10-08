@@ -7,36 +7,18 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    class Calibration
+    static class Calibration
     {
-        UserInterface UserInterface;
-        EEPROM EEPROM;
-        HeightFunctions HeightFunctions;
-        UserVariables UserVariables;
-        Validation Validation;
-        EEPROMFunctions EEPROMFunctions;
+        public static bool calibrateInProgress = false;
+        public static bool calibrationState = false;
+        public static int calibrationSelection = 0;
 
-        public Calibration(UserInterface _UserInterface, EEPROM _EEPROM, HeightFunctions _HeightFunctions, UserVariables _UserVariables, Validation _Validation, EEPROMFunctions _EEPROMFunctions)
-        {
-            this.UserInterface = _UserInterface;
-            this.EEPROM = _EEPROM;
-            this.HeightFunctions = _HeightFunctions;
-            this.UserVariables = _UserVariables;
-            this.Validation = _Validation;
-            this.EEPROMFunctions = _EEPROMFunctions;
-        }
-
-        
-
-        public bool calibrationState = false;
-        public int calibrationSelection = 0;
-
-        public void calibrate(int value)
+        public static void calibrate(int value, ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
         {
             switch (value)
             {
                 case 0:
-                    basicCalibration();
+                    basicCalibration(ref eeprom, ref heights, ref userVariables);
                     break;
                 case 1:
                     learningCalibration();
@@ -50,40 +32,105 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public void basicCalibration()
+        public static void basicCalibration(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
         {
-            Heights heights = HeightFunctions.returnHeightObject();
-            EEPROM eeprom = EEPROMFunctions.returnEEPROMObject();
+            //check if eeprom object remains after this function is called for the second time
 
-            while ()
-            HRad(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            DRad(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            //analyzeGeometry(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            towerOffsets(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            alphaRotation(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            SPM(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+            if (EEPROMFunctions.EEPROMRequestSent == false)
+            {
+                EEPROMFunctions.readEEPROM();
+                EEPROMFunctions.EEPROMRequestSent = true;
+            }
+            
+            if (EEPROMFunctions.EEPROMSet == true)
+            {
+                if (GCode.checkHeights == true)
+                {
+                    GCode.positionFlow(ref userVariables);
+                }
 
-            EEPROMFunctions.sendEEPROM(eeprom);
-            UserInterface.setHeightMap();
+                if (GCode.checkHeights == false)
+                {
+                    calibrateInProgress = true;
+                    checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    HRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    DRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    //analyzeGeometry(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    towerOffsets(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    alphaRotation(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    SPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+
+                    EEPROMFunctions.sendEEPROM(eeprom);
+                    //UserInterface.setHeightMap();
+                    calibrateInProgress = false;
+                    GCode.checkHeights = true;
+                }
+
+
+            }
+            //change all instances of a new variable which calls a class object to modify the class object directly as opposed to just pulling its value
         }
-        public void learningCalibration()
+        public static void learningCalibration()
         {
 
         }
 
-        public void iterativeCalibration()
+        public static void iterativeCalibration()
         {
 
         }
-        public void learningIterativeCalibration()
+        public static void learningIterativeCalibration()
         {
 
         }
 
-        public void HRad(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void checkAccuracy(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        {
+            float accuracy = userVariables.accuracy;
+
+            if (X <= accuracy && X >= -accuracy && XOpp <= accuracy && XOpp >= -accuracy && Y <= accuracy && Y >= -accuracy && YOpp <= accuracy && YOpp >= -accuracy && Z <= accuracy && Z >= -accuracy && ZOpp <= accuracy && ZOpp >= -accuracy)
+            {
+                //fsr plate offset
+                string zMinTemp;
+                string textFSRPO;
+
+                mainForm.comboBoxZMinimumValue.Invoke(new Action(() =>
+                {
+                    zMinTemp = mainForm.comboBoxZMinimumValue.Text;
+                }));
+
+                if (mainForm.textFSRPlateOffset.InvokeRequired)
+                {
+                    mainForm.textFSRPlateOffset.Invoke(new Action(() =>
+                    {
+                        textFSRPO = mainForm.textFSRPlateOffset.Text;
+                    }));
+                    return;
+                }
+                else
+                {
+                    textFSRPO = mainForm.textFSRPlateOffset.Text;
+                }
+                
+
+                if (mainForm.comboBoxZMinimumValue.Text == "FSR")
+                {
+                    GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength - Convert.ToSingle(textFSRPO));
+                    UserInterface.logConsole("Setting Z Max Length with adjustment for FSR\n");
+                    Thread.Sleep(userVariables.pauseTimeSet);
+                }
+
+                Thread.Sleep(userVariables.pauseTimeSet);
+                GCode.homeAxes();
+                UserInterface.logConsole("Calibration Complete\n");
+                //end code
+            }
+        }
+
+        public static void HRad(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float HRadSA = ((X + XOpp + Y + YOpp + Z + ZOpp) / 6);
-            float HRadRatio = UserVariables.returnHRadRatio();
+            float HRadRatio = userVariables.HRadRatio;
 
             eeprom.HRadius = eeprom.HRadius + (HRadSA / HRadRatio);
 
@@ -97,13 +144,13 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("HRad:" + eeprom.HRadius.ToString() + "\n");
         }
 
-        public void DRad(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void DRad(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float DASA = ((X + XOpp) / 2);
             float DBSA = ((Y + YOpp) / 2);
             float DCSA = ((Z + ZOpp) / 2);
-            float DRadRatio = UserVariables.DRadRatio;
-            
+            float DRadRatio = userVariables.DRadRatio;
+
             eeprom.DA += ((DASA) / DRadRatio);
             eeprom.DB += ((DBSA) / DRadRatio);
             eeprom.DC += ((DCSA) / DRadRatio);
@@ -132,13 +179,13 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("Delta Radii Offsets: " + eeprom.DA.ToString() + ", " + eeprom.DB.ToString() + ", " + eeprom.DC.ToString());
 
             Connection._serialPort.WriteLine("M206 T3 P913 X" + Validation.ToLongString(eeprom.DA));
-            Thread.Sleep(UserVariables.pauseTimeSet);
+            Thread.Sleep(userVariables.pauseTimeSet);
             Connection._serialPort.WriteLine("M206 T3 P917 X" + Validation.ToLongString(eeprom.DB));
-            Thread.Sleep(UserVariables.pauseTimeSet);
+            Thread.Sleep(userVariables.pauseTimeSet);
             Connection._serialPort.WriteLine("M206 T3 P921 X" + Validation.ToLongString(eeprom.DC));
-            Thread.Sleep(UserVariables.pauseTimeSet);
+            Thread.Sleep(userVariables.pauseTimeSet);
         }
-
+        /*
         public void analyzeGeometry(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
         {
             int analyzeCount = 0;
@@ -146,8 +193,8 @@ namespace OpenDACT.Class_Files
 
             UserInterface.logConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
         }
-
-        public void towerOffsets(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        */
+        public static void towerOffsets(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             int j = 0;
             float accuracy = 0.001F;
@@ -157,34 +204,30 @@ namespace OpenDACT.Class_Files
             float tempYOpp2 = YOpp;
             float tempZ2 = Z;
             float tempZOpp2 = ZOpp;
-            float offsetX = EEPROM.returnOffsetX();
-            float offsetY = EEPROM.returnOffsetY();
-            float offsetZ = EEPROM.returnOffsetZ();
-            float stepsPerMM = EEPROM.returnSPM();
+            float offsetX = eeprom.offsetX;
+            float offsetY = eeprom.offsetY;
+            float offsetZ = eeprom.offsetZ;
+            float stepsPerMM = eeprom.stepsPerMM;
 
             //
-            float offsetXCorrection;
-            float offsetYCorrection;
-            float offsetZCorrection;
-            float xxOppPerc;
-            float xyPerc;
-            float xyOppPerc;
-            float xzPerc;
-            float xzOppPerc;
-            float yyOppPerc;
-            float yxPerc;
-            float yxOppPerc;
-            float yzPerc;
-            float yzOppPerc;
-            float zzOppPerc;
-            float zxPerc;
-            float zxOppPerc;
-            float zyPerc;
-            float zyOppPerc;
-
-            UserVariables.returnOffsetXCorrection(out offsetXCorrection, out xxOppPerc, out xyPerc, out xyOppPerc, out xzPerc, out xzOppPerc);
-            UserVariables.returnOffsetYCorrection(out offsetYCorrection, out yyOppPerc, out yxPerc, out yxOppPerc, out yzPerc, out yzOppPerc);
-            UserVariables.returnOffsetZCorrection(out offsetZCorrection, out zzOppPerc, out zxPerc, out zxOppPerc, out zyPerc, out zyOppPerc);
+            float offsetXCorrection = userVariables.offsetXCorrection;
+            float offsetYCorrection = userVariables.offsetYCorrection;
+            float offsetZCorrection = userVariables.offsetZCorrection;
+            float xxOppPerc = userVariables.xxOppPerc;
+            float xyPerc = userVariables.xyPerc;
+            float xyOppPerc = userVariables.xyOppPerc;
+            float xzPerc = userVariables.xzPerc;
+            float xzOppPerc = userVariables.xzOppPerc;
+            float yyOppPerc = userVariables.yyOppPerc;
+            float yxPerc = userVariables.yxPerc;
+            float yxOppPerc = userVariables.yxOppPerc;
+            float yzPerc = userVariables.yzPerc;
+            float yzOppPerc = userVariables.yzOppPerc;
+            float zzOppPerc = userVariables.zzOppPerc;
+            float zxPerc = userVariables.zxPerc;
+            float zxOppPerc = userVariables.zxOppPerc;
+            float zyPerc = userVariables.zyPerc;
+            float zyOppPerc = userVariables.zyOppPerc;
 
             while (j < 100)
             {
@@ -411,28 +454,27 @@ namespace OpenDACT.Class_Files
 
             //send data back to printer
             Connection._serialPort.WriteLine("M206 T1 P893 S" + offsetX.ToString());
-            Thread.Sleep(UserVariables.returnPauseTimeSet());
+            Thread.Sleep(userVariables.pauseTimeSet);
             Connection._serialPort.WriteLine("M206 T1 P895 S" + offsetY.ToString());
-            Thread.Sleep(UserVariables.returnPauseTimeSet());
+            Thread.Sleep(userVariables.pauseTimeSet);
             Connection._serialPort.WriteLine("M206 T1 P897 S" + offsetZ.ToString());
-            Thread.Sleep(UserVariables.returnPauseTimeSet());
+            Thread.Sleep(userVariables.pauseTimeSet);
         }
-        
-        public void alphaRotation(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
-        {
-            float offsetX = EEPROM.returnOffsetX();
-            float offsetY = EEPROM.returnOffsetY();
-            float offsetZ = EEPROM.returnOffsetZ();
-            float A = EEPROM.returnA();
-            float B = EEPROM.returnB();
-            float C = EEPROM.returnC();
-            float alphaRotationPercentageX;
-            float alphaRotationPercentageY;
-            float alphaRotationPercentageZ;
 
-            UserVariables.returnAlphaRotationPercentageX(out alphaRotationPercentageX);
-            UserVariables.returnAlphaRotationPercentageY(out alphaRotationPercentageY);
-            UserVariables.returnAlphaRotationPercentageZ(out alphaRotationPercentageZ);
+        public static void alphaRotation(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        {
+            float offsetX = eeprom.offsetX;
+            float offsetY = eeprom.offsetY;
+            float offsetZ = eeprom.offsetZ;
+            float A = eeprom.A;
+            float B = eeprom.B;
+            float C = eeprom.C;
+            float accuracy = userVariables.accuracy;
+
+            //change to object
+            float alphaRotationPercentageX = userVariables.alphaRotationPercentageX;
+            float alphaRotationPercentageY = userVariables.alphaRotationPercentageY;
+            float alphaRotationPercentageZ = userVariables.alphaRotationPercentageZ;
 
             if (offsetX != 0 && offsetY != 0 && offsetZ != 0)
             {
@@ -505,32 +547,21 @@ namespace OpenDACT.Class_Files
                 }
 
                 //log
-                LogConsole("ABC:" + A + " " + B + " " + C + "\n");
-
-                //send obtained values back to the printer*************************************
-                Thread.Sleep(pauseTimeSet);
-                _serialPort.WriteLine("M206 T3 P901 X" + checkZero(A).ToString());
-                LogConsole("Setting A Rotation\n");
-                Thread.Sleep(pauseTimeSet);
-                _serialPort.WriteLine("M206 T3 P905 X" + checkZero(B).ToString());
-                LogConsole("Setting B Rotation\n");
-                Thread.Sleep(pauseTimeSet);
-                _serialPort.WriteLine("M206 T3 P909 X" + checkZero(C).ToString());
-                LogConsole("Setting C Rotation\n");
-                Thread.Sleep(pauseTimeSet);
+                UserInterface.logConsole("ABC:" + A + " " + B + " " + C + "\n");
             }
         }
 
-        public void SPM(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void SPM(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
 
             //opp = 0.21; //4/5
             //tower = 0.27; //9/32
 
-            float diagChange = 1 / deltaOpp;
-            float towOppDiff = deltaTower / deltaOpp; //0.5
+            float diagChange = 1 / userVariables.deltaOpp;
+            float towOppDiff = userVariables.deltaTower / userVariables.deltaOpp; //0.5
             float XYZ = (X + Y + Z) / 3;
             float XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+            float accuracy = userVariables.accuracy;
 
             UserInterface.logConsole(X.ToString() + " " + XOpp.ToString() + " " + Y.ToString() + " " + YOpp.ToString() + " " + Z.ToString() + " " + ZOpp.ToString());
 
@@ -540,7 +571,7 @@ namespace OpenDACT.Class_Files
                 while (i < 100)
                 {
                     XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                    stepsPerMM = stepsPerMM + (XYZOpp * diagChange);
+                    eeprom.stepsPerMM = eeprom.stepsPerMM + (XYZOpp * diagChange);
 
                     X = X - towOppDiff * XYZOpp;
                     Y = Y - towOppDiff * XYZOpp;
@@ -550,11 +581,12 @@ namespace OpenDACT.Class_Files
                     ZOpp = ZOpp - XYZOpp;
 
                     XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                    XYZOpp = checkZero(XYZOpp);
+                    XYZOpp = Validation.checkZero(XYZOpp);
 
                     //HRAD recalibration
                     XYZ = (X + Y + Z) / 3;
-                    HRad = HRad + ((XYZOpp * diagChange) / HRadRatio);
+                    XYZ = Validation.checkZero(XYZ);
+                    eeprom.HRadius = eeprom.HRadius + ((XYZOpp * diagChange) / userVariables.HRadRatio);
 
                     if (XYZOpp >= 0)
                     {
@@ -575,34 +607,34 @@ namespace OpenDACT.Class_Files
                         ZOpp = ZOpp + XYZ;
                     }
 
-                    X = checkZero(X);
-                    Y = checkZero(Y);
-                    Z = checkZero(Z);
-                    XOpp = checkZero(XOpp);
-                    YOpp = checkZero(YOpp);
-                    ZOpp = checkZero(ZOpp);
+                    X = Validation.checkZero(X);
+                    Y = Validation.checkZero(Y);
+                    Z = Validation.checkZero(Z);
+                    XOpp = Validation.checkZero(XOpp);
+                    YOpp = Validation.checkZero(YOpp);
+                    ZOpp = Validation.checkZero(ZOpp);
 
                     //XYZ is zero
                     if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
                     {
                         //end calculation
-                        stepsPerMM = checkZero(stepsPerMM);
+                        eeprom.stepsPerMM = Validation.checkZero(eeprom.stepsPerMM);
 
-                        float changeInMM = ((stepsPerMM * zMaxLength) - (tempSPM * zMaxLength)) / tempSPM;
+                        float changeInMM = ((eeprom.stepsPerMM * eeprom.zMaxLength) - (eeprom.tempSPM * eeprom.zMaxLength)) / eeprom.tempSPM;
 
-                        LogConsole("zMaxLength changed by: " + changeInMM);
-                        LogConsole("zMaxLength before: " + centerHeight);
-                        LogConsole("zMaxLength after: " + (centerHeight - changeInMM));
+                        UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
+                        UserInterface.logConsole("zMaxLength before: " + eeprom.zMaxLength);
+                        UserInterface.logConsole("zMaxLength after: " + (eeprom.zMaxLength - changeInMM));
 
-                        float tempChange = centerHeight - changeInMM;
+                        float tempChange = eeprom.zMaxLength - changeInMM;
 
-                        _serialPort.WriteLine("M206 T3 P153 X" + tempChange.ToString());
-                        LogConsole("Resetting Z Max Length\n");
-                        Thread.Sleep(pauseTimeSet);
+                        GCode.sendEEPROMVariable(3, 153, tempChange);
+                        UserInterface.logConsole("Resetting Z Max Length\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
-                        _serialPort.WriteLine("M206 T3 P11 X" + stepsPerMM.ToString());
-                        LogConsole("Steps Per Millimeter Changed: " + stepsPerMM.ToString());
-                        Thread.Sleep(pauseTimeSet);
+                        GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
+                        UserInterface.logConsole("Steps Per Millimeter Changed: " + eeprom.stepsPerMM.ToString());
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                         i = 100;
                     }
@@ -612,17 +644,17 @@ namespace OpenDACT.Class_Files
                     }
                 }
 
-                if (HRad < 250 && HRad > 50)
+                if (eeprom.HRadius < 250 && eeprom.HRadius > 50)
                 {
                     //send obtained values back to the printer*************************************
-                    LogConsole("HRad Recalibration:" + HRad + "\n");
-                    _serialPort.WriteLine("M206 T3 P885 X" + checkZero(HRad).ToString());
-                    LogConsole("Setting Horizontal Radius\n");
-                    Thread.Sleep(pauseTimeSet);
+                    UserInterface.logConsole("HRad Recalibration:" + eeprom.HRadius.ToString() + "\n");
+                    GCode.sendEEPROMVariable(3, 885, Validation.checkZero(eeprom.HRadius));
+                    UserInterface.logConsole("Setting Horizontal Radius\n");
+                    Thread.Sleep(userVariables.pauseTimeSet);
                 }
                 else
                 {
-                    LogConsole("Horizontal radius not set\n");
+                    UserInterface.logConsole("Horizontal radius not set\n");
                 }
             }
 

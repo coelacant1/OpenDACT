@@ -47,18 +47,23 @@ namespace OpenDACT.Class_Files
                         EEPROMFunctions.parseEEPROM(message, out intParse, out floatParse2);
                         EEPROMFunctions.setEEPROM(intParse, floatParse2);
                     }
-                    
-                    if (GCode.checkHeights == true)
+                    else
                     {
-                        GCode.positionFlow();
+                        HeightFunctions.setHeights(HeightFunctions.parseZProbe(message));
+
+                        if (GCode.checkHeights == true)
+                        {
+                            GCode.positionFlow();
+                        }
+                        else
+                        {
+                            if (Calibration.calibrationState == true)
+                            {
+                                Calibration.calibrate(Calibration.calibrationSelection);
+                            }
+                        }
                     }
 
-                    HeightFunctions.setHeights(HeightFunctions.parseZProbe(message));
-
-                    if (Calibration.calibrationState == true)
-                    {
-                        Calibration.calibrate(Calibration.calibrationSelection);
-                    }
                 }
                 catch (TimeoutException) { }
             }//end while

@@ -30,40 +30,22 @@ namespace OpenDACT.Class_Files
         }
     }
     
-    class HeightFunctions
+    static class HeightFunctions
     {
-        UserInterface UserInterface;
-        GCode GCode;
-        UserVariables UserVariables;
-        Calibration Calibration;
-
-        public HeightFunctions(UserInterface _UserInterface, GCode _GCode, UserVariables _UserVariables, Calibration _Calibration)
-        {
-            this.UserInterface = _UserInterface;
-            this.GCode = _GCode;
-            this.UserVariables = _UserVariables;
-            this.Calibration = _Calibration;
-        }
-
-
-        private static float tempCenter;
-        private static float tempX;
-        private static float tempXOpp;
-        private static float tempY;
-        private static float tempYOpp;
-        private static float tempZ;
-        private static float tempZOpp;
+        public static float tempCenter;
+        public static float tempX;
+        public static float tempXOpp;
+        public static float tempY;
+        public static float tempYOpp;
+        public static float tempZ;
+        public static float tempZOpp;
         private static int position = 0;
+        public static bool heightsSet = false;
 
-        public Heights returnHeightObject()
+        public static void setHeights(float probePosition, ref EEPROM eeprom, ref UserVariables userVariables)
         {
-            Heights heightObject = new Heights(tempCenter, tempX, tempXOpp, tempY, tempYOpp, tempZ, tempZOpp);
-            return heightObject;
-        }
-        public void setHeights(float probePosition)
-        {
-            float zMaxLength = EEPROM.returnZMaxLength();
-            float probingHeight = UserVariables.returnProbingHeight();
+            float zMaxLength = eeprom.zMaxLength;
+            float probingHeight = userVariables.probingHeight;
 
             if (probePosition != 200)
             {
@@ -109,21 +91,22 @@ namespace OpenDACT.Class_Files
                         probePosition = -probePosition;
                         tempZOpp = probePosition;
                         position = 0;
-
-                        Calibration.calibrationState = true;
-                        setHeights();
+                        
+                        //setHeightMap();
 
                         GCode.sendEEPROMVariable(3, 153, tempCenter);
                         UserInterface.logConsole("Setting Z Max Length\n");
-                        Thread.Sleep(UserVariables.pauseTimeSet);
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
-                        EEPROMClass.zMaxLength = Heights.center;
+                        eeprom.zMaxLength = tempCenter;
+
+                        heightsSet = true;
                         break;
                 }
             }
         }
 
-        public float parseZProbe(string value)
+        public static float parseZProbe(string value)
         {
             if (value.Contains("Z-probe:"))
             {

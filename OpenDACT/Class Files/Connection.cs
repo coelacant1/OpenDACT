@@ -9,25 +9,13 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    class Connection
+    static class Connection
     {
-        mainForm mainForm;
-        ConsoleRead ConsoleRead;
-        UserInterface UserInterface;
-
-        public Connection(mainForm _mainForm, ConsoleRead _ConsoleRead, UserInterface _UserInterface)
-        {
-            this.mainForm = _mainForm;
-            this.ConsoleRead = _ConsoleRead;
-            this.UserInterface = _UserInterface;
-        }
-
-
-
         public static SerialPort _serialPort;
-        public Thread readThread;
+        public static Thread readThread;
 
-        public void connect()
+
+        public static void connect()
         {
             if (_serialPort.IsOpen)
             {
@@ -44,8 +32,8 @@ namespace OpenDACT.Class_Files
                         _serialPort = new SerialPort();
                     }
 
-                    _serialPort.PortName = portComboBox.Text;
-                    _serialPort.BaudRate = int.Parse(cboBaudRate.Text);
+                    _serialPort.PortName = mainForm.portsCombo.Text;
+                    _serialPort.BaudRate = int.Parse(mainForm.baudRateCombo.Text);
 
                     // Set the read/write timeouts.
                     _serialPort.ReadTimeout = 500;
@@ -83,7 +71,7 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public void disconnect()
+        public static void disconnect()
         {
             if (_serialPort.IsOpen && readThread.IsAlive)
             {

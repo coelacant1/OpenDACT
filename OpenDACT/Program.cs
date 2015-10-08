@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace OpenDACT
+namespace OpenDACT.Class_Files
 {
     static class Program
     {

@@ -6,38 +6,18 @@ using System.Threading.Tasks;
 
 namespace OpenDACT.Class_Files
 {
-    class ConsoleRead
+    static class ConsoleRead
     {
-        Connection Connection;
-        UserInterface UserInterface;
-        EEPROMFunctions EEPROMFunctions;
-        GCode GCode;
-        HeightFunctions HeightFunctions;
-        Calibration Calibration;
-
-        public ConsoleRead(Connection _Connection, UserInterface _UserInterface, EEPROMFunctions _EEPROMFunctions, GCode _GCode, HeightFunctions _HeightFunctions, Calibration _Calibration)
-        {
-            this.Connection = _Connection;
-            this.UserInterface = _UserInterface;
-            this.EEPROMFunctions = _EEPROMFunctions;
-            this.GCode = _GCode;
-            this.HeightFunctions = _HeightFunctions;
-            this.Calibration = _Calibration;
-        }
-
-
-
-        public bool _continue;
-        int i = 0;
-        public void Read()
+        public static bool _continue = true;
+        public static void Read()
         {
             while (_continue)
             {
                 try
                 {
                     string message = Connection._serialPort.ReadLine();
-                    
-                    UserInterface.logConsole(message + "\n");
+
+                    UserInterface.logPrinter(message + "\n");
 
                     if (EEPROMFunctions.EEPROMSet == false)
                     {
@@ -47,21 +27,22 @@ namespace OpenDACT.Class_Files
                         EEPROMFunctions.parseEEPROM(message, out intParse, out floatParse2);
                         EEPROMFunctions.setEEPROM(intParse, floatParse2);
                     }
-                    else
+                    else if (Calibration.calibrateInProgress == false)
                     {
-                        HeightFunctions.setHeights(HeightFunctions.parseZProbe(message));
 
-                        if (GCode.checkHeights == true)
+                        EEPROM eeprom = EEPROMFunctions.returnEEPROMObject();
+                        Heights heights = new Heights(HeightFunctions.tempCenter, HeightFunctions.tempX, HeightFunctions.tempXOpp, HeightFunctions.tempY, HeightFunctions.tempYOpp, HeightFunctions.tempZ, HeightFunctions.tempZOpp);
+                        UserVariables userVariables = UserInterface.returnUserVariablesObject();
+
+
+                        if (HeightFunctions.parseZProbe(message) != 200)
                         {
-                            GCode.positionFlow();
+                            HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom, ref userVariables);
                         }
-                        else
-                        {
-                            if (Calibration.calibrationState == true)
-                            {
-                                Calibration.calibrate(Calibration.calibrationSelection);
-                            }
-                        }
+
+                        UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");
+
+                        Calibration.calibrate(Calibration.calibrationSelection, ref eeprom, ref heights, ref userVariables);
                     }
 
                 }

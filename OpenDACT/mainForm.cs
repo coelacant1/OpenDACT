@@ -7,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+using System.IO.Ports;
 
-namespace OpenDACT
+namespace OpenDACT.Class_Files
 {
     public partial class mainForm : Form
     {
@@ -22,23 +24,29 @@ namespace OpenDACT
 
 
 
-            /*
-            printerConsoleTextBox.Text = "";
-            printerConsoleTextBox.ScrollBars = ScrollBars.Vertical;
+            // Basic set of standard baud rates.
+            baudRateCombo.Items.Add("250000");
+            baudRateCombo.Items.Add("115200");
+            baudRateCombo.Items.Add("57600");
+            baudRateCombo.Items.Add("38400");
+            baudRateCombo.Items.Add("19200");
+            baudRateCombo.Items.Add("9600");
+            baudRateCombo.Text = "250000";  // This is the default for most RAMBo controllers.
 
-            consoleTextBox.Text = "";
-            consoleTextBox.ScrollBars = ScrollBars.Vertical;
 
             String[] zMinArray = { "FSR", "Z-Probe" };
-            comboZMin.DataSource = zMinArray;
+            comboBoxZMinimumValue.DataSource = zMinArray;
+            
+            Connection.readThread = new Thread(ConsoleRead.Read);
+            Connection._serialPort = new SerialPort();
+
 
             // Build the combobox of available ports.
-            string[] ports = _SerialPort.GetPortNames();
+            string[] ports = SerialPort.GetPortNames();
 
             if (ports.Length >= 1)
             {
-                Dictionary<string, string> comboSource =
-                    new Dictionary<string, string>();
+                Dictionary<string, string> comboSource = new Dictionary<string, string>();
 
                 int count = 0;
 
@@ -48,23 +56,18 @@ namespace OpenDACT
                     count++;
                 }
 
-                portComboBox.DataSource = new BindingSource(comboSource, null);
-                portComboBox.DisplayMember = "Key";
-                portComboBox.ValueMember = "Value";
+                portsCombo.DataSource = new BindingSource(comboSource, null);
+                portsCombo.DisplayMember = "Key";
+                portsCombo.ValueMember = "Value";
             }
             else
             {
-                LogConsole("No ports available\n");
+                UserInterface.logConsole("No ports available\n");
             }
 
-            // Basic set of standard baud rates.
-            cboBaudRate.Items.Add("250000");
-            cboBaudRate.Items.Add("115200");
-            cboBaudRate.Items.Add("57600");
-            cboBaudRate.Items.Add("38400");
-            cboBaudRate.Items.Add("19200");
-            cboBaudRate.Items.Add("9600");
-            cboBaudRate.Text = "250000";  // This is the default for most RAMBo controllers.
+            /*
+            String[] zMinArray = { "FSR", "Z-Probe" };
+            comboZMin.DataSource = zMinArray;
 
             // clear the result labels.
             lblXAngleTower.Text = "";
@@ -82,14 +85,42 @@ namespace OpenDACT
             lblScaleOffset.Text = "";
             */
         }
-    }
 
+        private void connectButton_Click(object sender, EventArgs e)
+        {
+            Connection.connect();
+        }
 
-    public class GraphAccuracy
-    {
-        //create graph of accuracy over iterations
+        private void disconnectButton_Click(object sender, EventArgs e)
+        {
+            Connection.disconnect();
+        }
 
+        private void calibrateButton_Click(object sender, EventArgs e)
+        {
+            if (Connection._serialPort.IsOpen)
+            {
+                EEPROMFunctions.readEEPROM();
+                Calibration.calibrationState = true;
+                Calibration.calibrationSelection = 0;
+            }
+            else
+            {
+                UserInterface.logConsole("Not connected\n");
+            }
+        }
 
+        private void resetPrinter_Click(object sender, EventArgs e)
+        {
+            if (Connection._serialPort.IsOpen)
+            {
+                GCode.emergencyReset();
+            }
+            else
+            {
+                UserInterface.logConsole("Not connected\n");
+            }
+        }
     }
 
 }

@@ -52,6 +52,7 @@
     <Compile Include="Class Files\EEPROM.cs" />
     <Compile Include="Class Files\GCode.cs" />
     <Compile Include="Class Files\Printer.cs" />
+    <Compile Include="Class Files\Test.cs" />
     <Compile Include="Class Files\UserInterface.cs" />
     <Compile Include="Class Files\Validation.cs" />
     <Compile Include="mainForm.cs">

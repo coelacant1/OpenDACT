@@ -8,149 +8,37 @@ namespace OpenDACT.Class_Files
 {
     class EEPROM
     {
-        public static float stepsPerMM;
-        public static float tempSPM;
-        public static float zMaxLength;
-        public static float zProbe;
-        public static float HRadius;
-        public static float offsetX;
-        public static float offsetY;
-        public static float offsetZ;
-        public static float A;
-        public static float B;
-        public static float C;
-        public static float DA;
-        public static float DB;
-        public static float DC;
-
-        //set
-        public static void setSPM(float value)
+        public float stepsPerMM;
+        public float tempSPM;
+        public float zMaxLength;
+        public float zProbe;
+        public float HRadius;
+        public float offsetX;
+        public float offsetY;
+        public float offsetZ;
+        public float A;
+        public float B;
+        public float C;
+        public float DA;
+        public float DB;
+        public float DC;
+        
+        public EEPROM(float _stepsPerMM, float _tempSPM, float _zMaxLength, float _zProbe, float _HRadius, float _offsetX, float _offsetY, float _offsetZ, float _A, float _B, float _C, float _DA, float _DB, float _DC)
         {
-            value = Validation.checkZero(value);
-            stepsPerMM = value;
-        }
-        public static void setTempSPM(float value)
-        {
-            value = Validation.checkZero(value);
-            tempSPM = value;
-        }
-        public static void setZMaxLength(float value)
-        {
-            value = Validation.checkZero(value);
-            zMaxLength = value;
-        }
-        public static void setZProbe(float value)
-        {
-            value = Validation.checkZero(value);
-            zProbe = value;
-        }
-        public static void setHRadius(float value)
-        {
-            value = Validation.checkZero(value);
-            HRadius = value;
-        }
-        public static void setOffsetX(float value)
-        {
-            value = Validation.checkZero(value);
-            offsetX = value;
-        }
-        public static void setOffsetY(float value)
-        {
-            value = Validation.checkZero(value);
-            offsetY = value;
-        }
-        public static void setOffsetZ(float value)
-        {
-            value = Validation.checkZero(value);
-            offsetZ = value;
-        }
-        public static void setA(float value)
-        {
-            value = Validation.checkZero(value);
-            A = value;
-        }
-        public static void setB(float value)
-        {
-            value = Validation.checkZero(value);
-            B = value;
-        }
-        public static void setC(float value)
-        {
-            value = Validation.checkZero(value);
-            C = value;
-        }
-        public static void setDA(float value)
-        {
-            value = Validation.checkZero(value);
-            DA = value;
-        }
-        public static void setDB(float value)
-        {
-            value = Validation.checkZero(value);
-            DB = value;
-        }
-        public static void setDC(float value)
-        {
-            value = Validation.checkZero(value);
-            DC = value;
-        }
-
-        //return
-        public static float returnSPM()
-        {
-            return stepsPerMM;
-        }
-        public static float returnTempSPM()
-        {
-            return tempSPM;
-        }
-        public static float returnZMaxLength()
-        {
-            return zMaxLength;
-        }
-        public static float returnZProbe()
-        {
-            return zProbe;
-        }
-        public static float returnHRadius()
-        {
-            return HRadius;
-        }
-        public static float returnOffsetX()
-        {
-            return offsetX;
-        }
-        public static float returnOffsetY()
-        {
-            return offsetY;
-        }
-        public static float returnOffsetZ()
-        {
-            return offsetZ;
-        }
-        public static float returnA()
-        {
-            return A;
-        }
-        public static float returnB()
-        {
-            return B;
-        }
-        public static float returnC()
-        {
-            return C;
-        }
-        public static float returnDA()
-        {
-            return DA;
-        }
-        public static float returnDB()
-        {
-            return DB;
-        }
-        public static float returnDC()
-        {
-            return DC;
+            stepsPerMM = _stepsPerMM;
+            tempSPM = _tempSPM;
+            zMaxLength = _zMaxLength;
+            zProbe = _zProbe;
+            HRadius = _HRadius;
+            offsetX = _offsetX;
+            offsetY = _offsetY;
+            offsetZ = _offsetZ;
+            A = _A;
+            B = _B;
+            C = _C;
+            DA = _DA;
+            DB = _DB;
+            DC = _DC;
         }
     }
 
@@ -173,6 +61,20 @@ namespace OpenDACT.Class_Files
         public bool EEPROMSet = false;
         public int iterationNum;
         public int centerIterations;
+        private static float tempStepsPerMM;
+        private static float tempTempSPM;
+        private static float tempZMaxLength;
+        private static float tempZProbe;
+        private static float tempHRadius;
+        private static float tempOffsetX;
+        private static float tempOffsetY;
+        private static float tempOffsetZ;
+        private static float tempA;
+        private static float tempB;
+        private static float tempC;
+        private static float tempDA;
+        private static float tempDB;
+        private static float tempDC;
 
         public void readEEPROM()
         {
@@ -182,6 +84,12 @@ namespace OpenDACT.Class_Files
         public object returnEEPROM()
         {
             return EEPROMVariables;
+        }
+
+        public EEPROM returnEEPROMObject()
+        {
+            EEPROM eepromObject = new EEPROM(tempStepsPerMM, tempTempSPM, tempZMaxLength, tempZProbe, tempHRadius, tempOffsetX, tempOffsetY, tempOffsetZ, tempA, tempB, tempC, tempDA, tempDB, tempDC);
+            return eepromObject;
         }
 
         public void parseEEPROM(string value, out int intParse, out float floatParse2)
@@ -232,7 +140,7 @@ namespace OpenDACT.Class_Files
             {
                 case 11:
                     UserInterface.logConsole("EEPROM capture initiated\n");
-                    
+
                     EEPROM.setSPM(floatParse2);
                     EEPROM.setTempSPM(floatParse2);
                     break;
@@ -274,6 +182,12 @@ namespace OpenDACT.Class_Files
                     EEPROMSet = true;
                     break;
             }
+        }
+
+        public void sendEEPROM(EEPROM eeprom)
+        {
+
+            GCode.sendEEPROMVariable();
         }
     }
 }

@@ -21,6 +21,7 @@ namespace OpenDACT
             consolePrinter.ScrollBars = RichTextBoxScrollBars.Vertical;
 
 
+
             /*
             printerConsoleTextBox.Text = "";
             printerConsoleTextBox.ScrollBars = ScrollBars.Vertical;

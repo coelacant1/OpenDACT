@@ -27,23 +27,34 @@ namespace OpenDACT.Class_Files
                         EEPROMFunctions.parseEEPROM(message, out intParse, out floatParse2);
                         EEPROMFunctions.setEEPROM(intParse, floatParse2);
                     }
-                    else if (Calibration.calibrateInProgress == false)
+                    else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false)
                     {
-
-                        EEPROM eeprom = EEPROMFunctions.returnEEPROMObject();
-                        Heights heights = new Heights(HeightFunctions.tempCenter, HeightFunctions.tempX, HeightFunctions.tempXOpp, HeightFunctions.tempY, HeightFunctions.tempYOpp, HeightFunctions.tempZ, HeightFunctions.tempZOpp);
-                        UserVariables userVariables = UserInterface.returnUserVariablesObject();
-
-
-                        if (HeightFunctions.parseZProbe(message) != 200)
+                        if (EEPROMFunctions.EEPROMSet == true)
                         {
-                            HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom, ref userVariables);
+                            EEPROM eeprom = EEPROMFunctions.returnEEPROMObject();
+                            UserVariables userVariables = UserInterface.returnUserVariablesObject();
+                            
+
+                            if (HeightFunctions.parseZProbe(message) != 200)
+                            {
+                                HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom, ref userVariables);
+                                UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");
+                            }
+
+                            if (HeightFunctions.heightsSet == true)
+                            {
+                                GCode.checkHeights = false;
+                                Heights heights = HeightFunctions.returnHeightObject();
+                                Calibration.calibrate(Calibration.calibrationSelection, ref eeprom, ref heights, ref userVariables);
+                            }
                         }
-
-                        UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");
-
-                        Calibration.calibrate(Calibration.calibrationSelection, ref eeprom, ref heights, ref userVariables);
                     }
+                    else if (GCode.checkHeights == true && Calibration.calibrateInProgress == false)
+                    {
+                        UserVariables userVariables = UserInterface.returnUserVariablesObject();
+                        GCode.positionFlow(ref userVariables);
+                    }
+
 
                 }
                 catch (TimeoutException) { }

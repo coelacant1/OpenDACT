@@ -37,7 +37,7 @@ namespace OpenDACT.Class_Files
         public float alphaRotationPercentageZ = 1.725F;
         public float deltaTower = 0.3F;
         public float deltaOpp = 0.2F;
-        public float plateDiameter = 100F;
+        public float plateDiameter = 200F;
 
         public int pauseTimeSet = 500;
 

@@ -42,6 +42,12 @@ namespace OpenDACT.Class_Files
         private static int position = 0;
         public static bool heightsSet = false;
 
+        public static Heights returnHeightObject()
+        {
+            Heights heights = new Heights(tempCenter, tempX, tempXOpp, tempY, tempYOpp, tempZ, tempZOpp);
+            return heights;
+        }
+
         public static void setHeights(float probePosition, ref EEPROM eeprom, ref UserVariables userVariables)
         {
             float zMaxLength = eeprom.zMaxLength;

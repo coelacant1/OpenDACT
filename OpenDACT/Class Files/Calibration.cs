@@ -32,6 +32,18 @@ namespace OpenDACT.Class_Files
             }
         }
 
+        public static void learnPrinter(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
+        {
+            calibrateInProgress = true;
+            heuristicLearning.testAdvanced(ref eeprom, ref userVariables, ref heights);
+
+            EEPROMFunctions.sendEEPROM(eeprom);
+            //UserInterface.setHeightMap();
+            calibrateInProgress = false;
+            GCode.checkHeights = true;
+            HeightFunctions.heightsSet = false;
+        }
+
         public static void basicCalibration(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
         {
             //check if eeprom object remains after this function is called for the second time
@@ -41,7 +53,7 @@ namespace OpenDACT.Class_Files
                 EEPROMFunctions.readEEPROM();
                 EEPROMFunctions.EEPROMRequestSent = true;
             }
-            
+
             if (EEPROMFunctions.EEPROMSet == true)
             {
                 if (GCode.checkHeights == false)
@@ -90,34 +102,12 @@ namespace OpenDACT.Class_Files
                 string zMinTemp;
                 string textFSRPO;
 
-                if (mainForm.comboBoxZMinimumValue.InvokeRequired)
-                {
-                    mainForm.comboBoxZMinimumValue.Invoke(new Action(() =>
-                    {
-                        zMinTemp = mainForm.comboBoxZMinimumValue.Text;
-                    }));
-                    return;
-                }
-                else
-                {
-                    zMinTemp = mainForm.comboBoxZMinimumValue.Text;
-                }
 
-                if (mainForm.textFSRPlateOffset.InvokeRequired)
-                {
-                    mainForm.textFSRPlateOffset.Invoke(new Action(() =>
-                    {
-                        textFSRPO = mainForm.textFSRPlateOffset.Text;
-                    }));
-                    return;
-                }
-                else
-                {
-                    textFSRPO = mainForm.textFSRPlateOffset.Text;
-                }
-                
+                zMinTemp = Program.mainFormTest.comboBoxZMinimumValue.Text;
+                textFSRPO = Program.mainFormTest.textFSRPlateOffset.Text;
 
-                if (mainForm.comboBoxZMinimumValue.Text == "FSR")
+
+                if (Program.mainFormTest.comboBoxZMinimumValue.Text == "FSR")
                 {
                     GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength - Convert.ToSingle(textFSRPO));
                     UserInterface.logConsole("Setting Z Max Length with adjustment for FSR");

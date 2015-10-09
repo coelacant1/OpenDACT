@@ -4,6 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Windows.Forms;
+using System.IO.Ports;
+using System.Diagnostics;
+using System.Threading;
+
 namespace OpenDACT.Class_Files
 {
     class UserVariables
@@ -117,7 +125,7 @@ namespace OpenDACT.Class_Files
             return calculationAccuracy;
         }
     }
-
+    
 
     static class UserInterface
     {
@@ -129,44 +137,22 @@ namespace OpenDACT.Class_Files
             this.mainForm = _mainForm;
         }
         */
-
         static public UserVariables returnUserVariablesObject()
         {
             UserVariables userVariables = new UserVariables();
             return userVariables;
         }
-        
-        static public void logConsole(string value)
+
+
+        public static void logConsole(string value)
         {
-            if (mainForm.consoleMain.InvokeRequired)
-            {
-                mainForm.consoleMain.Invoke(new Action(() =>
-                {
-                    mainForm.consoleMain.AppendText(value + "\n");
-                }));
-                return;
-            }
-            else
-            {
-                mainForm.consoleMain.AppendText(value + "\n");
-            }
+            Program.mainFormTest.appendMainConsole(value);
         }
 
 
-        static public void logPrinter(string value)
+        public static void logPrinter(string value)
         {
-            if (mainForm.consolePrinter.InvokeRequired)
-            {
-                mainForm.consolePrinter.Invoke(new Action(() =>
-                {
-                    mainForm.consolePrinter.AppendText(value + "\n");
-                }));
-                return;
-            }
-            else
-            {
-                mainForm.consolePrinter.AppendText(value + "\n");
-            }
+            Program.mainFormTest.appendPrinterConsole(value);
         }
 
         /*
@@ -181,9 +167,39 @@ namespace OpenDACT.Class_Files
             not: printer log, tabs: settings, advanced, calibration graph
         */
 
+        //
+        public static void setAdvancedCalVars()
+        {
 
+            /*
+            Invoke((MethodInvoker)delegate { mainForm.textDeltaTower.Text = Math.Round(deltaTower, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textDeltaOpp.Text = Math.Round(deltaOpp, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textHRadRatio.Text = Math.Round(HRadRatio, 3).ToString(); });
 
-        static public void GraphAccuracy()
+            Invoke((MethodInvoker)delegate { this.textxxPerc.Text = Math.Round(offsetXCorrection, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxxOppPerc.Text = Math.Round(xxOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxyPerc.Text = Math.Round(xyPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxyOppPerc.Text = Math.Round(xyOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxzPerc.Text = Math.Round(xzPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textxzOppPerc.Text = Math.Round(xzOppPerc, 3).ToString(); });
+
+            Invoke((MethodInvoker)delegate { this.textyyPerc.Text = Math.Round(offsetYCorrection, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyyOppPerc.Text = Math.Round(yyOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyxPerc.Text = Math.Round(yxPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyxOppPerc.Text = Math.Round(yxOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyzPerc.Text = Math.Round(yzPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textyzOppPerc.Text = Math.Round(yzOppPerc, 3).ToString(); });
+
+            Invoke((MethodInvoker)delegate { this.textzzPerc.Text = Math.Round(offsetZCorrection, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzzOppPerc.Text = Math.Round(zzOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzxPerc.Text = Math.Round(zxPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzxOppPerc.Text = Math.Round(zxOppPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzyPerc.Text = Math.Round(zyPerc, 3).ToString(); });
+            Invoke((MethodInvoker)delegate { this.textzyOppPerc.Text = Math.Round(zyOppPerc, 3).ToString(); });
+            */
+        }
+
+        public static void GraphAccuracy()
         {
             //create graph of accuracy over iterations
 

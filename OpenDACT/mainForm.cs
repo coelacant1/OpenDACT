@@ -34,6 +34,9 @@ namespace OpenDACT.Class_Files
             baudRateCombo.Items.Add("9600");
             baudRateCombo.Text = "250000";  // This is the default for most RAMBo controllers.
 
+            advancedPanel.Visible = false;
+            printerLogPanel.Visible = false;
+
 
             String[] zMinArray = { "FSR", "Z-Probe" };
             comboBoxZMinimumValue.DataSource = zMinArray;
@@ -129,6 +132,19 @@ namespace OpenDACT.Class_Files
         public void appendPrinterConsole(string value)
         {
             consolePrinter.AppendText(value + "\n");
+        }
+
+        private void openAdvanced_Click(object sender, EventArgs e)
+        {
+            if (advancedPanel.Visible == false) {
+                advancedPanel.Visible = true;
+                printerLogPanel.Visible = true;
+            }
+            else
+            {
+                advancedPanel.Visible = false;
+                printerLogPanel.Visible = false;
+            }
         }
     }
 }

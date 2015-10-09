@@ -21,7 +21,7 @@ namespace OpenDACT.Class_Files
 
             if (_serialPort.IsOpen)
             {
-                UserInterface.logConsole("Already Connected\n");
+                UserInterface.logConsole("Already Connected");
             }
             else
             {
@@ -51,16 +51,16 @@ namespace OpenDACT.Class_Files
                         ConsoleRead._continue = true;
 
                         readThread.Start();
-                        UserInterface.logConsole("Connected\n");
+                        UserInterface.logConsole("Connected");
                     }
                     else
                     {
-                        UserInterface.logConsole("Please fill all text boxes above\n");
+                        UserInterface.logConsole("Please fill all text boxes above");
                     }
                 }
                 catch (Exception e1)
                 {
-                    UserInterface.logConsole(e1.Message + "\n");
+                    UserInterface.logConsole(e1.Message);
                     ConsoleRead._continue = false;
 
                     //check if connection is open
@@ -83,16 +83,16 @@ namespace OpenDACT.Class_Files
                     ConsoleRead._continue = false;
                     readThread.Join();
                     _serialPort.Close();
-                    UserInterface.logConsole("Disconnected\n");
+                    UserInterface.logConsole("Disconnected");
                 }
                 catch (Exception e1)
                 {
-                    UserInterface.logConsole(e1.Message + "\n");
+                    UserInterface.logConsole(e1.Message);
                 }
             }
             else
             {
-                UserInterface.logConsole("Not Connected\n");
+                UserInterface.logConsole("Not Connected");
             }
         }
     }

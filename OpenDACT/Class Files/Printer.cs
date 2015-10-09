@@ -119,7 +119,7 @@ namespace OpenDACT.Class_Files
                         //setHeightMap();
 
                         GCode.sendEEPROMVariable(3, 153, tempCenter);
-                        UserInterface.logConsole("Setting Z Max Length\n");
+                        UserInterface.logConsole("Setting Z Max Length");
                         Thread.Sleep(userVariables.pauseTimeSet);
 
                         eeprom.zMaxLength = tempCenter;

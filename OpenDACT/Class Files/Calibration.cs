@@ -94,10 +94,18 @@ namespace OpenDACT.Class_Files
                 string zMinTemp;
                 string textFSRPO;
 
-                mainForm.comboBoxZMinimumValue.Invoke(new Action(() =>
+                if (mainForm.comboBoxZMinimumValue.InvokeRequired)
+                {
+                    mainForm.comboBoxZMinimumValue.Invoke(new Action(() =>
+                    {
+                        zMinTemp = mainForm.comboBoxZMinimumValue.Text;
+                    }));
+                    return;
+                }
+                else
                 {
                     zMinTemp = mainForm.comboBoxZMinimumValue.Text;
-                }));
+                }
 
                 if (mainForm.textFSRPlateOffset.InvokeRequired)
                 {

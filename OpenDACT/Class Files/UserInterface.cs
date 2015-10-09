@@ -136,19 +136,35 @@ namespace OpenDACT.Class_Files
         
         static public void logConsole(string value)
         {
-            mainForm.consoleMain.Invoke(new Action(() =>
+            if (mainForm.consoleMain.InvokeRequired)
+            {
+                mainForm.consoleMain.Invoke(new Action(() =>
+                {
+                    mainForm.consoleMain.AppendText(value + "\n");
+                }));
+                return;
+            }
+            else
             {
                 mainForm.consoleMain.AppendText(value + "\n");
-            }));
+            }
         }
 
 
         static public void logPrinter(string value)
         {
-            mainForm.consolePrinter.Invoke(new Action(() =>
+            if (mainForm.consolePrinter.InvokeRequired)
+            {
+                mainForm.consolePrinter.Invoke(new Action(() =>
+                {
+                    mainForm.consolePrinter.AppendText(value + "\n");
+                }));
+                return;
+            }
+            else
             {
                 mainForm.consolePrinter.AppendText(value + "\n");
-            }));
+            }
         }
 
         /*

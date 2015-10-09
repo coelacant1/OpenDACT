@@ -44,11 +44,6 @@ namespace OpenDACT.Class_Files
             
             if (EEPROMFunctions.EEPROMSet == true)
             {
-                if (GCode.checkHeights == true)
-                {
-                    GCode.positionFlow(ref userVariables);
-                }
-
                 if (GCode.checkHeights == false)
                 {
                     calibrateInProgress = true;
@@ -64,6 +59,7 @@ namespace OpenDACT.Class_Files
                     //UserInterface.setHeightMap();
                     calibrateInProgress = false;
                     GCode.checkHeights = true;
+                    HeightFunctions.heightsSet = false;
                 }
 
 
@@ -124,13 +120,13 @@ namespace OpenDACT.Class_Files
                 if (mainForm.comboBoxZMinimumValue.Text == "FSR")
                 {
                     GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength - Convert.ToSingle(textFSRPO));
-                    UserInterface.logConsole("Setting Z Max Length with adjustment for FSR\n");
+                    UserInterface.logConsole("Setting Z Max Length with adjustment for FSR");
                     Thread.Sleep(userVariables.pauseTimeSet);
                 }
 
                 Thread.Sleep(userVariables.pauseTimeSet);
                 GCode.homeAxes();
-                UserInterface.logConsole("Calibration Complete\n");
+                UserInterface.logConsole("Calibration Complete");
                 //end code
             }
         }
@@ -149,7 +145,7 @@ namespace OpenDACT.Class_Files
             YOpp -= HRadSA;
             ZOpp -= HRadSA;
 
-            UserInterface.logConsole("HRad:" + eeprom.HRadius.ToString() + "\n");
+            UserInterface.logConsole("HRad:" + eeprom.HRadius.ToString());
         }
 
         public static void DRad(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
@@ -184,14 +180,7 @@ namespace OpenDACT.Class_Files
             Z = Z + ((DCSA) / DRadRatio) * 0.5F;
             ZOpp = ZOpp + ((DCSA) / DRadRatio) * 0.225F;
 
-            UserInterface.logConsole("Delta Radii Offsets: " + eeprom.DA.ToString() + ", " + eeprom.DB.ToString() + ", " + eeprom.DC.ToString());
-
-            Connection._serialPort.WriteLine("M206 T3 P913 X" + Validation.ToLongString(eeprom.DA));
-            Thread.Sleep(userVariables.pauseTimeSet);
-            Connection._serialPort.WriteLine("M206 T3 P917 X" + Validation.ToLongString(eeprom.DB));
-            Thread.Sleep(userVariables.pauseTimeSet);
-            Connection._serialPort.WriteLine("M206 T3 P921 X" + Validation.ToLongString(eeprom.DC));
-            Thread.Sleep(userVariables.pauseTimeSet);
+            UserInterface.logConsole("DRad: " + eeprom.DA.ToString() + ", " + eeprom.DB.ToString() + ", " + eeprom.DC.ToString());
         }
         /*
         public void analyzeGeometry(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
@@ -454,19 +443,11 @@ namespace OpenDACT.Class_Files
             }
 
             //round to the nearest whole number
-            offsetX = Convert.ToInt32(offsetX);
-            offsetY = Convert.ToInt32(offsetY);
-            offsetZ = Convert.ToInt32(offsetZ);
+            eeprom.offsetX = Convert.ToInt32(offsetX);
+            eeprom.offsetY = Convert.ToInt32(offsetY);
+            eeprom.offsetZ = Convert.ToInt32(offsetZ);
 
-            UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ + "\n");
-
-            //send data back to printer
-            Connection._serialPort.WriteLine("M206 T1 P893 S" + offsetX.ToString());
-            Thread.Sleep(userVariables.pauseTimeSet);
-            Connection._serialPort.WriteLine("M206 T1 P895 S" + offsetY.ToString());
-            Thread.Sleep(userVariables.pauseTimeSet);
-            Connection._serialPort.WriteLine("M206 T1 P897 S" + offsetZ.ToString());
-            Thread.Sleep(userVariables.pauseTimeSet);
+            UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ);
         }
 
         public static void alphaRotation(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
@@ -474,9 +455,6 @@ namespace OpenDACT.Class_Files
             float offsetX = eeprom.offsetX;
             float offsetY = eeprom.offsetY;
             float offsetZ = eeprom.offsetZ;
-            float A = eeprom.A;
-            float B = eeprom.B;
-            float C = eeprom.C;
             float accuracy = userVariables.accuracy;
 
             //change to object
@@ -493,7 +471,7 @@ namespace OpenDACT.Class_Files
                     if (YOpp > ZOpp)
                     {
                         float ZYOppAvg = (YOpp - ZOpp) / 2;
-                        A = A + (ZYOppAvg * alphaRotationPercentageX); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
+                        eeprom.A = eeprom.A + (ZYOppAvg * alphaRotationPercentageX); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
                         YOpp = YOpp - ZYOppAvg;
                         ZOpp = ZOpp + ZYOppAvg;
                     }
@@ -501,7 +479,7 @@ namespace OpenDACT.Class_Files
                     {
                         float ZYOppAvg = (ZOpp - YOpp) / 2;
 
-                        A = A - (ZYOppAvg * alphaRotationPercentageX);
+                        eeprom.A = eeprom.A - (ZYOppAvg * alphaRotationPercentageX);
                         YOpp = YOpp + ZYOppAvg;
                         ZOpp = ZOpp - ZYOppAvg;
                     }
@@ -510,7 +488,7 @@ namespace OpenDACT.Class_Files
                     if (ZOpp > XOpp)
                     {
                         float XZOppAvg = (ZOpp - XOpp) / 2;
-                        B = B + (XZOppAvg * alphaRotationPercentageY);
+                        eeprom.B = eeprom.B + (XZOppAvg * alphaRotationPercentageY);
                         ZOpp = ZOpp - XZOppAvg;
                         XOpp = XOpp + XZOppAvg;
                     }
@@ -518,7 +496,7 @@ namespace OpenDACT.Class_Files
                     {
                         float XZOppAvg = (XOpp - ZOpp) / 2;
 
-                        B = B - (XZOppAvg * alphaRotationPercentageY);
+                        eeprom.B = eeprom.B - (XZOppAvg * alphaRotationPercentageY);
                         ZOpp = ZOpp + XZOppAvg;
                         XOpp = XOpp - XZOppAvg;
                     }
@@ -526,7 +504,7 @@ namespace OpenDACT.Class_Files
                     if (XOpp > YOpp)
                     {
                         float YXOppAvg = (XOpp - YOpp) / 2;
-                        C = C + (YXOppAvg * alphaRotationPercentageZ);
+                        eeprom.C = eeprom.C + (YXOppAvg * alphaRotationPercentageZ);
                         XOpp = XOpp - YXOppAvg;
                         YOpp = YOpp + YXOppAvg;
                     }
@@ -534,7 +512,7 @@ namespace OpenDACT.Class_Files
                     {
                         float YXOppAvg = (YOpp - XOpp) / 2;
 
-                        C = C - (YXOppAvg * alphaRotationPercentageZ);
+                        eeprom.C = eeprom.C - (YXOppAvg * alphaRotationPercentageZ);
                         XOpp = XOpp + YXOppAvg;
                         YOpp = YOpp - YXOppAvg;
                     }
@@ -555,7 +533,7 @@ namespace OpenDACT.Class_Files
                 }
 
                 //log
-                UserInterface.logConsole("ABC:" + A + " " + B + " " + C + "\n");
+                UserInterface.logConsole("ABC:" + eeprom.A + " " + eeprom.B + " " + eeprom.C);
             }
         }
 
@@ -571,7 +549,7 @@ namespace OpenDACT.Class_Files
             float XYZOpp = (XOpp + YOpp + ZOpp) / 3;
             float accuracy = userVariables.accuracy;
 
-            UserInterface.logConsole(X.ToString() + " " + XOpp.ToString() + " " + Y.ToString() + " " + YOpp.ToString() + " " + Z.ToString() + " " + ZOpp.ToString());
+            //UserInterface.logConsole(X.ToString() + " " + XOpp.ToString() + " " + Y.ToString() + " " + YOpp.ToString() + " " + Z.ToString() + " " + ZOpp.ToString());
 
             if (Math.Abs(XYZOpp - XYZ) > accuracy * 2)
             {
@@ -636,33 +614,15 @@ namespace OpenDACT.Class_Files
 
                         float tempChange = eeprom.zMaxLength - changeInMM;
 
-                        GCode.sendEEPROMVariable(3, 153, tempChange);
-                        UserInterface.logConsole("Resetting Z Max Length\n");
-                        Thread.Sleep(userVariables.pauseTimeSet);
+                        eeprom.zMaxLength = tempChange;
 
-                        GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
-                        UserInterface.logConsole("Steps Per Millimeter Changed: " + eeprom.stepsPerMM.ToString());
-                        Thread.Sleep(userVariables.pauseTimeSet);
-
+                        UserInterface.logConsole("SPM:" + eeprom.stepsPerMM);
                         i = 100;
                     }
                     else
                     {
                         i++;
                     }
-                }
-
-                if (eeprom.HRadius < 250 && eeprom.HRadius > 50)
-                {
-                    //send obtained values back to the printer*************************************
-                    UserInterface.logConsole("HRad Recalibration:" + eeprom.HRadius.ToString() + "\n");
-                    GCode.sendEEPROMVariable(3, 885, Validation.checkZero(eeprom.HRadius));
-                    UserInterface.logConsole("Setting Horizontal Radius\n");
-                    Thread.Sleep(userVariables.pauseTimeSet);
-                }
-                else
-                {
-                    UserInterface.logConsole("Horizontal radius not set\n");
                 }
             }
 

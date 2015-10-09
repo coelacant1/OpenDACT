@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
@@ -173,19 +174,35 @@ namespace OpenDACT.Class_Files
         public static void sendEEPROM(EEPROM eeprom)
         {
             //manually set all eeprom values
+            Thread.Sleep(500);
+            GCode.sendToPosition(0, 0, 100);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 808, eeprom.zProbe);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 885, eeprom.HRadius);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(1, 893, eeprom.offsetX);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(1, 895, eeprom.offsetY);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(1, 897, eeprom.offsetZ);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 901, eeprom.A);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 905, eeprom.B);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 909, eeprom.C);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 913, eeprom.DA);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 917, eeprom.DB);
+            Thread.Sleep(500);
             GCode.sendEEPROMVariable(3, 921, eeprom.DC);
+            Thread.Sleep(500);
         }
     }
 }

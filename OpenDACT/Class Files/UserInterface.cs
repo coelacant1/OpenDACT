@@ -38,6 +38,8 @@ namespace OpenDACT.Class_Files
         public float deltaTower = 0.3F;
         public float deltaOpp = 0.2F;
         public float plateDiameter = 200F;
+        public bool advancedCalibration = false;
+        public int advancedCalCount = 0;
 
         public int pauseTimeSet = 500;
 

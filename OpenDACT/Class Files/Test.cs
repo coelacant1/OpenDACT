@@ -3,222 +3,223 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    class advanced
+    class learnPrinter
     {
         private void testAdvanced(ref EEPROM eeprom, ref UserVariables userVariables, ref Heights heights)
         {
-            if (advancedCalibration == 1)
+            if (userVariables.advancedCalibration == true)
             {
                 //find base heights
                 //find heights with each value increased by 1 - HRad, tower offset 1-3, diagonal rod
 
-                if (advancedCalCount == 0)
+                if (userVariables.advancedCalCount == 0)
                 {//start
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //set diagonal rod +1
-                        _serialPort.WriteLine("M206 T3 P881 X" + (diagonalRod + 1).ToString());
-                        LogConsole("Setting diagonal rod to: " + (diagonalRod + 1).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        _serialPort.WriteLine("M206 T3 P881 X" + (eeprom.stepsPerMM + 1).ToString());
+                        UserInterface.logConsole("Setting diagonal rod to: " + (eeprom.stepsPerMM + 1).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
 
-                    initiateCal();
+                    //check heights
 
-                    advancedCalCount++;
+                    userVariables.advancedCalCount++;
                 }
-                else if (advancedCalCount == 1)
+                else if (userVariables.advancedCalCount == 1)
                 {//get diagonal rod percentages
 
-                    deltaTower = ((tempX - X) + (tempY - Y) + (tempZ - Z)) / 3;
-                    deltaOpp = ((tempXOpp - XOpp) + (tempYOpp - YOpp) + (tempZOpp - ZOpp)) / 3;
+                    userVariables.deltaTower = ((heights.teX - heights.X) + (tempY - heights.Y) + (tempZ - heights.Z)) / 3;
+                    userVariables.deltaOpp = ((tempXOpp - XOpp) + (tempYOpp - YOpp) + (tempZOpp - ZOpp)) / 3;
 
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //reset diagonal rod
-                        _serialPort.WriteLine("M206 T3 P881 X" + (diagonalRod).ToString());
-                        LogConsole("Setting diagonal rod to: " + (diagonalRod).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        _serialPort.WriteLine("M206 T3 P881 X" + (eeprom.stepsPerMM).ToString());
+                        UserInterface.logConsole("Setting diagonal rod to: " + (eeprom.stepsPerMM).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                         //set Hrad +1
-                        _serialPort.WriteLine("M206 T3 P885 X" + (HRad + 1).ToString());
-                        LogConsole("Setting Horizontal Radius to: " + (HRad + 1).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        _serialPort.WriteLine("M206 T3 P885 X" + (eeprom.HRadius + 1).ToString());
+                        UserInterface.logConsole("Setting Horizontal Radius to: " + (eeprom.HRadius + 1).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
 
-                    initiateCal();
+                    //check heights
 
-                    advancedCalCount++;
+                    userVariables.advancedCalCount++;
                 }
-                else if (advancedCalCount == 2)
+                else if (userVariables.advancedCalCount == 2)
                 {//get HRad percentages
-                    HRadRatio = -(Math.Abs((X - tempX) + (Y - tempY) + (Z - tempZ) + (XOpp - tempXOpp) + (YOpp - tempYOpp) + (ZOpp - tempZOpp))) / 6;
+                    userVariables.HRadRatio = -(Math.Abs((X - heights.teX) + (Y - heights.teY) + (Z - heights.teZ) + (XOpp - heights.teXOpp) + (YOpp - heights.teYOpp) + (ZOpp - heights.teZOpp))) / 6;
 
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //reset horizontal radius
                         _serialPort.WriteLine("M206 T3 P885 X" + (HRad).ToString());
-                        LogConsole("Setting Horizontal Radius to: " + (HRad).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting Horizontal Radius to: " + (HRad).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                         //set X offset
                         _serialPort.WriteLine("M206 T1 P893 S" + (offsetX + 80).ToString());
-                        LogConsole("Setting offset X to: " + (offsetX + 80).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting offset X to: " + (offsetX + 80).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
 
-                    initiateCal();
+                    //check heights
 
-                    advancedCalCount++;
+                    userVariables.advancedCalCount++;
                 }
-                else if (advancedCalCount == 3)
+                else if (userVariables.advancedCalCount == 3)
                 {//get X offset percentages
 
-                    offsetXCorrection = Math.Abs(1 / (X - tempX));
-                    xxOppPerc = Math.Abs((XOpp - tempXOpp) / (X - tempX));
-                    xyPerc = Math.Abs((Y - tempY) / (X - tempX));
-                    xyOppPerc = Math.Abs((YOpp - tempYOpp) / (X - tempX));
-                    xzPerc = Math.Abs((Z - tempZ) / (X - tempX));
-                    xzOppPerc = Math.Abs((ZOpp - tempZOpp) / (X - tempX));
+                    userVariables.offsetXCorrection = Math.Abs(1 / (X - heights.teX));
+                    userVariables.xxOppPerc = Math.Abs((XOpp - heights.teXOpp) / (X - heights.teX));
+                    userVariables.xyPerc = Math.Abs((Y - heights.teY) / (X - heights.teX));
+                    userVariables.xyOppPerc = Math.Abs((YOpp - heights.teYOpp) / (X - heights.teX));
+                    userVariables.xzPerc = Math.Abs((Z - heights.teZ) / (X - heights.teX));
+                    userVariables.xzOppPerc = Math.Abs((ZOpp - heights.teZOpp) / (X - heights.teX));
 
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //reset X offset
                         _serialPort.WriteLine("M206 T1 P893 S" + (offsetX).ToString());
-                        LogConsole("Setting offset X to: " + (offsetX).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting offset X to: " + (offsetX).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                         //set Y offset
                         _serialPort.WriteLine("M206 T1 P895 S" + (offsetY + 80).ToString());
-                        LogConsole("Setting offset Y to: " + (offsetY + 80).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting offset Y to: " + (offsetY + 80).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
 
-                    initiateCal();
+                    //check heights
 
-                    advancedCalCount++;
+                    userVariables.advancedCalCount++;
                 }
-                else if (advancedCalCount == 4)
+                else if (userVariables.advancedCalCount == 4)
                 {//get Y offset percentages
 
-                    offsetYCorrection = Math.Abs(1 / (Y - tempY));
-                    yyOppPerc = Math.Abs((YOpp - tempYOpp) / (Y - tempY));
-                    yxPerc = Math.Abs((X - tempX) / (Y - tempY));
-                    yxOppPerc = Math.Abs((XOpp - tempXOpp) / (Y - tempY));
-                    yzPerc = Math.Abs((Z - tempZ) / (Y - tempY));
-                    yzOppPerc = Math.Abs((ZOpp - tempZOpp) / (Y - tempY));
+                    userVariables.offsetYCorrection = Math.Abs(1 / (Y - heights.teY));
+                    userVariables.yyOppPerc = Math.Abs((YOpp - heights.teYOpp) / (Y - heights.teY));
+                    userVariables.yxPerc = Math.Abs((X - heights.teX) / (Y - heights.teY));
+                    userVariables.yxOppPerc = Math.Abs((XOpp - heights.teXOpp) / (Y - heights.teY));
+                    userVariables.yzPerc = Math.Abs((Z - heights.teZ) / (Y - heights.teY));
+                    userVariables.yzOppPerc = Math.Abs((ZOpp - heights.teZOpp) / (Y - heights.teY));
 
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //reset Y offset
                         _serialPort.WriteLine("M206 T1 P895 S" + (offsetY).ToString());
-                        LogConsole("Setting offset Y to: " + (offsetY).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting offset Y to: " + (offsetY).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                         //set Z offset
                         _serialPort.WriteLine("M206 T1 P897 S" + (offsetZ + 80).ToString());
-                        LogConsole("Setting offset Z to: " + (offsetZ + 80).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting offset Z to: " + (offsetZ + 80).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
 
-                    initiateCal();
+                    //check heights
 
-                    advancedCalCount++;
+                    userVariables.advancedCalCount++;
                 }
-                else if (advancedCalCount == 5)
+                else if (userVariables.advancedCalCount == 5)
                 {//get Z offset percentages
 
-                    offsetZCorrection = Math.Abs(1 / (Z - tempZ));
-                    zzOppPerc = Math.Abs((ZOpp - tempZOpp) / (Z - tempZ));
-                    zxPerc = Math.Abs((X - tempX) / (Z - tempZ));
-                    zxOppPerc = Math.Abs((XOpp - tempXOpp) / (Z - tempZ));
-                    zyPerc = Math.Abs((Y - tempY) / (Z - tempZ));
-                    zyOppPerc = Math.Abs((YOpp - tempYOpp) / (Z - tempZ));
+                    userVariables.offsetZCorrection = Math.Abs(1 / (Z - heights.teZ));
+                    userVariables.zzOppPerc = Math.Abs((ZOpp - heights.teZOpp) / (Z - heights.teZ));
+                    userVariables.zxPerc = Math.Abs((X - heights.teX) / (Z - heights.teZ));
+                    userVariables.zxOppPerc = Math.Abs((XOpp - heights.teXOpp) / (Z - heights.teZ));
+                    userVariables.zyPerc = Math.Abs((Y - heights.teY) / (Z - heights.teZ));
+                    userVariables.zyOppPerc = Math.Abs((YOpp - heights.teYOpp) / (Z - heights.teZ));
 
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //set Z offset
                         _serialPort.WriteLine("M206 T1 P897 S" + (offsetZ).ToString());
-                        LogConsole("Setting offset Z to: " + (offsetZ).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting offset Z to: " + (offsetZ).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                         //set alpha rotation offset perc X
                         _serialPort.WriteLine("M206 T3 P901 X" + (A + 1).ToString());
-                        LogConsole("Setting Alpha A to: " + (A + 1).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting Alpha A to: " + (A + 1).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
 
-                    initiateCal();
+                    //check heights
 
-                    advancedCalCount++;
+                    userVariables.advancedCalCount++;
 
                 }
-                else if (advancedCalCount == 6)//6
+                else if (userVariables.advancedCalCount == 6)//6
                 {//get A alpha rotation
 
-                    alphaRotationPercentageX = (2 / Math.Abs((YOpp - ZOpp) - (tempYOpp - tempZOpp)));
+                    userVariables.alphaRotationPercentageX = (2 / Math.Abs((YOpp - ZOpp) - (tempYOpp - heights.teZOpp)));
 
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //set alpha rotation offset perc X
                         _serialPort.WriteLine("M206 T3 P901 X" + (A).ToString());
-                        LogConsole("Setting Alpha A to: " + (A).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting Alpha A to: " + (A).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                         //set alpha rotation offset perc Y
                         _serialPort.WriteLine("M206 T3 P905 X" + (B + 1).ToString());
-                        LogConsole("Setting Alpha B to: " + (B + 1).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting Alpha B to: " + (B + 1).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
 
-                    initiateCal();
+                    //check heights
 
-                    advancedCalCount++;
+                    userVariables.advancedCalCount++;
                 }
-                else if (advancedCalCount == 7)//7
+                else if (userVariables.advancedCalCount == 7)//7
                 {//get B alpha rotation
 
-                    alphaRotationPercentageY = (2 / Math.Abs((ZOpp - XOpp) - (tempZOpp - tempXOpp)));
+                    userVariables.alphaRotationPercentageY = (2 / Math.Abs((ZOpp - XOpp) - (tempZOpp - heights.teXOpp)));
 
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //set alpha rotation offset perc Y
                         _serialPort.WriteLine("M206 T3 P905 X" + (B).ToString());
-                        LogConsole("Setting Alpha B to: " + (B).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting Alpha B to: " + (B).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                         //set alpha rotation offset perc Z
                         _serialPort.WriteLine("M206 T3 P909 X" + (C + 1).ToString());
-                        LogConsole("Setting Alpha C to: " + (C + 1).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting Alpha C to: " + (C + 1).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
 
-                    initiateCal();
+                    //check heights
 
-                    advancedCalCount++;
+                    userVariables.advancedCalCount++;
                 }
-                else if (advancedCalCount == 8)//8
+                else if (userVariables.advancedCalCount == 8)//8
                 {//get C alpha rotation
 
-                    alphaRotationPercentageZ = (2 / Math.Abs((XOpp - YOpp) - (tempXOpp - tempYOpp)));
+                    userVariables.alphaRotationPercentageZ = (2 / Math.Abs((XOpp - YOpp) - (tempXOpp - heights.teYOpp)));
 
-                    if (_serialPort.IsOpen)
+                    if (Connection._serialPort.IsOpen)
                     {
                         //set alpha rotation offset perc Z
                         _serialPort.WriteLine("M206 T3 P909 X" + (C).ToString());
-                        LogConsole("Setting Alpha C to: " + (C).ToString() + "\n");
-                        Thread.Sleep(pauseTimeSet);
+                        UserInterface.logConsole("Setting Alpha C to: " + (C).ToString() + "\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
 
                     }
 
-                    LogConsole("Alpha offset percentages: " + alphaRotationPercentageX + ", " + alphaRotationPercentageY + ", and" + alphaRotationPercentageZ + "\n");
+                    UserInterface.logConsole("Alpha offset percentages: " + alphaRotationPercentageX + ", " + alphaRotationPercentageY + ", and" + alphaRotationPercentageZ + "\n");
 
                     advancedCalibration = 0;
                     advancedCalCount = 0;
 
-                    initiateCal();
+                    //check heights
 
                     setAdvancedCalVars();
                 }
@@ -483,7 +484,7 @@ namespace OpenDACT.Class_Files
             public static float alphaRotationPercentageY = 1.725F;
             public static float alphaRotationPercentageZ = 1.725F;
 
-            public static int pauseTimeSet = 500;
+            public static int userVariables.pauseTimeSet = 500;
 
             public static void setHRadRatio(float value)
             {
@@ -543,9 +544,9 @@ namespace OpenDACT.Class_Files
                 value = Validation.checkZero(value);
                 alphaRotationPercentageZ = value;
             }
-            public static void setPauseTimeSet(int value)
+            public static void setuserVariables.pauseTimeSet(int value)
             {
-                pauseTimeSet = value;
+                userVariables.pauseTimeSet = value;
             }
 
 
@@ -601,9 +602,9 @@ namespace OpenDACT.Class_Files
             {
                 ialphaRotPercZ = alphaRotationPercentageZ;
             }
-            public static int returnPauseTimeSet()
+            public static int returnuserVariables.pauseTimeSet()
             {
-                return pauseTimeSet;
+                return userVariables.pauseTimeSet;
             }
         }
     }

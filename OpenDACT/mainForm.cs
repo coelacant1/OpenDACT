@@ -16,12 +16,13 @@ namespace OpenDACT.Class_Files
     {
         public mainForm()
         {
+            UserVariables userVariables = UserInterface.returnUserVariablesObject();
+
             InitializeComponent();
             consoleMain.Text = "";
             consoleMain.ScrollBars = RichTextBoxScrollBars.Vertical;
             consolePrinter.Text = "";
             consolePrinter.ScrollBars = RichTextBoxScrollBars.Vertical;
-
 
 
             // Basic set of standard baud rates.
@@ -121,6 +122,13 @@ namespace OpenDACT.Class_Files
                 UserInterface.logConsole("Not connected\n");
             }
         }
+        public void appendMainConsole(string value)
+        {
+            consoleMain.AppendText(value + "\n");
+        }
+        public void appendPrinterConsole(string value)
+        {
+            consolePrinter.AppendText(value + "\n");
+        }
     }
-
 }

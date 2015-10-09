@@ -43,9 +43,18 @@ namespace OpenDACT.Class_Files
 
                             if (HeightFunctions.heightsSet == true)
                             {
-                                GCode.checkHeights = false;
-                                Heights heights = HeightFunctions.returnHeightObject();
-                                Calibration.calibrate(Calibration.calibrationSelection, ref eeprom, ref heights, ref userVariables);
+                                if (userVariables.advancedCalibration == false)
+                                {
+                                    GCode.checkHeights = false;
+                                    Heights heights = HeightFunctions.returnHeightObject();
+                                    Calibration.calibrate(Calibration.calibrationSelection, ref eeprom, ref heights, ref userVariables);
+                                }
+                                else
+                                {
+                                    GCode.checkHeights = false;
+                                    Heights heights = HeightFunctions.returnHeightObject();
+
+                                }
                             }
                         }
                     }

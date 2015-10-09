@@ -17,6 +17,8 @@ namespace OpenDACT.Class_Files
 
         public static void connect()
         {
+            UserVariables userVariables = UserInterface.returnUserVariablesObject();
+
             if (_serialPort.IsOpen)
             {
                 UserInterface.logConsole("Already Connected\n");
@@ -32,8 +34,9 @@ namespace OpenDACT.Class_Files
                         _serialPort = new SerialPort();
                     }
 
-                    _serialPort.PortName = mainForm.portsCombo.Text;
-                    _serialPort.BaudRate = int.Parse(mainForm.baudRateCombo.Text);
+
+                    _serialPort.PortName = Program.mainFormTest.portsCombo.Text;
+                    _serialPort.BaudRate = int.Parse(Program.mainFormTest.baudRateCombo.Text);
 
                     // Set the read/write timeouts.
                     _serialPort.ReadTimeout = 500;

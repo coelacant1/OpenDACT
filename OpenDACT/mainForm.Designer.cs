@@ -28,33 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            consoleMain = new System.Windows.Forms.RichTextBox();
-            consolePrinter = new System.Windows.Forms.RichTextBox();
+            this.consoleMain = new System.Windows.Forms.RichTextBox();
+            this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
             this.disconnectButton = new System.Windows.Forms.Button();
             this.calibrateButton = new System.Windows.Forms.Button();
-            baudRateCombo = new System.Windows.Forms.ComboBox();
-            portsCombo = new System.Windows.Forms.ComboBox();
-            comboBoxZMinimumValue = new System.Windows.Forms.ComboBox();
-            textFSRPlateOffset = new System.Windows.Forms.TextBox();
+            this.baudRateCombo = new System.Windows.Forms.ComboBox();
+            this.portsCombo = new System.Windows.Forms.ComboBox();
+            this.comboBoxZMinimumValue = new System.Windows.Forms.ComboBox();
+            this.textFSRPlateOffset = new System.Windows.Forms.TextBox();
             this.resetPrinter = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // consoleMain
             // 
-            consoleMain.Location = new System.Drawing.Point(169, 71);
-            consoleMain.Name = "consoleMain";
-            consoleMain.Size = new System.Drawing.Size(321, 147);
-            consoleMain.TabIndex = 0;
-            consoleMain.Text = "";
+            this.consoleMain.Location = new System.Drawing.Point(169, 71);
+            this.consoleMain.Name = "consoleMain";
+            this.consoleMain.Size = new System.Drawing.Size(321, 147);
+            this.consoleMain.TabIndex = 0;
+            this.consoleMain.Text = "";
             // 
             // consolePrinter
             // 
-            consolePrinter.Location = new System.Drawing.Point(169, 225);
-            consolePrinter.Name = "consolePrinter";
-            consolePrinter.Size = new System.Drawing.Size(321, 96);
-            consolePrinter.TabIndex = 1;
-            consolePrinter.Text = "";
+            this.consolePrinter.Location = new System.Drawing.Point(169, 225);
+            this.consolePrinter.Name = "consolePrinter";
+            this.consolePrinter.Size = new System.Drawing.Size(321, 96);
+            this.consolePrinter.TabIndex = 1;
+            this.consolePrinter.Text = "";
             // 
             // connectButton
             // 
@@ -88,34 +89,34 @@
             // 
             // baudRateCombo
             // 
-            baudRateCombo.FormattingEnabled = true;
-            baudRateCombo.Location = new System.Drawing.Point(258, 14);
-            baudRateCombo.Name = "baudRateCombo";
-            baudRateCombo.Size = new System.Drawing.Size(121, 21);
-            baudRateCombo.TabIndex = 5;
+            this.baudRateCombo.FormattingEnabled = true;
+            this.baudRateCombo.Location = new System.Drawing.Point(258, 14);
+            this.baudRateCombo.Name = "baudRateCombo";
+            this.baudRateCombo.Size = new System.Drawing.Size(121, 21);
+            this.baudRateCombo.TabIndex = 5;
             // 
             // portsCombo
             // 
-            portsCombo.FormattingEnabled = true;
-            portsCombo.Location = new System.Drawing.Point(385, 15);
-            portsCombo.Name = "portsCombo";
-            portsCombo.Size = new System.Drawing.Size(121, 21);
-            portsCombo.TabIndex = 6;
+            this.portsCombo.FormattingEnabled = true;
+            this.portsCombo.Location = new System.Drawing.Point(385, 15);
+            this.portsCombo.Name = "portsCombo";
+            this.portsCombo.Size = new System.Drawing.Size(121, 21);
+            this.portsCombo.TabIndex = 6;
             // 
             // comboBoxZMinimumValue
             // 
-            comboBoxZMinimumValue.FormattingEnabled = true;
-            comboBoxZMinimumValue.Location = new System.Drawing.Point(39, 131);
-            comboBoxZMinimumValue.Name = "comboBoxZMinimumValue";
-            comboBoxZMinimumValue.Size = new System.Drawing.Size(121, 21);
-            comboBoxZMinimumValue.TabIndex = 7;
+            this.comboBoxZMinimumValue.FormattingEnabled = true;
+            this.comboBoxZMinimumValue.Location = new System.Drawing.Point(39, 131);
+            this.comboBoxZMinimumValue.Name = "comboBoxZMinimumValue";
+            this.comboBoxZMinimumValue.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxZMinimumValue.TabIndex = 7;
             // 
             // textFSRPlateOffset
             // 
-            textFSRPlateOffset.Location = new System.Drawing.Point(39, 178);
-            textFSRPlateOffset.Name = "textFSRPlateOffset";
-            textFSRPlateOffset.Size = new System.Drawing.Size(100, 20);
-            textFSRPlateOffset.TabIndex = 8;
+            this.textFSRPlateOffset.Location = new System.Drawing.Point(39, 178);
+            this.textFSRPlateOffset.Name = "textFSRPlateOffset";
+            this.textFSRPlateOffset.Size = new System.Drawing.Size(100, 20);
+            this.textFSRPlateOffset.TabIndex = 8;
             // 
             // resetPrinter
             // 
@@ -127,21 +128,31 @@
             this.resetPrinter.UseVisualStyleBackColor = true;
             this.resetPrinter.Click += new System.EventHandler(this.resetPrinter_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(528, 160);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 491);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.resetPrinter);
-            this.Controls.Add(textFSRPlateOffset);
-            this.Controls.Add(comboBoxZMinimumValue);
-            this.Controls.Add(portsCombo);
-            this.Controls.Add(baudRateCombo);
+            this.Controls.Add(this.textFSRPlateOffset);
+            this.Controls.Add(this.comboBoxZMinimumValue);
+            this.Controls.Add(this.portsCombo);
+            this.Controls.Add(this.baudRateCombo);
             this.Controls.Add(this.calibrateButton);
             this.Controls.Add(this.disconnectButton);
             this.Controls.Add(this.connectButton);
-            this.Controls.Add(consolePrinter);
-            this.Controls.Add(consoleMain);
+            this.Controls.Add(this.consolePrinter);
+            this.Controls.Add(this.consoleMain);
             this.Name = "mainForm";
             this.Text = "mainForm";
             this.ResumeLayout(false);
@@ -154,11 +165,12 @@
         private System.Windows.Forms.Button disconnectButton;
         private System.Windows.Forms.Button calibrateButton;
         private System.Windows.Forms.Button resetPrinter;
-        public static System.Windows.Forms.RichTextBox consoleMain;
-        public static System.Windows.Forms.RichTextBox consolePrinter;
-        public static System.Windows.Forms.ComboBox baudRateCombo;
-        public static System.Windows.Forms.ComboBox portsCombo;
-        public static System.Windows.Forms.ComboBox comboBoxZMinimumValue;
-        public static System.Windows.Forms.TextBox textFSRPlateOffset;
+        private System.Windows.Forms.Button button1;
+        public System.Windows.Forms.RichTextBox consoleMain;
+        public System.Windows.Forms.RichTextBox consolePrinter;
+        public System.Windows.Forms.ComboBox baudRateCombo;
+        public System.Windows.Forms.ComboBox portsCombo;
+        public System.Windows.Forms.ComboBox comboBoxZMinimumValue;
+        public System.Windows.Forms.TextBox textFSRPlateOffset;
     }
 }

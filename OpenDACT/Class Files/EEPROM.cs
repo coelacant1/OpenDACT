@@ -125,7 +125,7 @@ namespace OpenDACT.Class_Files
             switch (intParse)
             {
                 case 11:
-                    UserInterface.logConsole("EEPROM capture initiated\n");
+                    UserInterface.logConsole("EEPROM capture initiated");
 
                     tempStepsPerMM = floatParse2;
                     tempTempSPM = floatParse2;

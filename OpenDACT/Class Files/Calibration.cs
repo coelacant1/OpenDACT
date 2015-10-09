@@ -15,27 +15,20 @@ namespace OpenDACT.Class_Files
 
         public static void calibrate(int value, ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
         {
-            switch (value)
+            if (value == 0)
             {
-                case 0:
-                    basicCalibration(ref eeprom, ref heights, ref userVariables);
-                    break;
-                case 1:
-                    learningCalibration();
-                    break;
-                case 2:
-                    iterativeCalibration();
-                    break;
-                case 3:
-                    learningIterativeCalibration();
-                    break;
+                basicCalibration(ref eeprom, ref heights, ref userVariables);
+            }
+            else
+            {
+                iterativeCalibration();
             }
         }
 
         public static void learnPrinter(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
         {
             calibrateInProgress = true;
-            heuristicLearning.testAdvanced(ref eeprom, ref userVariables, ref heights);
+            GCode.heuristicLearning(ref eeprom, ref userVariables, ref heights);
 
             EEPROMFunctions.sendEEPROM(eeprom);
             //UserInterface.setHeightMap();
@@ -78,17 +71,7 @@ namespace OpenDACT.Class_Files
             }
             //change all instances of a new variable which calls a class object to modify the class object directly as opposed to just pulling its value
         }
-        public static void learningCalibration()
-        {
-
-
-        }
-
         public static void iterativeCalibration()
-        {
-
-        }
-        public static void learningIterativeCalibration()
         {
 
         }
@@ -418,7 +401,7 @@ namespace OpenDACT.Class_Files
             if (offsetX > 1000 || offsetY > 1000 || offsetZ > 1000)
             {
                 UserInterface.logConsole("XYZ offset calibration error, setting default values.");
-                UserInterface.logConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ + "\n");
+                UserInterface.logConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ );
                 offsetX = 0;
                 offsetY = 0;
                 offsetZ = 0;

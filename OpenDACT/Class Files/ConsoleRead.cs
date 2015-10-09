@@ -17,7 +17,7 @@ namespace OpenDACT.Class_Files
                 {
                     string message = Connection._serialPort.ReadLine();
 
-                    UserInterface.logPrinter(message + "\n");
+                    UserInterface.logPrinter(message);
 
                     if (EEPROMFunctions.EEPROMSet == false)
                     {

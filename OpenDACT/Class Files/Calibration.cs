@@ -12,9 +12,13 @@ namespace OpenDACT.Class_Files
         public static bool calibrateInProgress = false;
         public static bool calibrationState = false;
         public static int calibrationSelection = 0;
+        public static int iterationNum = 0;
+        private static float tempAccuracy;
 
         public static void calibrate(int value, ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
         {
+            iterationNum++;
+
             if (value == 0)
             {
                 basicCalibration(ref eeprom, ref heights, ref userVariables);
@@ -52,6 +56,8 @@ namespace OpenDACT.Class_Files
                 if (GCode.checkHeights == false)
                 {
                     calibrateInProgress = true;
+                    tempAccuracy = (Math.Abs(heights.X) + Math.Abs(heights.XOpp) + Math.Abs(heights.Y) + Math.Abs(heights.YOpp) + Math.Abs(heights.Z) + Math.Abs(heights.ZOpp)) / 6;
+                    Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
                     checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
                     HRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
                     DRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);

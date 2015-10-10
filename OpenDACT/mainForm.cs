@@ -37,7 +37,6 @@ namespace OpenDACT.Class_Files
             advancedPanel.Visible = false;
             printerLogPanel.Visible = false;
 
-
             String[] zMinArray = { "FSR", "Z-Probe" };
             comboBoxZMinimumValue.DataSource = zMinArray;
             
@@ -128,10 +127,12 @@ namespace OpenDACT.Class_Files
         public void appendMainConsole(string value)
         {
             consoleMain.AppendText(value + "\n");
+            consoleMain.ScrollToCaret();
         }
         public void appendPrinterConsole(string value)
         {
             consolePrinter.AppendText(value + "\n");
+            consolePrinter.ScrollToCaret();
         }
 
         private void openAdvanced_Click(object sender, EventArgs e)
@@ -145,6 +146,17 @@ namespace OpenDACT.Class_Files
                 advancedPanel.Visible = false;
                 printerLogPanel.Visible = false;
             }
+        }
+
+        private void sendGCode_Click(object sender, EventArgs e)
+        {
+            Connection._serialPort.WriteLine(GCodeBox.Text.ToString().ToUpper());
+            UserInterface.logConsole(GCodeBox.Text.ToString().ToUpper());
+        }
+
+        public void setAccuracyPoint(float x, float y)
+        {
+            accuracyTime.Series["Accuracy"].Points.AddXY(x, y);
         }
     }
 }

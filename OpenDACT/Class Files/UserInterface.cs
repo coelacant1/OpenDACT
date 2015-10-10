@@ -137,6 +137,8 @@ namespace OpenDACT.Class_Files
             this.mainForm = _mainForm;
         }
         */
+        public static bool isInitiated = false;
+
         static public UserVariables returnUserVariablesObject()
         {
             UserVariables userVariables = new UserVariables();
@@ -146,13 +148,19 @@ namespace OpenDACT.Class_Files
 
         public static void logConsole(string value)
         {
-            Program.mainFormTest.appendMainConsole(value);
+            if (isInitiated == true)
+            {
+                Program.mainFormTest.appendMainConsole(value);
+            }
         }
 
 
         public static void logPrinter(string value)
         {
-            Program.mainFormTest.appendPrinterConsole(value);
+            if (isInitiated == true)
+            {
+                Program.mainFormTest.appendPrinterConsole(value);
+            }
         }
 
         /*

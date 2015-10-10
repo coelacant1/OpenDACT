@@ -10,8 +10,6 @@ using System.Windows.Forms;
 using System.Threading;
 using System.IO.Ports;
 
-DataVisualization.Charting.Chart;
-
 namespace OpenDACT.Class_Files
 {
     public partial class mainForm : Form

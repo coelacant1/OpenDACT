@@ -17,7 +17,6 @@ namespace OpenDACT.Class_Files
         public mainForm()
         {
             UserVariables userVariables = UserInterface.returnUserVariablesObject();
-            UserInterface.isInitiated = true;
 
             InitializeComponent();
             consoleMain.Text = "";
@@ -35,12 +34,17 @@ namespace OpenDACT.Class_Files
             baudRateCombo.Items.Add("9600");
             baudRateCombo.Text = "250000";  // This is the default for most RAMBo controllers.
 
+            heuristicModeCombo.Items.Add("True");
+            heuristicModeCombo.Items.Add("False");
+            heuristicModeCombo.Text = "False";
+
+            comboBoxZMinimumValue.Items.Add("FSR");
+            comboBoxZMinimumValue.Items.Add("Z-Probe");
+            comboBoxZMinimumValue.Text = "FSR";
+
             advancedPanel.Visible = false;
             printerLogPanel.Visible = false;
 
-            String[] zMinArray = { "FSR", "Z-Probe" };
-            comboBoxZMinimumValue.DataSource = zMinArray;
-            
             Connection.readThread = new Thread(ConsoleRead.Read);
             Connection._serialPort = new SerialPort();
 
@@ -90,6 +94,7 @@ namespace OpenDACT.Class_Files
             */
 
             accuracyTime.Series["Accuracy"].Points.AddXY(0, 1);
+            UserInterface.isInitiated = true;
         }
 
         private void connectButton_Click(object sender, EventArgs e)
@@ -153,8 +158,15 @@ namespace OpenDACT.Class_Files
 
         private void sendGCode_Click(object sender, EventArgs e)
         {
-            Connection._serialPort.WriteLine(GCodeBox.Text.ToString().ToUpper());
-            UserInterface.logConsole(GCodeBox.Text.ToString().ToUpper());
+            if (Connection._serialPort.IsOpen)
+            {
+                Connection._serialPort.WriteLine(GCodeBox.Text.ToString().ToUpper());
+                UserInterface.logConsole("Sent: " + GCodeBox.Text.ToString().ToUpper());
+            }
+            else
+            {
+                UserInterface.logConsole("Not Connected");
+            }
         }
 
         public void setAccuracyPoint(float x, float y)

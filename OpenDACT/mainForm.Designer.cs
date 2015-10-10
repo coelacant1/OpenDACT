@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea13 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend13 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series13 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea14 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend14 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series14 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -132,6 +132,7 @@
             this.sendGCode = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -155,17 +156,17 @@
             // 
             // consolePrinter
             // 
-            this.consolePrinter.Location = new System.Drawing.Point(14, 31);
+            this.consolePrinter.Location = new System.Drawing.Point(14, 16);
             this.consolePrinter.Name = "consolePrinter";
-            this.consolePrinter.Size = new System.Drawing.Size(604, 186);
+            this.consolePrinter.Size = new System.Drawing.Size(604, 202);
             this.consolePrinter.TabIndex = 1;
             this.consolePrinter.Text = "";
             // 
             // connectButton
             // 
-            this.connectButton.Location = new System.Drawing.Point(4, 78);
+            this.connectButton.Location = new System.Drawing.Point(4, 99);
             this.connectButton.Name = "connectButton";
-            this.connectButton.Size = new System.Drawing.Size(75, 23);
+            this.connectButton.Size = new System.Drawing.Size(245, 23);
             this.connectButton.TabIndex = 2;
             this.connectButton.Text = "Connect";
             this.connectButton.UseVisualStyleBackColor = true;
@@ -173,9 +174,9 @@
             // 
             // disconnectButton
             // 
-            this.disconnectButton.Location = new System.Drawing.Point(85, 78);
+            this.disconnectButton.Location = new System.Drawing.Point(4, 128);
             this.disconnectButton.Name = "disconnectButton";
-            this.disconnectButton.Size = new System.Drawing.Size(75, 23);
+            this.disconnectButton.Size = new System.Drawing.Size(245, 23);
             this.disconnectButton.TabIndex = 3;
             this.disconnectButton.Text = "Disconnect";
             this.disconnectButton.UseVisualStyleBackColor = true;
@@ -183,9 +184,9 @@
             // 
             // calibrateButton
             // 
-            this.calibrateButton.Location = new System.Drawing.Point(166, 78);
+            this.calibrateButton.Location = new System.Drawing.Point(4, 157);
             this.calibrateButton.Name = "calibrateButton";
-            this.calibrateButton.Size = new System.Drawing.Size(75, 23);
+            this.calibrateButton.Size = new System.Drawing.Size(245, 23);
             this.calibrateButton.TabIndex = 4;
             this.calibrateButton.Text = "Calibrate";
             this.calibrateButton.UseVisualStyleBackColor = true;
@@ -225,9 +226,9 @@
             // 
             // resetPrinter
             // 
-            this.resetPrinter.Location = new System.Drawing.Point(4, 107);
+            this.resetPrinter.Location = new System.Drawing.Point(4, 215);
             this.resetPrinter.Name = "resetPrinter";
-            this.resetPrinter.Size = new System.Drawing.Size(75, 23);
+            this.resetPrinter.Size = new System.Drawing.Size(245, 23);
             this.resetPrinter.TabIndex = 9;
             this.resetPrinter.Text = "Reset";
             this.resetPrinter.UseVisualStyleBackColor = true;
@@ -235,9 +236,9 @@
             // 
             // openAdvanced
             // 
-            this.openAdvanced.Location = new System.Drawing.Point(166, 107);
+            this.openAdvanced.Location = new System.Drawing.Point(4, 186);
             this.openAdvanced.Name = "openAdvanced";
-            this.openAdvanced.Size = new System.Drawing.Size(75, 23);
+            this.openAdvanced.Size = new System.Drawing.Size(245, 23);
             this.openAdvanced.TabIndex = 10;
             this.openAdvanced.Text = "Advanced";
             this.openAdvanced.UseVisualStyleBackColor = true;
@@ -255,7 +256,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 12);
+            this.label1.Location = new System.Drawing.Point(13, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 2;
@@ -282,9 +283,9 @@
             // advancedPanel
             // 
             this.advancedPanel.Controls.Add(this.tabControl1);
-            this.advancedPanel.Location = new System.Drawing.Point(623, 12);
+            this.advancedPanel.Location = new System.Drawing.Point(623, 5);
             this.advancedPanel.Name = "advancedPanel";
-            this.advancedPanel.Size = new System.Drawing.Size(652, 612);
+            this.advancedPanel.Size = new System.Drawing.Size(652, 619);
             this.advancedPanel.TabIndex = 14;
             // 
             // tabControl1
@@ -293,10 +294,11 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(3, 0);
+            this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(646, 612);
+            this.tabControl1.Size = new System.Drawing.Size(646, 613);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -370,7 +372,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(638, 586);
+            this.tabPage1.Size = new System.Drawing.Size(638, 587);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -938,7 +940,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(638, 586);
+            this.tabPage2.Size = new System.Drawing.Size(638, 587);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Delta Analysis";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -948,7 +950,7 @@
             this.tabPage3.Controls.Add(this.accuracyTime);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(638, 586);
+            this.tabPage3.Size = new System.Drawing.Size(638, 587);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Accuracy ";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -956,22 +958,22 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea1.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend1);
+            chartArea13.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea13.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea13);
+            legend13.Enabled = false;
+            legend13.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend13);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series1.BackImageTransparentColor = System.Drawing.Color.White;
-            series1.BorderColor = System.Drawing.Color.Transparent;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.IsXValueIndexed = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series1);
+            series13.BackImageTransparentColor = System.Drawing.Color.White;
+            series13.BorderColor = System.Drawing.Color.Transparent;
+            series13.ChartArea = "ChartArea1";
+            series13.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series13.IsXValueIndexed = true;
+            series13.Legend = "Legend1";
+            series13.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series13);
             this.accuracyTime.Size = new System.Drawing.Size(632, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
@@ -983,7 +985,7 @@
             this.tabPage4.Controls.Add(this.pictureBox1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(638, 586);
+            this.tabPage4.Size = new System.Drawing.Size(638, 587);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Height Map";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1055,33 +1057,42 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(4, -4);
+            this.pictureBox2.Location = new System.Drawing.Point(3, 2);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(245, 96);
+            this.pictureBox2.Size = new System.Drawing.Size(245, 105);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 20;
             this.pictureBox2.TabStop = false;
             // 
             // chart1
             // 
-            chartArea2.Area3DStyle.Enable3D = true;
-            chartArea2.Area3DStyle.IsRightAngleAxes = false;
-            chartArea2.Area3DStyle.WallWidth = 0;
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            chartArea14.Area3DStyle.Enable3D = true;
+            chartArea14.Area3DStyle.IsRightAngleAxes = false;
+            chartArea14.Area3DStyle.WallWidth = 0;
+            chartArea14.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea14);
+            legend14.Name = "Legend1";
+            this.chart1.Legends.Add(legend14);
             this.chart1.Location = new System.Drawing.Point(293, 94);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineRange;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            series2.YValuesPerPoint = 2;
-            this.chart1.Series.Add(series2);
+            series14.ChartArea = "ChartArea1";
+            series14.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.SplineRange;
+            series14.Legend = "Legend1";
+            series14.Name = "Series1";
+            series14.YValuesPerPoint = 2;
+            this.chart1.Series.Add(series14);
             this.chart1.Size = new System.Drawing.Size(300, 300);
             this.chart1.TabIndex = 3;
             this.chart1.Text = "chart1";
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(638, 587);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "EEPROM";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // mainForm
             // 
@@ -1111,7 +1122,6 @@
             this.Controls.Add(this.pictureBox2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "mainForm";
-            this.ShowIcon = false;
             this.Text = "OpenDACT";
             this.printerLogPanel.ResumeLayout(false);
             this.printerLogPanel.PerformLayout();
@@ -1229,5 +1239,6 @@
         private System.Windows.Forms.TextBox textxzOppPerc;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.TabPage tabPage5;
     }
 }

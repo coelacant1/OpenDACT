@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Threading;
 using System.IO.Ports;
 
+DataVisualization.Charting.Chart;
+
 namespace OpenDACT.Class_Files
 {
     public partial class mainForm : Form
@@ -17,6 +19,7 @@ namespace OpenDACT.Class_Files
         public mainForm()
         {
             UserVariables userVariables = UserInterface.returnUserVariablesObject();
+            UserInterface.isInitiated = true;
 
             InitializeComponent();
             consoleMain.Text = "";
@@ -87,6 +90,8 @@ namespace OpenDACT.Class_Files
             lblZPlateTop.Text = "";
             lblScaleOffset.Text = "";
             */
+
+            accuracyTime.Series["Accuracy"].Points.AddXY(0, 1);
         }
 
         private void connectButton_Click(object sender, EventArgs e)
@@ -126,13 +131,13 @@ namespace OpenDACT.Class_Files
         }
         public void appendMainConsole(string value)
         {
-            consoleMain.AppendText(value + "\n");
-            consoleMain.ScrollToCaret();
+            Invoke((MethodInvoker)delegate { consoleMain.AppendText(value + "\n"); });
+            Invoke((MethodInvoker)delegate { consoleMain.ScrollToCaret(); });
         }
         public void appendPrinterConsole(string value)
         {
-            consolePrinter.AppendText(value + "\n");
-            consolePrinter.ScrollToCaret();
+            Invoke((MethodInvoker)delegate { consolePrinter.AppendText(value + "\n"); });
+            Invoke((MethodInvoker)delegate { consolePrinter.ScrollToCaret(); });
         }
 
         private void openAdvanced_Click(object sender, EventArgs e)
@@ -156,7 +161,10 @@ namespace OpenDACT.Class_Files
 
         public void setAccuracyPoint(float x, float y)
         {
-            accuracyTime.Series["Accuracy"].Points.AddXY(x, y);
+            Invoke((MethodInvoker)delegate {
+                accuracyTime.Refresh();
+                accuracyTime.Series["Accuracy"].Points.AddXY(x, y);
+            });
         }
     }
 }

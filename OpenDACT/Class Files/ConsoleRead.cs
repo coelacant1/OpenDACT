@@ -55,7 +55,7 @@ namespace OpenDACT.Class_Files
                                 {
                                     GCode.checkHeights = false;
                                     Heights heights = HeightFunctions.returnHeightObject();
-
+                                    GCode.heuristicLearning(ref eeprom, ref userVariables, ref heights);
                                 }
                             }
                         }

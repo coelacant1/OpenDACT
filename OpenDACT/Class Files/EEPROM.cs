@@ -117,11 +117,6 @@ namespace OpenDACT.Class_Files
 
         public static void setEEPROM(int intParse, float floatParse2)
         {
-            if (intParse != 0)
-            {
-                UserInterface.logConsole("EEPROM: " + intParse.ToString() + ", " + floatParse2.ToString() + " \n");
-            }
-
             switch (intParse)
             {
                 case 11:
@@ -165,7 +160,7 @@ namespace OpenDACT.Class_Files
                     break;
                 case 921:
                     tempDC = floatParse2;
-                    EEPROMSet = true;
+                    EEPROMFunctions.EEPROMSet = true;
                     GCode.checkHeights = true;
                     break;
             }
@@ -174,35 +169,35 @@ namespace OpenDACT.Class_Files
         public static void sendEEPROM(EEPROM eeprom)
         {
             //manually set all eeprom values
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendToPosition(0, 0, 100);
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
             GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 808, eeprom.zProbe);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 885, eeprom.HRadius);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(1, 893, eeprom.offsetX);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(1, 895, eeprom.offsetY);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(1, 897, eeprom.offsetZ);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 901, eeprom.A);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 905, eeprom.B);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 909, eeprom.C);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 913, eeprom.DA);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 917, eeprom.DB);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 921, eeprom.DC);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
         }
     }
 }

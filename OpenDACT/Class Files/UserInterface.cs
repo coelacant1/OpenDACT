@@ -22,32 +22,36 @@ namespace OpenDACT.Class_Files
         public float accuracy = 0.025F;
         public float calculationAccuracy = 0.001F;
         public float probingHeight = 10;
-        public float offsetXCorrection = 1.5F;
-        public float offsetYCorrection = 1.5F;
-        public float offsetZCorrection = 1.5F;
-        public float xxOppPerc = 0.5F;
-        public float xyPerc = 0.25F;
-        public float xyOppPerc = 0.25F;
-        public float xzPerc = 0.25F;
-        public float xzOppPerc = 0.25F;
-        public float yyOppPerc = 0.5F;
-        public float yxPerc = 0.25F;
-        public float yxOppPerc = 0.25F;
-        public float yzPerc = 0.25F;
-        public float yzOppPerc = 0.25F;
-        public float zzOppPerc = 0.5F;
-        public float zxPerc = 0.25F;
-        public float zxOppPerc = 0.25F;
-        public float zyPerc = 0.25F;
-        public float zyOppPerc = 0.25F;
+
+        public float offsetXCorrection = 1.55F;
+        public float xxOppPerc = -0.35F;
+        public float xyPerc = -0.23F;
+        public float xyOppPerc = 0.16F;
+        public float xzPerc = -0.23F;
+        public float xzOppPerc = 0.16F;
+
+        public float offsetYCorrection = 1.55F;
+        public float yyOppPerc = -0.35F;
+        public float yxPerc = -0.23F;
+        public float yxOppPerc = 0.16F;
+        public float yzPerc = -0.23F;
+        public float yzOppPerc = 0.16F;
+
+        public float offsetZCorrection = 1.55F;
+        public float zzOppPerc = -0.35F;
+        public float zxPerc = -0.23F;
+        public float zxOppPerc = 0.16F;
+        public float zyPerc = -0.23F;
+        public float zyOppPerc = 0.16F;
+
         public float alphaRotationPercentageX = 1.725F;
         public float alphaRotationPercentageY = 1.725F;
         public float alphaRotationPercentageZ = 1.725F;
-        public float deltaTower = 0.3F;
-        public float deltaOpp = 0.2F;
-        public float plateDiameter = 200F;
-        public bool advancedCalibration = false;
+        public float deltaTower = 0.293F;
+        public float deltaOpp = 0.214F;
+        public float plateDiameter = 230F;
         public int advancedCalCount = 0;
+        public bool advancedCalibration = false;
 
         public int pauseTimeSet = 500;
 

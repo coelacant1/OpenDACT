@@ -17,8 +17,6 @@ namespace OpenDACT.Class_Files
 
         public static void calibrate(int value, ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
         {
-            iterationNum++;
-
             if (value == 0)
             {
                 basicCalibration(ref eeprom, ref heights, ref userVariables);
@@ -27,6 +25,8 @@ namespace OpenDACT.Class_Files
             {
                 iterativeCalibration();
             }
+
+            iterationNum++;
         }
 
         public static void learnPrinter(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
@@ -57,14 +57,27 @@ namespace OpenDACT.Class_Files
                 {
                     calibrateInProgress = true;
                     tempAccuracy = (Math.Abs(heights.X) + Math.Abs(heights.XOpp) + Math.Abs(heights.Y) + Math.Abs(heights.YOpp) + Math.Abs(heights.Z) + Math.Abs(heights.ZOpp)) / 6;
+                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
                     Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
                     checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
+
                     HRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
+
                     DRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
+
                     //analyzeGeometry(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
                     towerOffsets(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
+
                     alphaRotation(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
+
                     SPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
+
 
                     EEPROMFunctions.sendEEPROM(eeprom);
                     //UserInterface.setHeightMap();
@@ -407,7 +420,7 @@ namespace OpenDACT.Class_Files
             if (offsetX > 1000 || offsetY > 1000 || offsetZ > 1000)
             {
                 UserInterface.logConsole("XYZ offset calibration error, setting default values.");
-                UserInterface.logConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ );
+                UserInterface.logConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ);
                 offsetX = 0;
                 offsetY = 0;
                 offsetZ = 0;
@@ -442,74 +455,71 @@ namespace OpenDACT.Class_Files
             float alphaRotationPercentageY = userVariables.alphaRotationPercentageY;
             float alphaRotationPercentageZ = userVariables.alphaRotationPercentageZ;
 
-            if (offsetX != 0 && offsetY != 0 && offsetZ != 0)
+            int k = 0;
+            while (k < 100)
             {
-                int k = 0;
-                while (k < 100)
+                //X Alpha Rotation
+                if (YOpp > ZOpp)
                 {
-                    //X Alpha Rotation
-                    if (YOpp > ZOpp)
-                    {
-                        float ZYOppAvg = (YOpp - ZOpp) / 2;
-                        eeprom.A = eeprom.A + (ZYOppAvg * alphaRotationPercentageX); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
-                        YOpp = YOpp - ZYOppAvg;
-                        ZOpp = ZOpp + ZYOppAvg;
-                    }
-                    else if (YOpp < ZOpp)
-                    {
-                        float ZYOppAvg = (ZOpp - YOpp) / 2;
+                    float ZYOppAvg = (YOpp - ZOpp) / 2;
+                    eeprom.A = eeprom.A + (ZYOppAvg * alphaRotationPercentageX); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
+                    YOpp = YOpp - ZYOppAvg;
+                    ZOpp = ZOpp + ZYOppAvg;
+                }
+                else if (YOpp < ZOpp)
+                {
+                    float ZYOppAvg = (ZOpp - YOpp) / 2;
 
-                        eeprom.A = eeprom.A - (ZYOppAvg * alphaRotationPercentageX);
-                        YOpp = YOpp + ZYOppAvg;
-                        ZOpp = ZOpp - ZYOppAvg;
-                    }
+                    eeprom.A = eeprom.A - (ZYOppAvg * alphaRotationPercentageX);
+                    YOpp = YOpp + ZYOppAvg;
+                    ZOpp = ZOpp - ZYOppAvg;
+                }
 
-                    //Y Alpha Rotation
-                    if (ZOpp > XOpp)
-                    {
-                        float XZOppAvg = (ZOpp - XOpp) / 2;
-                        eeprom.B = eeprom.B + (XZOppAvg * alphaRotationPercentageY);
-                        ZOpp = ZOpp - XZOppAvg;
-                        XOpp = XOpp + XZOppAvg;
-                    }
-                    else if (ZOpp < XOpp)
-                    {
-                        float XZOppAvg = (XOpp - ZOpp) / 2;
+                //Y Alpha Rotation
+                if (ZOpp > XOpp)
+                {
+                    float XZOppAvg = (ZOpp - XOpp) / 2;
+                    eeprom.B = eeprom.B + (XZOppAvg * alphaRotationPercentageY);
+                    ZOpp = ZOpp - XZOppAvg;
+                    XOpp = XOpp + XZOppAvg;
+                }
+                else if (ZOpp < XOpp)
+                {
+                    float XZOppAvg = (XOpp - ZOpp) / 2;
 
-                        eeprom.B = eeprom.B - (XZOppAvg * alphaRotationPercentageY);
-                        ZOpp = ZOpp + XZOppAvg;
-                        XOpp = XOpp - XZOppAvg;
-                    }
-                    //Z Alpha Rotation
-                    if (XOpp > YOpp)
-                    {
-                        float YXOppAvg = (XOpp - YOpp) / 2;
-                        eeprom.C = eeprom.C + (YXOppAvg * alphaRotationPercentageZ);
-                        XOpp = XOpp - YXOppAvg;
-                        YOpp = YOpp + YXOppAvg;
-                    }
-                    else if (XOpp < YOpp)
-                    {
-                        float YXOppAvg = (YOpp - XOpp) / 2;
+                    eeprom.B = eeprom.B - (XZOppAvg * alphaRotationPercentageY);
+                    ZOpp = ZOpp + XZOppAvg;
+                    XOpp = XOpp - XZOppAvg;
+                }
+                //Z Alpha Rotation
+                if (XOpp > YOpp)
+                {
+                    float YXOppAvg = (XOpp - YOpp) / 2;
+                    eeprom.C = eeprom.C + (YXOppAvg * alphaRotationPercentageZ);
+                    XOpp = XOpp - YXOppAvg;
+                    YOpp = YOpp + YXOppAvg;
+                }
+                else if (XOpp < YOpp)
+                {
+                    float YXOppAvg = (YOpp - XOpp) / 2;
 
-                        eeprom.C = eeprom.C - (YXOppAvg * alphaRotationPercentageZ);
-                        XOpp = XOpp + YXOppAvg;
-                        YOpp = YOpp - YXOppAvg;
-                    }
+                    eeprom.C = eeprom.C - (YXOppAvg * alphaRotationPercentageZ);
+                    XOpp = XOpp + YXOppAvg;
+                    YOpp = YOpp - YXOppAvg;
+                }
 
-                    //determine if value is close enough
-                    float hTow = Math.Max(Math.Max(XOpp, YOpp), ZOpp);
-                    float lTow = Math.Min(Math.Min(XOpp, YOpp), ZOpp);
-                    float towDiff = hTow - lTow;
+                //determine if value is close enough
+                float hTow = Math.Max(Math.Max(XOpp, YOpp), ZOpp);
+                float lTow = Math.Min(Math.Min(XOpp, YOpp), ZOpp);
+                float towDiff = hTow - lTow;
 
-                    if (towDiff < accuracy && towDiff > -accuracy)
-                    {
-                        k = 100;
-                    }
-                    else
-                    {
-                        k++;
-                    }
+                if (towDiff < accuracy && towDiff > -accuracy)
+                {
+                    k = 100;
+                }
+                else
+                {
+                    k++;
                 }
 
                 //log
@@ -537,7 +547,7 @@ namespace OpenDACT.Class_Files
                 while (i < 100)
                 {
                     XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                    eeprom.stepsPerMM = eeprom.stepsPerMM + (XYZOpp * diagChange);
+                    eeprom.stepsPerMM = eeprom.stepsPerMM - (XYZOpp * diagChange);
 
                     X = X - towOppDiff * XYZOpp;
                     Y = Y - towOppDiff * XYZOpp;

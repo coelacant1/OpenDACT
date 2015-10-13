@@ -55,16 +55,33 @@ namespace OpenDACT.Class_Files
             {
                 if (GCode.checkHeights == false)
                 {
+                    if (iterationNum == 0)
+                    {
+                        Program.mainFormTest.setUserVariables(ref userVariables);
+
+                        if (Convert.ToSingle(Program.mainFormTest.diagonalRodLengthText.Text) > 0)
+                        {
+                            userVariables.diagonalRodLength = Convert.ToSingle(Program.mainFormTest.diagonalRodLengthText.Text);
+                        }
+                        else
+                        {
+                            userVariables.diagonalRodLength = eeprom.diagonalRod;
+                            UserInterface.logConsole("Using default diagonal rod length from EEPROM");
+                        }
+                    }
+
                     calibrateInProgress = true;
+
                     tempAccuracy = (Math.Abs(heights.X) + Math.Abs(heights.XOpp) + Math.Abs(heights.Y) + Math.Abs(heights.YOpp) + Math.Abs(heights.Z) + Math.Abs(heights.ZOpp)) / 6;
                     Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
                     checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    Program.mainFormTest.setHeightsInvoke(ref heights);
                     HRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
                     DRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
                     //analyzeGeometry(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
                     towerOffsets(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
                     alphaRotation(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    SPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+                    diagonalRodSPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
 
                     EEPROMFunctions.sendEEPROM(eeprom);
                     Program.mainFormTest.setEEPROMGUIList(eeprom);
@@ -90,13 +107,8 @@ namespace OpenDACT.Class_Files
             if (X <= accuracy && X >= -accuracy && XOpp <= accuracy && XOpp >= -accuracy && Y <= accuracy && Y >= -accuracy && YOpp <= accuracy && YOpp >= -accuracy && Z <= accuracy && Z >= -accuracy && ZOpp <= accuracy && ZOpp >= -accuracy)
             {
                 //fsr plate offset
-                string zMinTemp;
-                string textFSRPO;
-
-
-                zMinTemp = Program.mainFormTest.comboBoxZMinimumValue.Text;
-                textFSRPO = Program.mainFormTest.textFSRPlateOffset.Text;
-
+                string zMinTemp = userVariables.probeChoice.ToString();
+                string textFSRPO = userVariables.FSROffset.ToString();
 
                 if (Program.mainFormTest.comboBoxZMinimumValue.Text == "FSR")
                 {
@@ -515,7 +527,7 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public static void SPM(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void diagonalRodSPM(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
 
             //opp = 0.21; //4/5
@@ -532,78 +544,180 @@ namespace OpenDACT.Class_Files
             if (Math.Abs(XYZOpp - XYZ) > accuracy * 2)
             {
                 int i = 0;
-                while (i < 100)
+                eeprom.diagonalRod += (XYZOpp * diagChange);
+                X = X - towOppDiff * XYZOpp;
+                Y = Y - towOppDiff * XYZOpp;
+                Z = Z - towOppDiff * XYZOpp;
+                XOpp = XOpp - XYZOpp;
+                YOpp = YOpp - XYZOpp;
+                ZOpp = ZOpp - XYZOpp;
+                XYZOpp = (XOpp + YOpp + ZOpp) / 3;
+                XYZOpp = Validation.checkZero(XYZOpp);
+                
+                //hrad
+                eeprom.HRadius += (XYZ / userVariables.HRadRatio);
+
+                if (XYZOpp >= 0)
                 {
-                    XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                    eeprom.stepsPerMM = eeprom.stepsPerMM - (XYZOpp * diagChange);
+                    X = X - XYZ;
+                    Y = Y - XYZ;
+                    Z = Z - XYZ;
+                    XOpp = XOpp - XYZ;
+                    YOpp = YOpp - XYZ;
+                    ZOpp = ZOpp - XYZ;
+                }
+                else
+                {
+                    X = X + XYZ;
+                    Y = Y + XYZ;
+                    Z = Z + XYZ;
+                    XOpp = XOpp + XYZ;
+                    YOpp = YOpp + XYZ;
+                    ZOpp = ZOpp + XYZ;
+                }
 
-                    X = X - towOppDiff * XYZOpp;
-                    Y = Y - towOppDiff * XYZOpp;
-                    Z = Z - towOppDiff * XYZOpp;
-                    XOpp = XOpp - XYZOpp;
-                    YOpp = YOpp - XYZOpp;
-                    ZOpp = ZOpp - XYZOpp;
+                X = Validation.checkZero(X);
+                Y = Validation.checkZero(Y);
+                Z = Validation.checkZero(Z);
+                XOpp = Validation.checkZero(XOpp);
+                YOpp = Validation.checkZero(YOpp);
+                ZOpp = Validation.checkZero(ZOpp);
 
-                    XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                    XYZOpp = Validation.checkZero(XYZOpp);
+                //XYZ is zero
+                if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
+                {
+                    //end calculation
+                    eeprom.diagonalRod = Validation.checkZero(eeprom.diagonalRod);
 
-                    //HRAD recalibration
-                    XYZ = (X + Y + Z) / 3;
-                    XYZ = Validation.checkZero(XYZ);
-                    eeprom.HRadius = eeprom.HRadius + ((XYZOpp * diagChange) / userVariables.HRadRatio);
+                    //add diagonal rod and steps per millimeter to list to use later for linear regression
+                    userVariables.known_xDR.Add(eeprom.diagonalRod);
+                    userVariables.known_yDR.Add(eeprom.stepsPerMM);
 
-                    if (XYZOpp >= 0)
+                    //prevent using linear regression if there are not two values store
+                    if (userVariables.stepsCalcNumber >= 2)
                     {
-                        X = X - XYZ;
-                        Y = Y - XYZ;
-                        Z = Z - XYZ;
-                        XOpp = XOpp - XYZ;
-                        YOpp = YOpp - XYZ;
-                        ZOpp = ZOpp - XYZ;
-                    }
-                    else
-                    {
-                        X = X + XYZ;
-                        Y = Y + XYZ;
-                        Z = Z + XYZ;
-                        XOpp = XOpp + XYZ;
-                        YOpp = YOpp + XYZ;
-                        ZOpp = ZOpp + XYZ;
-                    }
+                        if (userVariables.stepsCalcNumber >= 3)
+                        {
+                            userVariables.known_xDR.RemoveAt(userVariables.l);
+                            userVariables.known_yDR.RemoveAt(userVariables.l);
+                            userVariables.l++;
+                        }
 
-                    X = Validation.checkZero(X);
-                    Y = Validation.checkZero(Y);
-                    Z = Validation.checkZero(Z);
-                    XOpp = Validation.checkZero(XOpp);
-                    YOpp = Validation.checkZero(YOpp);
-                    ZOpp = Validation.checkZero(ZOpp);
+                        float rsquared = 0;
+                        float yintercept = 0;
+                        float slope = 0;
 
-                    //XYZ is zero
-                    if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
-                    {
-                        //end calculation
-                        eeprom.stepsPerMM = Validation.checkZero(eeprom.stepsPerMM);
+                        LinearRegression(userVariables.known_xDR.ToArray(), userVariables.known_yDR.ToArray(), 0, userVariables.known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
+                        eeprom.stepsPerMM = slope * userVariables.diagonalRodLength + yintercept;
 
-                        float changeInMM = ((eeprom.stepsPerMM * eeprom.zMaxLength) - (eeprom.tempSPM * eeprom.zMaxLength)) / eeprom.tempSPM;
+                        Thread.Sleep(userVariables.pauseTimeSet);
+                        GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
+                        UserInterface.logConsole("Steps Per Millimeter Changed: " + eeprom.stepsPerMM.ToString());
+
+                        UserInterface.logConsole("SPM yintercept: " + yintercept);
+                        UserInterface.logConsole("SPM slope: " + slope);
+
+                        float changeInMM = ((eeprom.stepsPerMM * eeprom.zMaxLength) - (eeprom.tempSPM * eeprom.zMaxLength)) / eeprom.stepsPerMM;
 
                         UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
                         UserInterface.logConsole("zMaxLength before: " + eeprom.zMaxLength);
                         UserInterface.logConsole("zMaxLength after: " + (eeprom.zMaxLength - changeInMM));
 
-                        float tempChange = eeprom.zMaxLength - changeInMM;
-
-                        eeprom.zMaxLength = tempChange;
-
-                        UserInterface.logConsole("SPM:" + eeprom.stepsPerMM);
-                        i = 100;
+                        GCode.sendEEPROMVariable(3, 153, (eeprom.zMaxLength - changeInMM));
+                        UserInterface.logConsole("Resetting Z Max Length\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
-                    else
+                    else if (userVariables.stepsCalcNumber == 0)
                     {
-                        i++;
+                        //add one to steps calnumber
+                        userVariables.stepsCalcNumber++;
+
+                        //adds a point to the array below the stepsPerMM
+                        eeprom.stepsPerMM = eeprom.tempSPM - (1 / eeprom.tempSPM) * 160;
+                        UserInterface.logConsole("Steps Per Millimeter Decreased: " + eeprom.stepsPerMM.ToString());
+
+                        Thread.Sleep(userVariables.pauseTimeSet);
+                        GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
+                        UserInterface.logConsole("Setting steps per millimeter\n");
+
+                        float changeInMM = ((eeprom.stepsPerMM * eeprom.zMaxLength) - (eeprom.tempSPM * eeprom.zMaxLength)) / eeprom.stepsPerMM;
+
+                        UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
+                        UserInterface.logConsole("zMaxLength before: " + eeprom.zMaxLength);
+                        UserInterface.logConsole("zMaxLength after: " + (eeprom.zMaxLength - changeInMM));
+
+                        GCode.sendEEPROMVariable(3, 153, (eeprom.zMaxLength - changeInMM));
+                        UserInterface.logConsole("Resetting Z Max Length\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
                     }
+                    else if (userVariables.stepsCalcNumber == 1)
+                    {
+                        //add one to steps calnumber
+                        userVariables.stepsCalcNumber++;
+
+                        //adds a point to the array above the stepsPerMM
+                        eeprom.stepsPerMM = eeprom.tempSPM + (1 / eeprom.tempSPM) * 160;//*2 to compensate for the subtraction
+                        UserInterface.logConsole("Steps Per Millimeter Increased: " + eeprom.stepsPerMM.ToString());
+
+                        Thread.Sleep(userVariables.pauseTimeSet);
+                        GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
+                        UserInterface.logConsole("Setting steps per millimeter\n");
+
+                        float changeInMM = ((eeprom.stepsPerMM * eeprom.zMaxLength) - (eeprom.tempSPM * eeprom.zMaxLength)) / eeprom.stepsPerMM;
+
+                        UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
+                        UserInterface.logConsole("zMaxLength before: " + eeprom.zMaxLength);
+                        UserInterface.logConsole("zMaxLength after: " + (eeprom.zMaxLength - changeInMM));
+
+                        GCode.sendEEPROMVariable(3, 153, (eeprom.zMaxLength - changeInMM));
+                        UserInterface.logConsole("Resetting Z Max Length\n");
+                        Thread.Sleep(userVariables.pauseTimeSet);
+                    }
+
+                    i = 100;
+                }
+                else
+                {
+                    i++;
                 }
             }
+        }
+        public static void LinearRegression(float[] xVals, float[] yVals, int inclusiveStart, int exclusiveEnd, out float rsquared, out float yintercept, out float slope)
+        {
+            float sumOfX = 0;
+            float sumOfY = 0;
+            float sumOfXSq = 0;
+            float sumOfYSq = 0;
+            float ssX = 0;
+            float ssY = 0;
+            float sumCodeviates = 0;
+            float sCo = 0;
+            float count = exclusiveEnd - inclusiveStart;
 
+            for (int ctr = inclusiveStart; ctr < exclusiveEnd; ctr++)
+            {
+                float x = xVals[ctr];
+                float y = yVals[ctr];
+                sumCodeviates += x * y;
+                sumOfX += x;
+                sumOfY += y;
+                sumOfXSq += x * x;
+                sumOfYSq += y * y;
+            }
+
+            ssX = sumOfXSq - ((sumOfX * sumOfX) / count);
+            ssY = sumOfYSq - ((sumOfY * sumOfY) / count);
+            float RNumerator = (count * sumCodeviates) - (sumOfX * sumOfY);
+            float RDenom = (count * sumOfXSq - (sumOfX * sumOfX))
+             * (count * sumOfYSq - (sumOfY * sumOfY));
+            sCo = sumCodeviates - ((sumOfX * sumOfY) / count);
+
+            float meanX = sumOfX / count;
+            float meanY = sumOfY / count;
+            float dblR = RNumerator / Convert.ToSingle(Math.Sqrt(RDenom));
+            rsquared = dblR * dblR;
+            yintercept = meanY - ((sCo / ssX) * meanX);
+            slope = sCo / ssX;
         }
     }
 }

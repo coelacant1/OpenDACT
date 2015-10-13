@@ -66,11 +66,6 @@ namespace OpenDACT.Class_Files
             return heights;
         }
 
-        public static void setHeights()
-        {
-            
-        }
-
         public static void setHeights(float probePosition, ref EEPROM eeprom, ref UserVariables userVariables)
         {
             float zMaxLength = eeprom.zMaxLength;
@@ -166,7 +161,7 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                return 200;
+                return 1000;
             }
         }
     }

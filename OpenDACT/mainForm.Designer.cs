@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -50,7 +50,8 @@
             this.advancedPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label11 = new System.Windows.Forms.Label();
+            this.label57 = new System.Windows.Forms.Label();
+            this.readEEPROM = new System.Windows.Forms.Button();
             this.label52 = new System.Windows.Forms.Label();
             this.textDeltaOpp = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -111,9 +112,9 @@
             this.textBox28 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.alphaBText = new System.Windows.Forms.TextBox();
+            this.alphaAText = new System.Windows.Forms.TextBox();
+            this.alphaCText = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.textZProbeHeight = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
@@ -122,7 +123,7 @@
             this.label33 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.textMaxIterations = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textFSRPO = new System.Windows.Forms.TextBox();
             this.label31 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.textHRadRatio = new System.Windows.Forms.TextBox();
@@ -166,9 +167,28 @@
             this.textxzOppPerc = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.ZText = new System.Windows.Forms.Label();
+            this.YText = new System.Windows.Forms.Label();
+            this.XText = new System.Windows.Forms.Label();
+            this.ZOppText = new System.Windows.Forms.Label();
+            this.XOppText = new System.Windows.Forms.Label();
+            this.YOppText = new System.Windows.Forms.Label();
+            this.label65 = new System.Windows.Forms.Label();
+            this.label66 = new System.Windows.Forms.Label();
+            this.label67 = new System.Windows.Forms.Label();
+            this.iZtext = new System.Windows.Forms.Label();
+            this.iYtext = new System.Windows.Forms.Label();
+            this.iXtext = new System.Windows.Forms.Label();
+            this.iZOpptext = new System.Windows.Forms.Label();
+            this.iXOpptext = new System.Windows.Forms.Label();
+            this.iYOpptext = new System.Windows.Forms.Label();
+            this.label56 = new System.Windows.Forms.Label();
+            this.label55 = new System.Windows.Forms.Label();
+            this.label54 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.accuracyTime = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.label11 = new System.Windows.Forms.Label();
             this.label35 = new System.Windows.Forms.Label();
             this.textProbingHeight = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -180,24 +200,7 @@
             this.contactButton = new System.Windows.Forms.Button();
             this.donateButton = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.label54 = new System.Windows.Forms.Label();
-            this.label55 = new System.Windows.Forms.Label();
-            this.label56 = new System.Windows.Forms.Label();
-            this.iYOpptext = new System.Windows.Forms.Label();
-            this.iXOpptext = new System.Windows.Forms.Label();
-            this.iZOpptext = new System.Windows.Forms.Label();
-            this.iXtext = new System.Windows.Forms.Label();
-            this.iYtext = new System.Windows.Forms.Label();
-            this.iZtext = new System.Windows.Forms.Label();
-            this.ZText = new System.Windows.Forms.Label();
-            this.YText = new System.Windows.Forms.Label();
-            this.XText = new System.Windows.Forms.Label();
-            this.ZOppText = new System.Windows.Forms.Label();
-            this.XOppText = new System.Windows.Forms.Label();
-            this.YOppText = new System.Windows.Forms.Label();
-            this.label65 = new System.Windows.Forms.Label();
-            this.label66 = new System.Windows.Forms.Label();
-            this.label67 = new System.Windows.Forms.Label();
+            this.diagonalRodLengthText = new System.Windows.Forms.TextBox();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -266,9 +269,9 @@
             // portsCombo
             // 
             this.portsCombo.FormattingEnabled = true;
-            this.portsCombo.Location = new System.Drawing.Point(508, 32);
+            this.portsCombo.Location = new System.Drawing.Point(509, 32);
             this.portsCombo.Name = "portsCombo";
-            this.portsCombo.Size = new System.Drawing.Size(108, 21);
+            this.portsCombo.Size = new System.Drawing.Size(107, 21);
             this.portsCombo.TabIndex = 6;
             // 
             // comboBoxZMinimumValue
@@ -364,7 +367,8 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.label57);
+            this.tabPage1.Controls.Add(this.readEEPROM);
             this.tabPage1.Controls.Add(this.label52);
             this.tabPage1.Controls.Add(this.textDeltaOpp);
             this.tabPage1.Controls.Add(this.label10);
@@ -426,9 +430,9 @@
             this.tabPage1.Controls.Add(this.textBox28);
             this.tabPage1.Controls.Add(this.textBox2);
             this.tabPage1.Controls.Add(this.textBox6);
-            this.tabPage1.Controls.Add(this.textBox5);
-            this.tabPage1.Controls.Add(this.textBox3);
-            this.tabPage1.Controls.Add(this.textBox4);
+            this.tabPage1.Controls.Add(this.alphaBText);
+            this.tabPage1.Controls.Add(this.alphaAText);
+            this.tabPage1.Controls.Add(this.alphaCText);
             this.tabPage1.Controls.Add(this.label36);
             this.tabPage1.Controls.Add(this.textZProbeHeight);
             this.tabPage1.Controls.Add(this.label34);
@@ -437,7 +441,7 @@
             this.tabPage1.Controls.Add(this.label33);
             this.tabPage1.Controls.Add(this.label32);
             this.tabPage1.Controls.Add(this.textMaxIterations);
-            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.textFSRPO);
             this.tabPage1.Controls.Add(this.label31);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.textHRadRatio);
@@ -487,14 +491,24 @@
             this.tabPage1.Text = "Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label11
+            // label57
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(11, 293);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(129, 13);
-            this.label11.TabIndex = 141;
-            this.label11.Text = "Opposite SPM Correction:";
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(10, 294);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(187, 13);
+            this.label57.TabIndex = 155;
+            this.label57.Text = "Opposite SPM Percentage Correction:";
+            // 
+            // readEEPROM
+            // 
+            this.readEEPROM.Location = new System.Drawing.Point(481, 369);
+            this.readEEPROM.Name = "readEEPROM";
+            this.readEEPROM.Size = new System.Drawing.Size(151, 20);
+            this.readEEPROM.TabIndex = 199;
+            this.readEEPROM.Text = "Read EEPROM Values";
+            this.readEEPROM.UseVisualStyleBackColor = true;
+            this.readEEPROM.Click += new System.EventHandler(this.readEEPROM_Click);
             // 
             // label52
             // 
@@ -578,7 +592,7 @@
             // 
             this.sendEEPROMButton.Location = new System.Drawing.Point(327, 369);
             this.sendEEPROMButton.Name = "sendEEPROMButton";
-            this.sendEEPROMButton.Size = new System.Drawing.Size(305, 20);
+            this.sendEEPROMButton.Size = new System.Drawing.Size(148, 20);
             this.sendEEPROMButton.TabIndex = 192;
             this.sendEEPROMButton.Text = "Send EEPROM Values";
             this.sendEEPROMButton.UseVisualStyleBackColor = true;
@@ -988,29 +1002,29 @@
             this.textBox6.TabIndex = 161;
             this.textBox6.Text = "10";
             // 
-            // textBox5
+            // alphaBText
             // 
-            this.textBox5.Location = new System.Drawing.Point(217, 343);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 20);
-            this.textBox5.TabIndex = 160;
-            this.textBox5.Text = "10";
+            this.alphaBText.Location = new System.Drawing.Point(217, 343);
+            this.alphaBText.Name = "alphaBText";
+            this.alphaBText.Size = new System.Drawing.Size(100, 20);
+            this.alphaBText.TabIndex = 160;
+            this.alphaBText.Text = "1.725";
             // 
-            // textBox3
+            // alphaAText
             // 
-            this.textBox3.Location = new System.Drawing.Point(217, 317);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 159;
-            this.textBox3.Text = "10";
+            this.alphaAText.Location = new System.Drawing.Point(217, 317);
+            this.alphaAText.Name = "alphaAText";
+            this.alphaAText.Size = new System.Drawing.Size(100, 20);
+            this.alphaAText.TabIndex = 159;
+            this.alphaAText.Text = "1.725";
             // 
-            // textBox4
+            // alphaCText
             // 
-            this.textBox4.Location = new System.Drawing.Point(217, 369);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 158;
-            this.textBox4.Text = "10";
+            this.alphaCText.Location = new System.Drawing.Point(217, 369);
+            this.alphaCText.Name = "alphaCText";
+            this.alphaCText.Size = new System.Drawing.Size(100, 20);
+            this.alphaCText.TabIndex = 158;
+            this.alphaCText.Text = "1.725";
             // 
             // label36
             // 
@@ -1080,13 +1094,13 @@
             this.textMaxIterations.TabIndex = 146;
             this.textMaxIterations.Text = "50";
             // 
-            // textBox1
+            // textFSRPO
             // 
-            this.textBox1.Location = new System.Drawing.Point(217, 83);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 145;
-            this.textBox1.Text = "0.6";
+            this.textFSRPO.Location = new System.Drawing.Point(217, 83);
+            this.textFSRPO.Name = "textFSRPO";
+            this.textFSRPO.Size = new System.Drawing.Size(100, 20);
+            this.textFSRPO.TabIndex = 145;
+            this.textFSRPO.Text = "0.6";
             // 
             // label31
             // 
@@ -1476,231 +1490,6 @@
             this.tabPage3.Text = "Accuracy ";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(341, 309);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(271, 274);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 2;
-            this.pictureBox4.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(341, 18);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(271, 274);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            // 
-            // accuracyTime
-            // 
-            this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea3.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea3.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea3);
-            legend3.Enabled = false;
-            legend3.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend3);
-            this.accuracyTime.Location = new System.Drawing.Point(3, 3);
-            this.accuracyTime.Name = "accuracyTime";
-            series3.BackImageTransparentColor = System.Drawing.Color.White;
-            series3.BorderColor = System.Drawing.Color.Transparent;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.IsXValueIndexed = true;
-            series3.Legend = "Legend1";
-            series3.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series3);
-            this.accuracyTime.Size = new System.Drawing.Size(317, 580);
-            this.accuracyTime.TabIndex = 0;
-            this.accuracyTime.Text = "chart1";
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(262, 36);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(80, 13);
-            this.label35.TabIndex = 153;
-            this.label35.Text = "Probing Height:";
-            // 
-            // textProbingHeight
-            // 
-            this.textProbingHeight.Location = new System.Drawing.Point(343, 33);
-            this.textProbingHeight.Name = "textProbingHeight";
-            this.textProbingHeight.Size = new System.Drawing.Size(100, 20);
-            this.textProbingHeight.TabIndex = 152;
-            this.textProbingHeight.Text = "10";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(262, 8);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(65, 13);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "Probe Type:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(262, 83);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(48, 13);
-            this.label6.TabIndex = 17;
-            this.label6.Text = "Console:";
-            // 
-            // GCodeBox
-            // 
-            this.GCodeBox.Location = new System.Drawing.Point(343, 59);
-            this.GCodeBox.Name = "GCodeBox";
-            this.GCodeBox.Size = new System.Drawing.Size(273, 20);
-            this.GCodeBox.TabIndex = 18;
-            // 
-            // sendGCode
-            // 
-            this.sendGCode.Location = new System.Drawing.Point(262, 57);
-            this.sendGCode.Name = "sendGCode";
-            this.sendGCode.Size = new System.Drawing.Size(75, 23);
-            this.sendGCode.TabIndex = 19;
-            this.sendGCode.Text = "Send GC";
-            this.sendGCode.UseVisualStyleBackColor = true;
-            this.sendGCode.Click += new System.EventHandler(this.sendGCode_Click);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(3, 2);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(245, 105);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 20;
-            this.pictureBox2.TabStop = false;
-            // 
-            // aboutButton
-            // 
-            this.aboutButton.Location = new System.Drawing.Point(5, 316);
-            this.aboutButton.Name = "aboutButton";
-            this.aboutButton.Size = new System.Drawing.Size(245, 23);
-            this.aboutButton.TabIndex = 21;
-            this.aboutButton.Text = "About";
-            this.aboutButton.UseVisualStyleBackColor = true;
-            this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
-            // 
-            // contactButton
-            // 
-            this.contactButton.Location = new System.Drawing.Point(5, 345);
-            this.contactButton.Name = "contactButton";
-            this.contactButton.Size = new System.Drawing.Size(245, 23);
-            this.contactButton.TabIndex = 22;
-            this.contactButton.Text = "Contact";
-            this.contactButton.UseVisualStyleBackColor = true;
-            this.contactButton.Click += new System.EventHandler(this.contactButton_Click_1);
-            // 
-            // donateButton
-            // 
-            this.donateButton.Location = new System.Drawing.Point(4, 374);
-            this.donateButton.Name = "donateButton";
-            this.donateButton.Size = new System.Drawing.Size(245, 23);
-            this.donateButton.TabIndex = 23;
-            this.donateButton.Text = "Donate";
-            this.donateButton.UseVisualStyleBackColor = true;
-            this.donateButton.Click += new System.EventHandler(this.donateButton_Click_1);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(5, 206);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(245, 47);
-            this.button4.TabIndex = 24;
-            this.button4.Text = "Iterative Calibration";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(470, 6);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(14, 13);
-            this.label54.TabIndex = 3;
-            this.label54.Text = "Z";
-            // 
-            // label55
-            // 
-            this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(343, 221);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(14, 13);
-            this.label55.TabIndex = 4;
-            this.label55.Text = "X";
-            // 
-            // label56
-            // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(598, 221);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(14, 13);
-            this.label56.TabIndex = 5;
-            this.label56.Text = "Y";
-            // 
-            // iYOpptext
-            // 
-            this.iYOpptext.AutoSize = true;
-            this.iYOpptext.Location = new System.Drawing.Point(364, 85);
-            this.iYOpptext.Name = "iYOpptext";
-            this.iYOpptext.Size = new System.Drawing.Size(41, 13);
-            this.iYOpptext.TabIndex = 6;
-            this.iYOpptext.Text = "label57";
-            // 
-            // iXOpptext
-            // 
-            this.iXOpptext.AutoSize = true;
-            this.iXOpptext.Location = new System.Drawing.Point(562, 85);
-            this.iXOpptext.Name = "iXOpptext";
-            this.iXOpptext.Size = new System.Drawing.Size(14, 13);
-            this.iXOpptext.TabIndex = 7;
-            this.iXOpptext.Text = "Z";
-            // 
-            // iZOpptext
-            // 
-            this.iZOpptext.AutoSize = true;
-            this.iZOpptext.Location = new System.Drawing.Point(461, 267);
-            this.iZOpptext.Name = "iZOpptext";
-            this.iZOpptext.Size = new System.Drawing.Size(12, 13);
-            this.iZOpptext.TabIndex = 8;
-            this.iZOpptext.Text = "z";
-            // 
-            // iXtext
-            // 
-            this.iXtext.AutoSize = true;
-            this.iXtext.Location = new System.Drawing.Point(374, 204);
-            this.iXtext.Name = "iXtext";
-            this.iXtext.Size = new System.Drawing.Size(14, 13);
-            this.iXtext.TabIndex = 9;
-            this.iXtext.Text = "Z";
-            // 
-            // iYtext
-            // 
-            this.iYtext.AutoSize = true;
-            this.iYtext.Location = new System.Drawing.Point(552, 204);
-            this.iYtext.Name = "iYtext";
-            this.iYtext.Size = new System.Drawing.Size(14, 13);
-            this.iYtext.TabIndex = 10;
-            this.iYtext.Text = "Z";
-            // 
-            // iZtext
-            // 
-            this.iZtext.AutoSize = true;
-            this.iZtext.Location = new System.Drawing.Point(461, 53);
-            this.iZtext.Name = "iZtext";
-            this.iZtext.Size = new System.Drawing.Size(14, 13);
-            this.iZtext.TabIndex = 11;
-            this.iZtext.Text = "Z";
-            // 
             // ZText
             // 
             this.ZText.AutoSize = true;
@@ -1782,12 +1571,255 @@
             this.label67.TabIndex = 12;
             this.label67.Text = "Z";
             // 
+            // iZtext
+            // 
+            this.iZtext.AutoSize = true;
+            this.iZtext.Location = new System.Drawing.Point(461, 53);
+            this.iZtext.Name = "iZtext";
+            this.iZtext.Size = new System.Drawing.Size(14, 13);
+            this.iZtext.TabIndex = 11;
+            this.iZtext.Text = "Z";
+            // 
+            // iYtext
+            // 
+            this.iYtext.AutoSize = true;
+            this.iYtext.Location = new System.Drawing.Point(552, 204);
+            this.iYtext.Name = "iYtext";
+            this.iYtext.Size = new System.Drawing.Size(14, 13);
+            this.iYtext.TabIndex = 10;
+            this.iYtext.Text = "Z";
+            // 
+            // iXtext
+            // 
+            this.iXtext.AutoSize = true;
+            this.iXtext.Location = new System.Drawing.Point(374, 204);
+            this.iXtext.Name = "iXtext";
+            this.iXtext.Size = new System.Drawing.Size(14, 13);
+            this.iXtext.TabIndex = 9;
+            this.iXtext.Text = "Z";
+            // 
+            // iZOpptext
+            // 
+            this.iZOpptext.AutoSize = true;
+            this.iZOpptext.Location = new System.Drawing.Point(461, 267);
+            this.iZOpptext.Name = "iZOpptext";
+            this.iZOpptext.Size = new System.Drawing.Size(12, 13);
+            this.iZOpptext.TabIndex = 8;
+            this.iZOpptext.Text = "z";
+            // 
+            // iXOpptext
+            // 
+            this.iXOpptext.AutoSize = true;
+            this.iXOpptext.Location = new System.Drawing.Point(562, 85);
+            this.iXOpptext.Name = "iXOpptext";
+            this.iXOpptext.Size = new System.Drawing.Size(14, 13);
+            this.iXOpptext.TabIndex = 7;
+            this.iXOpptext.Text = "Z";
+            // 
+            // iYOpptext
+            // 
+            this.iYOpptext.AutoSize = true;
+            this.iYOpptext.Location = new System.Drawing.Point(364, 85);
+            this.iYOpptext.Name = "iYOpptext";
+            this.iYOpptext.Size = new System.Drawing.Size(41, 13);
+            this.iYOpptext.TabIndex = 6;
+            this.iYOpptext.Text = "label57";
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(598, 221);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(14, 13);
+            this.label56.TabIndex = 5;
+            this.label56.Text = "Y";
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(343, 221);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(14, 13);
+            this.label55.TabIndex = 4;
+            this.label55.Text = "X";
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(470, 6);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(14, 13);
+            this.label54.TabIndex = 3;
+            this.label54.Text = "Z";
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
+            this.pictureBox4.Location = new System.Drawing.Point(341, 309);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(271, 274);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 2;
+            this.pictureBox4.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(341, 18);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(271, 274);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            // 
+            // accuracyTime
+            // 
+            this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
+            chartArea2.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea2.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea2);
+            legend2.Enabled = false;
+            legend2.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend2);
+            this.accuracyTime.Location = new System.Drawing.Point(3, 3);
+            this.accuracyTime.Name = "accuracyTime";
+            series2.BackImageTransparentColor = System.Drawing.Color.White;
+            series2.BorderColor = System.Drawing.Color.Transparent;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.IsXValueIndexed = true;
+            series2.Legend = "Legend1";
+            series2.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series2);
+            this.accuracyTime.Size = new System.Drawing.Size(317, 580);
+            this.accuracyTime.TabIndex = 0;
+            this.accuracyTime.Text = "chart1";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(262, 64);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(75, 13);
+            this.label11.TabIndex = 141;
+            this.label11.Text = "Diagonal Rod:";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(262, 36);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(80, 13);
+            this.label35.TabIndex = 153;
+            this.label35.Text = "Probing Height:";
+            // 
+            // textProbingHeight
+            // 
+            this.textProbingHeight.Location = new System.Drawing.Point(343, 33);
+            this.textProbingHeight.Name = "textProbingHeight";
+            this.textProbingHeight.Size = new System.Drawing.Size(100, 20);
+            this.textProbingHeight.TabIndex = 152;
+            this.textProbingHeight.Text = "10";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(262, 8);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(65, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Probe Type:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(262, 83);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(48, 13);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "Console:";
+            // 
+            // GCodeBox
+            // 
+            this.GCodeBox.Location = new System.Drawing.Point(524, 59);
+            this.GCodeBox.Name = "GCodeBox";
+            this.GCodeBox.Size = new System.Drawing.Size(92, 20);
+            this.GCodeBox.TabIndex = 18;
+            // 
+            // sendGCode
+            // 
+            this.sendGCode.Location = new System.Drawing.Point(452, 58);
+            this.sendGCode.Name = "sendGCode";
+            this.sendGCode.Size = new System.Drawing.Size(66, 23);
+            this.sendGCode.TabIndex = 19;
+            this.sendGCode.Text = "Send GC";
+            this.sendGCode.UseVisualStyleBackColor = true;
+            this.sendGCode.Click += new System.EventHandler(this.sendGCode_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(3, 2);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(245, 105);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 20;
+            this.pictureBox2.TabStop = false;
+            // 
+            // aboutButton
+            // 
+            this.aboutButton.Location = new System.Drawing.Point(5, 316);
+            this.aboutButton.Name = "aboutButton";
+            this.aboutButton.Size = new System.Drawing.Size(245, 23);
+            this.aboutButton.TabIndex = 21;
+            this.aboutButton.Text = "About";
+            this.aboutButton.UseVisualStyleBackColor = true;
+            this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
+            // 
+            // contactButton
+            // 
+            this.contactButton.Location = new System.Drawing.Point(5, 345);
+            this.contactButton.Name = "contactButton";
+            this.contactButton.Size = new System.Drawing.Size(245, 23);
+            this.contactButton.TabIndex = 22;
+            this.contactButton.Text = "Contact";
+            this.contactButton.UseVisualStyleBackColor = true;
+            this.contactButton.Click += new System.EventHandler(this.contactButton_Click_1);
+            // 
+            // donateButton
+            // 
+            this.donateButton.Location = new System.Drawing.Point(4, 374);
+            this.donateButton.Name = "donateButton";
+            this.donateButton.Size = new System.Drawing.Size(245, 23);
+            this.donateButton.TabIndex = 23;
+            this.donateButton.Text = "Donate";
+            this.donateButton.UseVisualStyleBackColor = true;
+            this.donateButton.Click += new System.EventHandler(this.donateButton_Click_1);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(5, 206);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(245, 47);
+            this.button4.TabIndex = 24;
+            this.button4.Text = "Iterative Calibration";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // diagonalRodLengthText
+            // 
+            this.diagonalRodLengthText.Location = new System.Drawing.Point(343, 61);
+            this.diagonalRodLengthText.Name = "diagonalRodLengthText";
+            this.diagonalRodLengthText.Size = new System.Drawing.Size(100, 20);
+            this.diagonalRodLengthText.TabIndex = 154;
+            // 
             // mainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1287, 633);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.diagonalRodLengthText);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.donateButton);
             this.Controls.Add(this.contactButton);
@@ -1865,9 +1897,9 @@
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox alphaBText;
+        private System.Windows.Forms.TextBox alphaAText;
+        private System.Windows.Forms.TextBox alphaCText;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.TextBox textZProbeHeight;
         private System.Windows.Forms.Label label35;
@@ -1878,15 +1910,15 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox textMaxIterations;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textFSRPO;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textHRadRatio;
+        public System.Windows.Forms.TextBox textHRadRatio;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textDeltaOpp;
+        public System.Windows.Forms.TextBox textDeltaOpp;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox textDeltaTower;
-        private System.Windows.Forms.TextBox textAccuracy;
+        public System.Windows.Forms.TextBox textDeltaTower;
+        public System.Windows.Forms.TextBox textAccuracy;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox textAccuracy2;
         private System.Windows.Forms.Label label9;
@@ -1999,5 +2031,8 @@
         private System.Windows.Forms.Label label65;
         private System.Windows.Forms.Label label66;
         private System.Windows.Forms.Label label67;
+        private System.Windows.Forms.Button readEEPROM;
+        public System.Windows.Forms.TextBox diagonalRodLengthText;
+        private System.Windows.Forms.Label label57;
     }
 }

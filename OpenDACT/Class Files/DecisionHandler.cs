@@ -10,7 +10,10 @@ namespace OpenDACT.Class_Files
     {
         public static void handleInput(string message)
         {
-            if (EEPROMFunctions.EEPROMSet == false)
+            EEPROM eeprom;
+            UserVariables userVariables;
+
+            if (EEPROMFunctions.tempEEPROMSet == false)
             {
                 int intParse;
                 float floatParse2;
@@ -18,40 +21,43 @@ namespace OpenDACT.Class_Files
                 EEPROMFunctions.parseEEPROM(message, out intParse, out floatParse2);
                 EEPROMFunctions.setEEPROM(intParse, floatParse2);
             }
-            else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false)
+            else if (EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == true)
             {
-                if (EEPROMFunctions.EEPROMSet == true)
+                eeprom = EEPROMFunctions.returnEEPROMObject();
+                Program.mainFormTest.setEEPROMGUIList(eeprom);
+            }
+            else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
+            {
+                eeprom = EEPROMFunctions.returnEEPROMObject();
+                userVariables = UserInterface.returnUserVariablesObject();
+                Program.mainFormTest.setEEPROMGUIList(eeprom);
+
+
+                if (HeightFunctions.parseZProbe(message) != 1000)
                 {
-                    EEPROM eeprom = EEPROMFunctions.returnEEPROMObject();
-                    UserVariables userVariables = UserInterface.returnUserVariablesObject();
+                    HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom, ref userVariables);
+                    UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");
+                }
 
-
-                    if (HeightFunctions.parseZProbe(message) != 1000)
+                if (HeightFunctions.heightsSet == true)
+                {
+                    if (userVariables.advancedCalibration == false)
                     {
-                        HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom, ref userVariables);
-                        UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");
+                        GCode.checkHeights = false;
+                        Heights heights = HeightFunctions.returnHeightObject();
+                        Calibration.calibrate(Calibration.calibrationSelection, ref eeprom, ref heights, ref userVariables);
                     }
-
-                    if (HeightFunctions.heightsSet == true)
+                    else
                     {
-                        if (userVariables.advancedCalibration == false)
-                        {
-                            GCode.checkHeights = false;
-                            Heights heights = HeightFunctions.returnHeightObject();
-                            Calibration.calibrate(Calibration.calibrationSelection, ref eeprom, ref heights, ref userVariables);
-                        }
-                        else
-                        {
-                            GCode.checkHeights = false;
-                            Heights heights = HeightFunctions.returnHeightObject();
-                            GCode.heuristicLearning(ref eeprom, ref userVariables, ref heights);
-                        }
+                        GCode.checkHeights = false;
+                        Heights heights = HeightFunctions.returnHeightObject();
+                        GCode.heuristicLearning(ref eeprom, ref userVariables, ref heights);
                     }
                 }
             }
             else if (GCode.checkHeights == true && Calibration.calibrateInProgress == false)
             {
-                UserVariables userVariables = UserInterface.returnUserVariablesObject();
+                userVariables = UserInterface.returnUserVariablesObject();
                 GCode.positionFlow(ref userVariables);
             }
 

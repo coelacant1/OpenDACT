@@ -47,8 +47,9 @@ namespace OpenDACT.Class_Files
 
     static class EEPROMFunctions
     {
-        public static bool EEPROMSet = false;
+        public static bool tempEEPROMSet = false;
         public static bool EEPROMRequestSent = false;
+        public static bool EEPROMReadOnly = false;
         private static float tempStepsPerMM;
         private static float tempTempSPM;
         private static float tempZMaxLength;
@@ -171,8 +172,9 @@ namespace OpenDACT.Class_Files
                     break;
                 case 921:
                     tempDC = floatParse2;
-                    EEPROMFunctions.EEPROMSet = true;
+                    tempEEPROMSet = true;
                     GCode.checkHeights = true;
+
                     break;
             }
         }

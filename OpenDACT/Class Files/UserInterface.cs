@@ -76,6 +76,7 @@ namespace OpenDACT.Class_Files
     {
         public static bool isInitiated = false;
 
+
         static public UserVariables returnUserVariablesObject()
         {
             UserVariables userVariables = new UserVariables();

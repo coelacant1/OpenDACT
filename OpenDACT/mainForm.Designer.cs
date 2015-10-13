@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -115,8 +115,6 @@
             this.alphaBText = new System.Windows.Forms.TextBox();
             this.alphaAText = new System.Windows.Forms.TextBox();
             this.alphaCText = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
-            this.textZProbeHeight = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.textProbingSpeed = new System.Windows.Forms.TextBox();
             this.textPauseTimeSet = new System.Windows.Forms.TextBox();
@@ -201,6 +199,8 @@
             this.donateButton = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.diagonalRodLengthText = new System.Windows.Forms.TextBox();
+            this.textPlateDiameter = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -391,6 +391,8 @@
             this.tabPage1.Controls.Add(this.label40);
             this.tabPage1.Controls.Add(this.label39);
             this.tabPage1.Controls.Add(this.label38);
+            this.tabPage1.Controls.Add(this.label35);
+            this.tabPage1.Controls.Add(this.textProbingHeight);
             this.tabPage1.Controls.Add(this.label37);
             this.tabPage1.Controls.Add(this.textFSRPlateOffset);
             this.tabPage1.Controls.Add(this.label30);
@@ -433,8 +435,6 @@
             this.tabPage1.Controls.Add(this.alphaBText);
             this.tabPage1.Controls.Add(this.alphaAText);
             this.tabPage1.Controls.Add(this.alphaCText);
-            this.tabPage1.Controls.Add(this.label36);
-            this.tabPage1.Controls.Add(this.textZProbeHeight);
             this.tabPage1.Controls.Add(this.label34);
             this.tabPage1.Controls.Add(this.textProbingSpeed);
             this.tabPage1.Controls.Add(this.textPauseTimeSet);
@@ -521,7 +521,7 @@
             // 
             // textDeltaOpp
             // 
-            this.textDeltaOpp.Location = new System.Drawing.Point(218, 291);
+            this.textDeltaOpp.Location = new System.Drawing.Point(217, 291);
             this.textDeltaOpp.Name = "textDeltaOpp";
             this.textDeltaOpp.Size = new System.Drawing.Size(100, 20);
             this.textDeltaOpp.TabIndex = 136;
@@ -547,7 +547,7 @@
             // 
             // textDeltaTower
             // 
-            this.textDeltaTower.Location = new System.Drawing.Point(218, 265);
+            this.textDeltaTower.Location = new System.Drawing.Point(217, 264);
             this.textDeltaTower.Name = "textDeltaTower";
             this.textDeltaTower.Size = new System.Drawing.Size(100, 20);
             this.textDeltaTower.TabIndex = 135;
@@ -1025,23 +1025,6 @@
             this.alphaCText.Size = new System.Drawing.Size(100, 20);
             this.alphaCText.TabIndex = 158;
             this.alphaCText.Text = "1.725";
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(10, 188);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(103, 13);
-            this.label36.TabIndex = 155;
-            this.label36.Text = "Z-probe Height (mm)";
-            // 
-            // textZProbeHeight
-            // 
-            this.textZProbeHeight.Location = new System.Drawing.Point(217, 186);
-            this.textZProbeHeight.Name = "textZProbeHeight";
-            this.textZProbeHeight.Size = new System.Drawing.Size(100, 20);
-            this.textZProbeHeight.TabIndex = 154;
-            this.textZProbeHeight.Text = "0";
             // 
             // label34
             // 
@@ -1675,22 +1658,22 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea2.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend2);
+            chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea1.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend1);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series2.BackImageTransparentColor = System.Drawing.Color.White;
-            series2.BorderColor = System.Drawing.Color.Transparent;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.IsXValueIndexed = true;
-            series2.Legend = "Legend1";
-            series2.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series2);
+            series1.BackImageTransparentColor = System.Drawing.Color.White;
+            series1.BorderColor = System.Drawing.Color.Transparent;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series1);
             this.accuracyTime.Size = new System.Drawing.Size(317, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
@@ -1707,7 +1690,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(262, 36);
+            this.label35.Location = new System.Drawing.Point(10, 191);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(80, 13);
             this.label35.TabIndex = 153;
@@ -1715,7 +1698,7 @@
             // 
             // textProbingHeight
             // 
-            this.textProbingHeight.Location = new System.Drawing.Point(343, 33);
+            this.textProbingHeight.Location = new System.Drawing.Point(217, 188);
             this.textProbingHeight.Name = "textProbingHeight";
             this.textProbingHeight.Size = new System.Drawing.Size(100, 20);
             this.textProbingHeight.TabIndex = 152;
@@ -1812,12 +1795,30 @@
             this.diagonalRodLengthText.Size = new System.Drawing.Size(100, 20);
             this.diagonalRodLengthText.TabIndex = 154;
             // 
+            // textPlateDiameter
+            // 
+            this.textPlateDiameter.Location = new System.Drawing.Point(343, 33);
+            this.textPlateDiameter.Name = "textPlateDiameter";
+            this.textPlateDiameter.Size = new System.Drawing.Size(100, 20);
+            this.textPlateDiameter.TabIndex = 200;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(262, 36);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(79, 13);
+            this.label36.TabIndex = 201;
+            this.label36.Text = "Plate Diameter:";
+            // 
             // mainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1287, 633);
+            this.Controls.Add(this.label36);
+            this.Controls.Add(this.textPlateDiameter);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.diagonalRodLengthText);
             this.Controls.Add(this.button4);
@@ -1842,8 +1843,6 @@
             this.Controls.Add(this.advancedPanel);
             this.Controls.Add(this.printerLogPanel);
             this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.textProbingHeight);
-            this.Controls.Add(this.label35);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "mainForm";
             this.Text = "OpenDACT";
@@ -1900,8 +1899,6 @@
         private System.Windows.Forms.TextBox alphaBText;
         private System.Windows.Forms.TextBox alphaAText;
         private System.Windows.Forms.TextBox alphaCText;
-        private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.TextBox textZProbeHeight;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.TextBox textProbingHeight;
         private System.Windows.Forms.Label label34;
@@ -2034,5 +2031,7 @@
         private System.Windows.Forms.Button readEEPROM;
         public System.Windows.Forms.TextBox diagonalRodLengthText;
         private System.Windows.Forms.Label label57;
+        private System.Windows.Forms.TextBox textPlateDiameter;
+        private System.Windows.Forms.Label label36;
     }
 }

@@ -51,7 +51,7 @@ namespace OpenDACT.Class_Files
                 EEPROMFunctions.EEPROMRequestSent = true;
             }
 
-            if (EEPROMFunctions.EEPROMSet == true)
+            if (EEPROMFunctions.tempEEPROMSet == true)
             {
                 if (GCode.checkHeights == false)
                 {
@@ -59,11 +59,7 @@ namespace OpenDACT.Class_Files
                     {
                         Program.mainFormTest.setUserVariables(ref userVariables);
 
-                        if (Convert.ToSingle(Program.mainFormTest.diagonalRodLengthText.Text) > 0)
-                        {
-                            userVariables.diagonalRodLength = Convert.ToSingle(Program.mainFormTest.diagonalRodLengthText.Text);
-                        }
-                        else
+                        if (userVariables.diagonalRodLength == Convert.ToSingle(""))
                         {
                             userVariables.diagonalRodLength = eeprom.diagonalRod;
                             UserInterface.logConsole("Using default diagonal rod length from EEPROM");
@@ -110,7 +106,7 @@ namespace OpenDACT.Class_Files
                 string zMinTemp = userVariables.probeChoice.ToString();
                 string textFSRPO = userVariables.FSROffset.ToString();
 
-                if (Program.mainFormTest.comboBoxZMinimumValue.Text == "FSR")
+                if (userVariables.probeChoice == "FSR")
                 {
                     GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength - Convert.ToSingle(textFSRPO));
                     UserInterface.logConsole("Setting Z Max Length with adjustment for FSR");

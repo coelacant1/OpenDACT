@@ -103,6 +103,11 @@ namespace OpenDACT.Class_Files
                     intParse = int.Parse(parseEPRSpace[2]);
                     floatParse2 = float.Parse(parseEPRSpace[3]);
                 }
+                else if (value.Contains("EEPROM") || value.Contains("updated"))
+                {
+                    intParse = 1000;
+                    floatParse2 = 0F;
+                }
                 else
                 {
                     //No space

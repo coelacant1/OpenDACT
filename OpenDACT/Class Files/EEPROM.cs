@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    class EEPROM
+    public class EEPROM
     {
         public float stepsPerMM;
         public float tempSPM;
@@ -169,6 +169,7 @@ namespace OpenDACT.Class_Files
         public static void sendEEPROM(EEPROM eeprom)
         {
             //manually set all eeprom values
+            UserInterface.logConsole("Setting EEPROM.");
             Thread.Sleep(750);
             GCode.sendToPosition(0, 0, 100);
             Thread.Sleep(1000);

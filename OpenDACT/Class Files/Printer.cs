@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    class Heights
+    public class Heights
     {
         //store every set of heights
         public float center;
@@ -48,7 +48,7 @@ namespace OpenDACT.Class_Files
         }
     }
     
-    static class HeightFunctions
+    public static class HeightFunctions
     {
         public static float tempCenter;
         public static float tempX;
@@ -64,6 +64,11 @@ namespace OpenDACT.Class_Files
         {
             Heights heights = new Heights(tempCenter, tempX, tempXOpp, tempY, tempYOpp, tempZ, tempZOpp);
             return heights;
+        }
+
+        public static void setHeights()
+        {
+            
         }
 
         public static void setHeights(float probePosition, ref EEPROM eeprom, ref UserVariables userVariables)

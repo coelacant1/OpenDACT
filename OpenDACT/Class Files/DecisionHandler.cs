@@ -26,7 +26,7 @@ namespace OpenDACT.Class_Files
                     UserVariables userVariables = UserInterface.returnUserVariablesObject();
 
 
-                    if (HeightFunctions.parseZProbe(message) != 200)
+                    if (HeightFunctions.parseZProbe(message) != 1000)
                     {
                         HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom, ref userVariables);
                         UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");

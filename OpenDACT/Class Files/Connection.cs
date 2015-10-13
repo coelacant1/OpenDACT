@@ -33,8 +33,7 @@ namespace OpenDACT.Class_Files
                         readThread = new Thread(ConsoleRead.Read);
                         _serialPort = new SerialPort();
                     }
-
-
+                    
                     _serialPort.PortName = Program.mainFormTest.portsCombo.Text;
                     _serialPort.BaudRate = int.Parse(Program.mainFormTest.baudRateCombo.Text);
 

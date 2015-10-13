@@ -14,6 +14,7 @@ namespace OpenDACT.Class_Files
         public float zMaxLength;
         public float zProbe;
         public float HRadius;
+        public float diagonalRod;
         public float offsetX;
         public float offsetY;
         public float offsetZ;
@@ -24,12 +25,13 @@ namespace OpenDACT.Class_Files
         public float DB;
         public float DC;
 
-        public EEPROM(float _stepsPerMM, float _tempSPM, float _zMaxLength, float _zProbe, float _HRadius, float _offsetX, float _offsetY, float _offsetZ, float _A, float _B, float _C, float _DA, float _DB, float _DC)
+        public EEPROM(float _stepsPerMM, float _tempSPM, float _zMaxLength, float _zProbe, float _diagonalRod, float _HRadius, float _offsetX, float _offsetY, float _offsetZ, float _A, float _B, float _C, float _DA, float _DB, float _DC)
         {
             stepsPerMM = _stepsPerMM;
             tempSPM = _tempSPM;
             zMaxLength = _zMaxLength;
             zProbe = _zProbe;
+            diagonalRod = _diagonalRod;
             HRadius = _HRadius;
             offsetX = _offsetX;
             offsetY = _offsetY;
@@ -52,6 +54,7 @@ namespace OpenDACT.Class_Files
         private static float tempZMaxLength;
         private static float tempZProbe;
         private static float tempHRadius;
+        private static float tempDiagonalRod;
         private static float tempOffsetX;
         private static float tempOffsetY;
         private static float tempOffsetZ;
@@ -69,7 +72,7 @@ namespace OpenDACT.Class_Files
 
         public static EEPROM returnEEPROMObject()
         {
-            EEPROM eepromObject = new EEPROM(tempStepsPerMM, tempTempSPM, tempZMaxLength, tempZProbe, tempHRadius, tempOffsetX, tempOffsetY, tempOffsetZ, tempA, tempB, tempC, tempDA, tempDB, tempDC);
+            EEPROM eepromObject = new EEPROM(tempStepsPerMM, tempTempSPM, tempZMaxLength, tempZProbe, tempDiagonalRod, tempHRadius, tempOffsetX, tempOffsetY, tempOffsetZ, tempA, tempB, tempC, tempDA, tempDB, tempDC);
             return eepromObject;
         }
 
@@ -131,6 +134,9 @@ namespace OpenDACT.Class_Files
                 case 808:
                     tempZProbe = floatParse2;
                     break;
+                case 881:
+                    tempDiagonalRod = floatParse2;
+                    break;
                 case 885:
                     tempHRadius = floatParse2;
                     break;
@@ -178,6 +184,8 @@ namespace OpenDACT.Class_Files
             GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength);
             Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 808, eeprom.zProbe);
+            Thread.Sleep(750);
+            GCode.sendEEPROMVariable(3, 881, eeprom.diagonalRod);
             Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 885, eeprom.HRadius);
             Thread.Sleep(750);

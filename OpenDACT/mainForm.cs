@@ -55,7 +55,7 @@ namespace OpenDACT.Class_Files
             YOppText.Text = "0.00";
             ZText.Text = "0.00";
             ZOppText.Text = "0.00";
-            
+
             advancedPanel.Visible = false;
             printerLogPanel.Visible = false;
 
@@ -159,7 +159,8 @@ namespace OpenDACT.Class_Files
 
         private void openAdvanced_Click(object sender, EventArgs e)
         {
-            if (advancedPanel.Visible == false) {
+            if (advancedPanel.Visible == false)
+            {
                 advancedPanel.Visible = true;
                 printerLogPanel.Visible = true;
             }
@@ -185,12 +186,13 @@ namespace OpenDACT.Class_Files
 
         public void setAccuracyPoint(float x, float y)
         {
-            Invoke((MethodInvoker)delegate {
+            Invoke((MethodInvoker)delegate
+            {
                 accuracyTime.Refresh();
                 accuracyTime.Series["Accuracy"].Points.AddXY(x, y);
             });
         }
-        
+
         private void aboutButton_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.MessageBox.Show("Version: 3.0.0\n\nCreated by Coela Can't\n\nWith help from Gene Buckle and Michael Hackney\n");
@@ -303,6 +305,59 @@ namespace OpenDACT.Class_Files
             Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 921, Convert.ToSingle(DCText.Text));
             Thread.Sleep(750);
+        }
+
+        private void readEEPROM_Click(object sender, EventArgs e)
+        {
+            if (Connection._serialPort.IsOpen)
+            {
+                GCode.sendReadEEPROMCommand();
+            }
+            else
+            {
+                UserInterface.logConsole("Not Connected");
+            }
+        }
+
+        public void setUserVariables(ref UserVariables userVariables)
+        {
+            userVariables.calculationAccuracy = Convert.ToSingle(textAccuracy.Text);
+            userVariables.accuracy = Convert.ToSingle(textAccuracy2.Text);
+            userVariables.HRadRatio = Convert.ToSingle(textHRadRatio.Text);
+            userVariables.probeChoice = textFSRPO.Text;
+            userVariables.pauseTimeSet = Convert.ToInt32(textPauseTimeSet.Text);
+            userVariables.maxIterations = Convert.ToInt32(textMaxIterations.Text);
+            userVariables.probingSpeed = Convert.ToSingle(textProbingSpeed.Text);
+            userVariables.FSROffset = Convert.ToSingle(textFSRPO.Text);
+            userVariables.advancedCalibration = Convert.ToBoolean(heuristicModeCombo.Text);
+            userVariables.deltaOpp = Convert.ToSingle(textDeltaOpp.Text);
+            userVariables.deltaTower = Convert.ToSingle(textDeltaTower.Text);
+            userVariables.diagonalRodLength = Convert.ToSingle(diagonalRodLengthText.Text);
+            userVariables.alphaRotationPercentageX = Convert.ToSingle(AText.Text);
+            userVariables.alphaRotationPercentageY = Convert.ToSingle(BText.Text);
+            userVariables.alphaRotationPercentageZ = Convert.ToSingle(CText.Text);
+
+            //XYZ Offset percs
+            userVariables.offsetXCorrection = Convert.ToSingle(offsetXText.Text);
+            userVariables.xxOppPerc = Convert.ToSingle(textxxOppPerc.Text);
+            userVariables.xyPerc = Convert.ToSingle(textxyPerc.Text);
+            userVariables.xyOppPerc = Convert.ToSingle(textxyOppPerc.Text);
+            userVariables.xzPerc = Convert.ToSingle(textxzPerc.Text);
+            userVariables.xzOppPerc = Convert.ToSingle(textxzOppPerc.Text);
+
+            userVariables.offsetYCorrection = Convert.ToSingle(offsetYText.Text);
+            userVariables.yyOppPerc = Convert.ToSingle(textyyOppPerc.Text);
+            userVariables.yxPerc = Convert.ToSingle(textyxPerc.Text);
+            userVariables.yxOppPerc = Convert.ToSingle(textyxOppPerc);
+            userVariables.yzPerc = Convert.ToSingle(textyzPerc.Text);
+            userVariables.yzOppPerc = Convert.ToSingle(textyzOppPerc.Text);
+
+            userVariables.offsetZCorrection = Convert.ToSingle(offsetZText.Text);
+            userVariables.zzOppPerc = Convert.ToSingle(textzzOppPerc.Text);
+            userVariables.zxPerc = Convert.ToSingle(textzxPerc.Text);
+            userVariables.zxOppPerc = Convert.ToSingle(textzxOppPerc.Text);
+            userVariables.zyPerc = Convert.ToSingle(textzyPerc.Text);
+            userVariables.zyOppPerc = Convert.ToSingle(textzyOppPerc.Text);
         }
     }
 }

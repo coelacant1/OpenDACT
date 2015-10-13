@@ -50,91 +50,30 @@ namespace OpenDACT.Class_Files
         public float deltaTower = 0.293F;
         public float deltaOpp = 0.214F;
         public float plateDiameter = 230F;
-        public int advancedCalCount = 0;
+        public float diagonalRodLength = 269;
+        public float FSROffset = 0.6F;
+        public float probingSpeed = 5F;
+
+        public string probeChoice = "FSR";
+
         public bool advancedCalibration = false;
 
+
         public int pauseTimeSet = 500;
+        public int advancedCalCount = 0;
+        public int stepsCalcNumber = 0;
+        public int maxIterations = 50;
+        public int l = 0;
+        
+        public List<float> known_yDR = new List<float>();
+        public List<float> known_xDR = new List<float>();
 
         public UserVariables() { }
-
-        public void setHRadRatio(float value)
-        {
-            HRadRatio = value;
-        }
-
-        public void setDRadRatio(float value)
-        {
-            DRadRatio = value;
-        }
-        public void setAccuracy(float value)
-        {
-            accuracy = value;
-        }
-        public void setAlphaRotationPercentageX(float value)
-        {
-            value = Validation.checkZero(value);
-            alphaRotationPercentageX = value;
-        }
-        public void setAlphaRotationPercentageY(float value)
-        {
-            value = Validation.checkZero(value);
-            alphaRotationPercentageY = value;
-        }
-        public void setAlphaRotationPercentageZ(float value)
-        {
-            value = Validation.checkZero(value);
-            alphaRotationPercentageZ = value;
-        }
-        public void setPauseTimeSet(int value)
-        {
-            pauseTimeSet = value;
-        }
-        public void setPlateDiameter(int value)
-        {
-            plateDiameter = value;
-        }
-
-        public void setOffsetXCorrection(float ioffsetXCorrection, float ixxOppPerc, float ixyPerc, float ixyOppPerc, float ixzPerc, float ixzOppPerc)
-        {
-            offsetXCorrection = ioffsetXCorrection;
-            xxOppPerc = ixxOppPerc;
-            xyPerc = ixyPerc;
-            xyOppPerc = ixyOppPerc;
-            xzPerc = ixzPerc;
-            xzOppPerc = ixzOppPerc;
-
-        }
-        public void setOffsetYCorrection(float ioffsetYCorrection, float iyyOppPerc, float iyxPerc, float iyxOppPerc, float iyzPerc, float iyzOppPerc)
-        {
-            offsetYCorrection = ioffsetYCorrection;
-            yyOppPerc = iyyOppPerc;
-            yxPerc = iyxPerc;
-            yxOppPerc = iyxOppPerc;
-            yzPerc = iyzPerc;
-            yzOppPerc = iyzOppPerc;
-        }
-        public void setOffsetZCorrection(float ioffsetZCorrection, float izzOppPerc, float izxPerc, float izxOppPerc, float izyPerc, float izyOppPerc)
-        {
-            offsetZCorrection = ioffsetZCorrection;
-            zzOppPerc = izzOppPerc;
-            zxPerc = izxPerc;
-            zxOppPerc = izxOppPerc;
-            zyPerc = izyPerc;
-            zyOppPerc = izyOppPerc;
-        }
     }
     
 
     static class UserInterface
     {
-        /*
-        mainForm mainForm;
-
-        public UserInterface(mainForm _mainForm)
-        {
-            this.mainForm = _mainForm;
-        }
-        */
         public static bool isInitiated = false;
 
         static public UserVariables returnUserVariablesObject()

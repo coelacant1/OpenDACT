@@ -57,29 +57,17 @@ namespace OpenDACT.Class_Files
                 {
                     calibrateInProgress = true;
                     tempAccuracy = (Math.Abs(heights.X) + Math.Abs(heights.XOpp) + Math.Abs(heights.Y) + Math.Abs(heights.YOpp) + Math.Abs(heights.Z) + Math.Abs(heights.ZOpp)) / 6;
-                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
                     Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
                     checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
-
                     HRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
-
                     DRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
-
                     //analyzeGeometry(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
                     towerOffsets(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
-
                     alphaRotation(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
-
                     SPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    UserInterface.logConsole(heights.X.ToString() + " " + heights.XOpp.ToString() + " " + heights.Y.ToString() + " " + heights.YOpp.ToString() + " " + heights.Z.ToString() + " " + heights.ZOpp.ToString());
-
 
                     EEPROMFunctions.sendEEPROM(eeprom);
+                    Program.mainFormTest.setEEPROMGUIList(eeprom);
                     //UserInterface.setHeightMap();
                     calibrateInProgress = false;
                     GCode.checkHeights = true;

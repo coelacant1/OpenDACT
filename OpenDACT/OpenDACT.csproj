@@ -49,7 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>OpenDACT.ico</ApplicationIcon>
+    <ApplicationIcon>OpenDACTIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>2C94E6471BD022D0803FA0D81D9E36E58C02E35B</ManifestCertificateThumbprint>
@@ -142,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="OpenDACT.ico" />
+    <Content Include="OpenDACTIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

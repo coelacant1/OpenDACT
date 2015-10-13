@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    class UserVariables
+    public class UserVariables
     {
         //misc vars, alpha offsets, tower offsets, spm offsets, hrad offsets, drad offsets
         public float HRadRatio = -0.5F;
@@ -121,12 +121,6 @@ namespace OpenDACT.Class_Files
             zxOppPerc = izxOppPerc;
             zyPerc = izyPerc;
             zyOppPerc = izyOppPerc;
-        }
-
-
-        public float returnCalculationAccuracy()
-        {
-            return calculationAccuracy;
         }
     }
     

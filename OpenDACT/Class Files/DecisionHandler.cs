@@ -8,7 +8,6 @@ namespace OpenDACT.Class_Files
 {
     static class DecisionHandler
     {
-
         public static void handleInput(string message)
         {
             if (EEPROMFunctions.EEPROMSet == false)

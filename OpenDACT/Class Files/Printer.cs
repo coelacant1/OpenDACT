@@ -59,6 +59,7 @@ namespace OpenDACT.Class_Files
         public static float tempZOpp;
         private static int position = 0;
         public static bool heightsSet = false;
+        public static bool checkHeightsOnly = false;
 
         public static Heights returnHeightObject()
         {

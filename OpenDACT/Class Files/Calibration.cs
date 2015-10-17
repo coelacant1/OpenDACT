@@ -45,50 +45,31 @@ namespace OpenDACT.Class_Files
         {
             //check if eeprom object remains after this function is called for the second time
 
-            if (EEPROMFunctions.EEPROMRequestSent == false)
+            if (iterationNum == 0)
             {
-                EEPROMFunctions.readEEPROM();
-                EEPROMFunctions.EEPROMRequestSent = true;
-            }
-
-            if (EEPROMFunctions.tempEEPROMSet == true)
-            {
-                if (GCode.checkHeights == false)
+                if (userVariables.diagonalRodLength == Convert.ToSingle(""))
                 {
-                    if (iterationNum == 0)
-                    {
-                        Program.mainFormTest.setUserVariables(ref userVariables);
-
-                        if (userVariables.diagonalRodLength == Convert.ToSingle(""))
-                        {
-                            userVariables.diagonalRodLength = eeprom.diagonalRod;
-                            UserInterface.logConsole("Using default diagonal rod length from EEPROM");
-                        }
-                    }
-
-                    calibrateInProgress = true;
-
-                    tempAccuracy = (Math.Abs(heights.X) + Math.Abs(heights.XOpp) + Math.Abs(heights.Y) + Math.Abs(heights.YOpp) + Math.Abs(heights.Z) + Math.Abs(heights.ZOpp)) / 6;
-                    Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
-                    checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    Program.mainFormTest.setHeightsInvoke(ref heights);
-                    HRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    DRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    //analyzeGeometry(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    towerOffsets(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    alphaRotation(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-                    diagonalRodSPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-
-                    EEPROMFunctions.sendEEPROM(eeprom);
-                    Program.mainFormTest.setEEPROMGUIList(eeprom);
-                    //UserInterface.setHeightMap();
-                    calibrateInProgress = false;
-                    GCode.checkHeights = true;
-                    HeightFunctions.heightsSet = false;
+                    userVariables.diagonalRodLength = eeprom.diagonalRod;
+                    UserInterface.logConsole("Using default diagonal rod length from EEPROM");
                 }
-
-
             }
+
+            calibrateInProgress = true;
+
+            tempAccuracy = (Math.Abs(heights.X) + Math.Abs(heights.XOpp) + Math.Abs(heights.Y) + Math.Abs(heights.YOpp) + Math.Abs(heights.Z) + Math.Abs(heights.ZOpp)) / 6;
+            Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
+            checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+            HRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+            DRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+            //analyzeGeometry(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+            towerOffsets(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+            alphaRotation(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+            diagonalRodSPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+
+            EEPROMFunctions.sendEEPROM(eeprom);
+            calibrateInProgress = false;
+            GCode.checkHeights = true;
+            HeightFunctions.heightsSet = false;
             //change all instances of a new variable which calls a class object to modify the class object directly as opposed to just pulling its value
         }
         public static void iterativeCalibration()
@@ -113,6 +94,7 @@ namespace OpenDACT.Class_Files
                     Thread.Sleep(userVariables.pauseTimeSet);
                 }
 
+                calibrationState = false;
                 Thread.Sleep(userVariables.pauseTimeSet);
                 GCode.homeAxes();
                 UserInterface.logConsole("Calibration Complete");
@@ -549,7 +531,7 @@ namespace OpenDACT.Class_Files
                 ZOpp = ZOpp - XYZOpp;
                 XYZOpp = (XOpp + YOpp + ZOpp) / 3;
                 XYZOpp = Validation.checkZero(XYZOpp);
-                
+
                 //hrad
                 eeprom.HRadius += (XYZ / userVariables.HRadRatio);
 

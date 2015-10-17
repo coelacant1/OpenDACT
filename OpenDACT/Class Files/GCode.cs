@@ -10,7 +10,7 @@ namespace OpenDACT.Class_Files
     static class GCode
     {
         public static int currentPosition = 0;
-        public static bool checkHeights = true;
+        public static bool checkHeights = false;
 
         public static void sendToPosition(float X, float Y, float Z)
         {

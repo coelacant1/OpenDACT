@@ -50,6 +50,7 @@ namespace OpenDACT.Class_Files
         public static bool tempEEPROMSet = false;
         public static bool EEPROMRequestSent = false;
         public static bool EEPROMReadOnly = false;
+        public static int EEPROMReadCount = 0;
         private static float tempStepsPerMM;
         private static float tempTempSPM;
         private static float tempZMaxLength;

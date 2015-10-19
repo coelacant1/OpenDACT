@@ -31,14 +31,7 @@ namespace OpenDACT.Class_Files
 
         public static void learnPrinter(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
         {
-            calibrateInProgress = true;
             GCode.heuristicLearning(ref eeprom, ref userVariables, ref heights);
-
-            EEPROMFunctions.sendEEPROM(eeprom);
-            //UserInterface.setHeightMap();
-            calibrateInProgress = false;
-            GCode.checkHeights = true;
-            HeightFunctions.heightsSet = false;
         }
 
         public static void basicCalibration(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
@@ -54,8 +47,6 @@ namespace OpenDACT.Class_Files
                 }
             }
 
-            calibrateInProgress = true;
-
             tempAccuracy = (Math.Abs(heights.X) + Math.Abs(heights.XOpp) + Math.Abs(heights.Y) + Math.Abs(heights.YOpp) + Math.Abs(heights.Z) + Math.Abs(heights.ZOpp)) / 6;
             Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
             checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
@@ -66,10 +57,6 @@ namespace OpenDACT.Class_Files
             alphaRotation(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
             diagonalRodSPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
 
-            EEPROMFunctions.sendEEPROM(eeprom);
-            calibrateInProgress = false;
-            GCode.checkHeights = true;
-            HeightFunctions.heightsSet = false;
             //change all instances of a new variable which calls a class object to modify the class object directly as opposed to just pulling its value
         }
         public static void iterativeCalibration()
@@ -99,6 +86,10 @@ namespace OpenDACT.Class_Files
                 GCode.homeAxes();
                 UserInterface.logConsole("Calibration Complete");
                 //end code
+            }
+            else
+            {
+                GCode.checkHeights = true;
             }
         }
 

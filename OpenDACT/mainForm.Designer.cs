@@ -39,7 +39,6 @@
             this.calibrateButton = new System.Windows.Forms.Button();
             this.baudRateCombo = new System.Windows.Forms.ComboBox();
             this.portsCombo = new System.Windows.Forms.ComboBox();
-            this.comboBoxZMinimumValue = new System.Windows.Forms.ComboBox();
             this.resetPrinter = new System.Windows.Forms.Button();
             this.openAdvanced = new System.Windows.Forms.Button();
             this.printerLogPanel = new System.Windows.Forms.Panel();
@@ -49,6 +48,7 @@
             this.advancedPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.heuristicComboBox = new System.Windows.Forms.ComboBox();
             this.label57 = new System.Windows.Forms.Label();
             this.readEEPROM = new System.Windows.Forms.Button();
             this.label52 = new System.Windows.Forms.Label();
@@ -198,8 +198,10 @@
             this.diagonalRodLengthText = new System.Windows.Forms.TextBox();
             this.textPlateDiameter = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
-            this.heuristicComboBox = new System.Windows.Forms.ComboBox();
             this.checkHeights = new System.Windows.Forms.Button();
+            this.comboBoxZMin = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label58 = new System.Windows.Forms.Label();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -213,9 +215,9 @@
             // 
             // consoleMain
             // 
-            this.consoleMain.Location = new System.Drawing.Point(262, 128);
+            this.consoleMain.Location = new System.Drawing.Point(262, 99);
             this.consoleMain.Name = "consoleMain";
-            this.consoleMain.Size = new System.Drawing.Size(354, 269);
+            this.consoleMain.Size = new System.Drawing.Size(354, 298);
             this.consoleMain.TabIndex = 0;
             this.consoleMain.Text = "";
             // 
@@ -272,18 +274,6 @@
             this.portsCombo.Name = "portsCombo";
             this.portsCombo.Size = new System.Drawing.Size(107, 21);
             this.portsCombo.TabIndex = 6;
-            // 
-            // comboBoxZMinimumValue
-            // 
-            this.comboBoxZMinimumValue.FormattingEnabled = true;
-            this.comboBoxZMinimumValue.Items.AddRange(new object[] {
-            "FSR",
-            "Z-Probe"});
-            this.comboBoxZMinimumValue.Location = new System.Drawing.Point(343, 5);
-            this.comboBoxZMinimumValue.Name = "comboBoxZMinimumValue";
-            this.comboBoxZMinimumValue.Size = new System.Drawing.Size(100, 21);
-            this.comboBoxZMinimumValue.TabIndex = 7;
-            this.comboBoxZMinimumValue.Text = "FSR";
             // 
             // resetPrinter
             // 
@@ -484,10 +474,22 @@
             this.tabPage1.Text = "Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // heuristicComboBox
+            // 
+            this.heuristicComboBox.FormattingEnabled = true;
+            this.heuristicComboBox.Items.AddRange(new object[] {
+            "True",
+            "False"});
+            this.heuristicComboBox.Location = new System.Drawing.Point(217, 214);
+            this.heuristicComboBox.Name = "heuristicComboBox";
+            this.heuristicComboBox.Size = new System.Drawing.Size(100, 21);
+            this.heuristicComboBox.TabIndex = 200;
+            this.heuristicComboBox.Text = "False";
+            // 
             // label57
             // 
             this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(10, 294);
+            this.label57.Location = new System.Drawing.Point(10, 269);
             this.label57.Name = "label57";
             this.label57.Size = new System.Drawing.Size(187, 13);
             this.label57.TabIndex = 155;
@@ -514,7 +516,7 @@
             // 
             // textDeltaOpp
             // 
-            this.textDeltaOpp.Location = new System.Drawing.Point(217, 291);
+            this.textDeltaOpp.Location = new System.Drawing.Point(217, 266);
             this.textDeltaOpp.Name = "textDeltaOpp";
             this.textDeltaOpp.Size = new System.Drawing.Size(100, 20);
             this.textDeltaOpp.TabIndex = 136;
@@ -523,7 +525,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(10, 267);
+            this.label10.Location = new System.Drawing.Point(10, 242);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(175, 13);
             this.label10.TabIndex = 140;
@@ -532,7 +534,7 @@
             // label51
             // 
             this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(10, 371);
+            this.label51.Location = new System.Drawing.Point(10, 346);
             this.label51.Name = "label51";
             this.label51.Size = new System.Drawing.Size(199, 13);
             this.label51.TabIndex = 197;
@@ -540,7 +542,7 @@
             // 
             // textDeltaTower
             // 
-            this.textDeltaTower.Location = new System.Drawing.Point(217, 264);
+            this.textDeltaTower.Location = new System.Drawing.Point(217, 239);
             this.textDeltaTower.Name = "textDeltaTower";
             this.textDeltaTower.Size = new System.Drawing.Size(100, 20);
             this.textDeltaTower.TabIndex = 135;
@@ -549,7 +551,7 @@
             // label50
             // 
             this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(10, 346);
+            this.label50.Location = new System.Drawing.Point(10, 321);
             this.label50.Name = "label50";
             this.label50.Size = new System.Drawing.Size(199, 13);
             this.label50.TabIndex = 196;
@@ -558,7 +560,7 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(10, 319);
+            this.label49.Location = new System.Drawing.Point(10, 294);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(199, 13);
             this.label49.TabIndex = 195;
@@ -567,7 +569,7 @@
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(10, 241);
+            this.label48.Location = new System.Drawing.Point(10, 216);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(81, 13);
             this.label48.TabIndex = 194;
@@ -997,7 +999,7 @@
             // 
             // alphaBText
             // 
-            this.alphaBText.Location = new System.Drawing.Point(217, 343);
+            this.alphaBText.Location = new System.Drawing.Point(217, 318);
             this.alphaBText.Name = "alphaBText";
             this.alphaBText.Size = new System.Drawing.Size(100, 20);
             this.alphaBText.TabIndex = 160;
@@ -1005,7 +1007,7 @@
             // 
             // alphaAText
             // 
-            this.alphaAText.Location = new System.Drawing.Point(217, 317);
+            this.alphaAText.Location = new System.Drawing.Point(217, 292);
             this.alphaAText.Name = "alphaAText";
             this.alphaAText.Size = new System.Drawing.Size(100, 20);
             this.alphaAText.TabIndex = 159;
@@ -1013,7 +1015,7 @@
             // 
             // alphaCText
             // 
-            this.alphaCText.Location = new System.Drawing.Point(217, 369);
+            this.alphaCText.Location = new System.Drawing.Point(217, 344);
             this.alphaCText.Name = "alphaCText";
             this.alphaCText.Size = new System.Drawing.Size(100, 20);
             this.alphaCText.TabIndex = 158;
@@ -1438,6 +1440,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label58);
+            this.tabPage3.Controls.Add(this.label5);
             this.tabPage3.Controls.Add(this.ZText);
             this.tabPage3.Controls.Add(this.YText);
             this.tabPage3.Controls.Add(this.XText);
@@ -1674,7 +1678,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(262, 64);
+            this.label11.Location = new System.Drawing.Point(262, 61);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(75, 13);
             this.label11.TabIndex = 141;
@@ -1692,7 +1696,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(262, 109);
+            this.label6.Location = new System.Drawing.Point(262, 83);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(48, 13);
             this.label6.TabIndex = 17;
@@ -1700,16 +1704,16 @@
             // 
             // GCodeBox
             // 
-            this.GCodeBox.Location = new System.Drawing.Point(343, 87);
+            this.GCodeBox.Location = new System.Drawing.Point(526, 59);
             this.GCodeBox.Name = "GCodeBox";
-            this.GCodeBox.Size = new System.Drawing.Size(273, 20);
+            this.GCodeBox.Size = new System.Drawing.Size(90, 20);
             this.GCodeBox.TabIndex = 18;
             // 
             // sendGCode
             // 
-            this.sendGCode.Location = new System.Drawing.Point(261, 85);
+            this.sendGCode.Location = new System.Drawing.Point(449, 57);
             this.sendGCode.Name = "sendGCode";
-            this.sendGCode.Size = new System.Drawing.Size(76, 23);
+            this.sendGCode.Size = new System.Drawing.Size(71, 23);
             this.sendGCode.TabIndex = 19;
             this.sendGCode.Text = "Send GC";
             this.sendGCode.UseVisualStyleBackColor = true;
@@ -1766,14 +1770,14 @@
             // 
             // diagonalRodLengthText
             // 
-            this.diagonalRodLengthText.Location = new System.Drawing.Point(343, 61);
+            this.diagonalRodLengthText.Location = new System.Drawing.Point(343, 58);
             this.diagonalRodLengthText.Name = "diagonalRodLengthText";
             this.diagonalRodLengthText.Size = new System.Drawing.Size(100, 20);
             this.diagonalRodLengthText.TabIndex = 154;
             // 
             // textPlateDiameter
             // 
-            this.textPlateDiameter.Location = new System.Drawing.Point(343, 33);
+            this.textPlateDiameter.Location = new System.Drawing.Point(343, 32);
             this.textPlateDiameter.Name = "textPlateDiameter";
             this.textPlateDiameter.Size = new System.Drawing.Size(100, 20);
             this.textPlateDiameter.TabIndex = 200;
@@ -1781,23 +1785,11 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(262, 36);
+            this.label36.Location = new System.Drawing.Point(262, 35);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(79, 13);
             this.label36.TabIndex = 201;
             this.label36.Text = "Plate Diameter:";
-            // 
-            // heuristicComboBox
-            // 
-            this.heuristicComboBox.FormattingEnabled = true;
-            this.heuristicComboBox.Items.AddRange(new object[] {
-            "True",
-            "False"});
-            this.heuristicComboBox.Location = new System.Drawing.Point(217, 239);
-            this.heuristicComboBox.Name = "heuristicComboBox";
-            this.heuristicComboBox.Size = new System.Drawing.Size(100, 21);
-            this.heuristicComboBox.TabIndex = 200;
-            this.heuristicComboBox.Text = "False";
             // 
             // checkHeights
             // 
@@ -1809,12 +1801,43 @@
             this.checkHeights.UseVisualStyleBackColor = true;
             this.checkHeights.Click += new System.EventHandler(this.checkHeights_Click);
             // 
+            // comboBoxZMin
+            // 
+            this.comboBoxZMin.FormattingEnabled = true;
+            this.comboBoxZMin.Items.AddRange(new object[] {
+            "FSR",
+            "Z-Probe"});
+            this.comboBoxZMin.Location = new System.Drawing.Point(343, 5);
+            this.comboBoxZMin.Name = "comboBoxZMin";
+            this.comboBoxZMin.Size = new System.Drawing.Size(100, 21);
+            this.comboBoxZMin.TabIndex = 203;
+            this.comboBoxZMin.Text = "FSR";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(315, 18);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(87, 13);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "First Height-Map:";
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(315, 309);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(102, 13);
+            this.label58.TabIndex = 22;
+            this.label58.Text = "Current Height-Map:";
+            // 
             // mainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1287, 633);
+            this.Controls.Add(this.comboBoxZMin);
             this.Controls.Add(this.checkHeights);
             this.Controls.Add(this.label36);
             this.Controls.Add(this.textPlateDiameter);
@@ -1832,7 +1855,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.openAdvanced);
             this.Controls.Add(this.resetPrinter);
-            this.Controls.Add(this.comboBoxZMinimumValue);
             this.Controls.Add(this.portsCombo);
             this.Controls.Add(this.baudRateCombo);
             this.Controls.Add(this.calibrateButton);
@@ -1872,7 +1894,6 @@
         public System.Windows.Forms.RichTextBox consolePrinter;
         public System.Windows.Forms.ComboBox baudRateCombo;
         public System.Windows.Forms.ComboBox portsCombo;
-        public System.Windows.Forms.ComboBox comboBoxZMinimumValue;
         private System.Windows.Forms.Panel printerLogPanel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -2029,7 +2050,10 @@
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.TextBox textPlateDiameter;
         private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.ComboBox heuristicComboBox;
+        public System.Windows.Forms.ComboBox heuristicComboBox;
         private System.Windows.Forms.Button checkHeights;
+        public System.Windows.Forms.ComboBox comboBoxZMin;
+        private System.Windows.Forms.Label label58;
+        private System.Windows.Forms.Label label5;
     }
 }

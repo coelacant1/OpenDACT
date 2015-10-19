@@ -83,6 +83,7 @@ namespace OpenDACT.Class_Files
         {
             if (Connection._serialPort.IsOpen)
             {
+                GCode.checkHeights = true;
                 EEPROMFunctions.readEEPROM();
                 EEPROMFunctions.EEPROMReadOnly = false;
                 Calibration.calibrationState = true;
@@ -202,6 +203,8 @@ namespace OpenDACT.Class_Files
                 Invoke((MethodInvoker)delegate { this.iYOpptext.Text = Math.Round(YOpp, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.iZtext.Text = Math.Round(Z, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.iZOpptext.Text = Math.Round(ZOpp, 3).ToString(); });
+
+                Calibration.iterationNum++;
             }
             else
             {
@@ -276,6 +279,7 @@ namespace OpenDACT.Class_Files
                 EEPROMFunctions.readEEPROM();
                 EEPROMFunctions.EEPROMReadOnly = true;
                 HeightFunctions.checkHeightsOnly = false;
+                EEPROMFunctions.EEPROMReadCount = 0;
             }
             else
             {
@@ -283,57 +287,88 @@ namespace OpenDACT.Class_Files
             }
         }
 
+        private string getZMin()
+        {
+            if (comboBoxZMin.InvokeRequired)
+            {
+            return (string)comboBoxZMin.Invoke(new Func<string>(getZMin));
+            }
+            else
+            {
+                return comboBoxZMin.Text;
+            }
+        }
+
+        private string getHeuristic()
+        {
+            if (heuristicComboBox.InvokeRequired)
+            {
+                return (string)heuristicComboBox.Invoke(new Func<string>(getHeuristic));
+            }
+            else
+            {
+                return heuristicComboBox.Text;
+            }
+        }
+        
         public void setUserVariables(ref UserVariables userVariables)
         {
-            userVariables.calculationAccuracy = Convert.ToSingle(textAccuracy.Text);
-            userVariables.accuracy = Convert.ToSingle(textAccuracy2.Text);
-            userVariables.HRadRatio = Convert.ToSingle(textHRadRatio.Text);
+            userVariables.calculationAccuracy = Convert.ToSingle(this.textAccuracy.Text);
+            userVariables.accuracy = Convert.ToSingle(this.textAccuracy2.Text);
+            userVariables.HRadRatio = Convert.ToSingle(this.textHRadRatio.Text);
+            
+            userVariables.probeChoice = getZMin();
+            userVariables.advancedCalibration = Convert.ToBoolean(getHeuristic());
 
-            userVariables.probeChoice = comboBoxZMinimumValue.Text;
-            userVariables.advancedCalibration = Convert.ToBoolean(heuristicComboBox.Text);
+            userVariables.pauseTimeSet = Convert.ToInt32(this.textPauseTimeSet.Text);
+            userVariables.maxIterations = Convert.ToInt32(this.textMaxIterations.Text);
+            userVariables.probingSpeed = Convert.ToSingle(this.textProbingSpeed.Text);
+            userVariables.FSROffset = Convert.ToSingle(this.textFSRPO.Text);
+            userVariables.deltaOpp = Convert.ToSingle(this.textDeltaOpp.Text);
+            userVariables.deltaTower = Convert.ToSingle(this.textDeltaTower.Text);
+            userVariables.diagonalRodLength = Convert.ToSingle(this.diagonalRodLengthText.Text);
+            userVariables.alphaRotationPercentageX = Convert.ToSingle(this.alphaAText.Text);
+            userVariables.alphaRotationPercentageY = Convert.ToSingle(this.alphaBText.Text);
+            userVariables.alphaRotationPercentageZ = Convert.ToSingle(this.alphaCText.Text);
+            userVariables.plateDiameter = Convert.ToSingle(this.textPlateDiameter.Text);
 
-            userVariables.pauseTimeSet = Convert.ToInt32(textPauseTimeSet.Text);
-            userVariables.maxIterations = Convert.ToInt32(textMaxIterations.Text);
-            userVariables.probingSpeed = Convert.ToSingle(textProbingSpeed.Text);
-            userVariables.FSROffset = Convert.ToSingle(textFSRPO.Text);
-            userVariables.deltaOpp = Convert.ToSingle(textDeltaOpp.Text);
-            userVariables.deltaTower = Convert.ToSingle(textDeltaTower.Text);
-            userVariables.diagonalRodLength = Convert.ToSingle(diagonalRodLengthText.Text);
-            userVariables.alphaRotationPercentageX = Convert.ToSingle(AText.Text);
-            userVariables.alphaRotationPercentageY = Convert.ToSingle(BText.Text);
-            userVariables.alphaRotationPercentageZ = Convert.ToSingle(CText.Text);
-            userVariables.plateDiameter = Convert.ToSingle(textPlateDiameter.Text);
-
+            
             //XYZ Offset percs
-            userVariables.offsetXCorrection = Convert.ToSingle(offsetXText.Text);
-            userVariables.xxOppPerc = Convert.ToSingle(textxxOppPerc.Text);
-            userVariables.xyPerc = Convert.ToSingle(textxyPerc.Text);
-            userVariables.xyOppPerc = Convert.ToSingle(textxyOppPerc.Text);
-            userVariables.xzPerc = Convert.ToSingle(textxzPerc.Text);
-            userVariables.xzOppPerc = Convert.ToSingle(textxzOppPerc.Text);
+            userVariables.offsetXCorrection = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(offsetXText.Text); });
+            userVariables.xxOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxxOppPerc.Text); });
+            userVariables.xyPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxyPerc.Text); });
+            userVariables.xyOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxyOppPerc.Text); });
+            userVariables.xzPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxzPerc.Text); });
+            userVariables.xzOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxzOppPerc.Text); });
 
-            userVariables.offsetYCorrection = Convert.ToSingle(offsetYText.Text);
-            userVariables.yyOppPerc = Convert.ToSingle(textyyOppPerc.Text);
-            userVariables.yxPerc = Convert.ToSingle(textyxPerc.Text);
-            userVariables.yxOppPerc = Convert.ToSingle(textyxOppPerc);
-            userVariables.yzPerc = Convert.ToSingle(textyzPerc.Text);
-            userVariables.yzOppPerc = Convert.ToSingle(textyzOppPerc.Text);
+            userVariables.offsetYCorrection = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(offsetYText.Text); });
+            userVariables.yyOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyyOppPerc.Text); });
+            userVariables.yxPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyxPerc.Text); });
+            userVariables.yxOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyxOppPerc); });
+            userVariables.yzPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyzPerc.Text); });
+            userVariables.yzOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyzOppPerc.Text); });
 
-            userVariables.offsetZCorrection = Convert.ToSingle(offsetZText.Text);
-            userVariables.zzOppPerc = Convert.ToSingle(textzzOppPerc.Text);
-            userVariables.zxPerc = Convert.ToSingle(textzxPerc.Text);
-            userVariables.zxOppPerc = Convert.ToSingle(textzxOppPerc.Text);
-            userVariables.zyPerc = Convert.ToSingle(textzyPerc.Text);
-            userVariables.zyOppPerc = Convert.ToSingle(textzyOppPerc.Text);
+            userVariables.offsetZCorrection = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(offsetZText.Text); });
+            userVariables.zzOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzzOppPerc.Text); });
+            userVariables.zxPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzxPerc.Text); });
+            userVariables.zxOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzxOppPerc.Text); });
+            userVariables.zyPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzyPerc.Text); });
+            userVariables.zyOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzyOppPerc.Text); });
         }
 
         private void checkHeights_Click(object sender, EventArgs e)
         {
-            EEPROMFunctions.readEEPROM();
+            if (EEPROMFunctions.tempEEPROMSet == false)
+            {
+                EEPROMFunctions.readEEPROM();
+            }
+
+            GCode.checkHeights = true;
             EEPROMFunctions.EEPROMReadOnly = false;
             Calibration.calibrationState = true;
             Calibration.calibrationSelection = 0;
             HeightFunctions.checkHeightsOnly = true;
+            HeightFunctions.heightsSet = false;
         }
     }
 }

@@ -29,9 +29,15 @@ namespace OpenDACT.Class_Files
                 Program.mainFormTest.setEEPROMGUIList(eeprom);
                 EEPROMFunctions.EEPROMReadCount++;
             }
-            else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
+            else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
             {
                 UserInterface.logConsole("3");
+                userVariables = UserInterface.returnUserVariablesObject();
+                GCode.positionFlow(ref userVariables);
+            }
+            else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
+            {
+                UserInterface.logConsole("4");
                 eeprom = EEPROMFunctions.returnEEPROMObject();
                 userVariables = UserInterface.returnUserVariablesObject();
 
@@ -44,12 +50,13 @@ namespace OpenDACT.Class_Files
 
                 if(HeightFunctions.heightsSet == true)
                 {
-                    GCode.checkHeights = false;
                     Heights heights = HeightFunctions.returnHeightObject();
                     Program.mainFormTest.setHeightsInvoke(heights);
                     
                     if (Calibration.calibrationState == true && HeightFunctions.checkHeightsOnly == false)
                     {
+                        Calibration.calibrateInProgress = true;
+
                         if (EEPROMFunctions.EEPROMRequestSent == false)
                         {
                             EEPROMFunctions.readEEPROM();
@@ -68,14 +75,12 @@ namespace OpenDACT.Class_Files
                         }
 
                         Program.mainFormTest.setEEPROMGUIList(eeprom);
+                        EEPROMFunctions.sendEEPROM(eeprom);
+                        Calibration.calibrateInProgress = false;
                     }
+
+                    HeightFunctions.heightsSet = false;
                 }
-            }
-            else if (GCode.checkHeights == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
-            {
-                UserInterface.logConsole("4");
-                userVariables = UserInterface.returnUserVariablesObject();
-                GCode.positionFlow(ref userVariables);
             }
             /*
             else
@@ -83,6 +88,7 @@ namespace OpenDACT.Class_Files
                 UserInterface.logConsole("0: " + Calibration.calibrateInProgress + GCode.checkHeights + EEPROMFunctions.tempEEPROMSet + EEPROMFunctions.EEPROMReadOnly);
             }
             */
+
         }
     }
 }

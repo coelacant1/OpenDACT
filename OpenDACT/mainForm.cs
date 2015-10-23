@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.IO.Ports;
+using System.Globalization;
 
 namespace OpenDACT.Class_Files
 {
@@ -18,7 +19,10 @@ namespace OpenDACT.Class_Files
         {
             UserVariables userVariables = UserInterface.returnUserVariablesObject();
 
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+
             InitializeComponent();
+
             consoleMain.Text = "";
             consoleMain.ScrollBars = RichTextBoxScrollBars.Vertical;
             consolePrinter.Text = "";
@@ -334,26 +338,26 @@ namespace OpenDACT.Class_Files
 
             
             //XYZ Offset percs
-            userVariables.offsetXCorrection = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(offsetXText.Text); });
-            userVariables.xxOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxxOppPerc.Text); });
-            userVariables.xyPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxyPerc.Text); });
-            userVariables.xyOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxyOppPerc.Text); });
-            userVariables.xzPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxzPerc.Text); });
-            userVariables.xzOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textxzOppPerc.Text); });
+            userVariables.offsetXCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(offsetXText.Text, out value); return value; }));
+            userVariables.xxOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxxOppPerc.Text, out value); return value; }));
+            userVariables.xyPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxyPerc.Text, out value); return value; }));
+            userVariables.xyOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxyOppPerc.Text, out value); return value; }));
+            userVariables.xzPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxzPerc.Text, out value); return value;  }));
+            userVariables.xzOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxzOppPerc.Text, out value); return value;  }));
 
-            userVariables.offsetYCorrection = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(offsetYText.Text); });
-            userVariables.yyOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyyOppPerc.Text); });
-            userVariables.yxPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyxPerc.Text); });
-            userVariables.yxOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyxOppPerc); });
-            userVariables.yzPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyzPerc.Text); });
-            userVariables.yzOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textyzOppPerc.Text); });
+            userVariables.offsetYCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(offsetYText.Text, out value); return value;  }));
+            userVariables.yyOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyyOppPerc.Text, out value); return value;  }));
+            userVariables.yxPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyxPerc.Text, out value); return value;  }));
+            userVariables.yxOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyxOppPerc.Text, out value); return value;  }));
+            userVariables.yzPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyzPerc.Text, out value); return value;  }));
+            userVariables.yzOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyzOppPerc.Text, out value); return value;  }));
 
-            userVariables.offsetZCorrection = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(offsetZText.Text); });
-            userVariables.zzOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzzOppPerc.Text); });
-            userVariables.zxPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzxPerc.Text); });
-            userVariables.zxOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzxOppPerc.Text); });
-            userVariables.zyPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzyPerc.Text); });
-            userVariables.zyOppPerc = (float)this.Invoke((Func<float>)delegate { return Convert.ToSingle(textzyOppPerc.Text); });
+            userVariables.offsetZCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(offsetZText.Text, out value); return value;  }));
+            userVariables.zzOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzzOppPerc.Text, out value); return value;  }));
+            userVariables.zxPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzxPerc.Text, out value); return value;  }));
+            userVariables.zxOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzxOppPerc.Text, out value); return value;  }));
+            userVariables.zyPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzyPerc.Text, out value); return value;  }));
+            userVariables.zyOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzyOppPerc.Text, out value); return value; }));
         }
 
         private void checkHeights_Click(object sender, EventArgs e)

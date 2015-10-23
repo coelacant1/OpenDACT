@@ -563,9 +563,9 @@ namespace OpenDACT.Class_Files
                     userVariables.known_yDR.Add(eeprom.stepsPerMM);
 
                     //prevent using linear regression if there are not two values store
-                    if (userVariables.stepsCalcNumber >= 2)
+                    if (UserInterface.stepsCalcNumber >= 2)
                     {
-                        if (userVariables.stepsCalcNumber >= 3)
+                        if (UserInterface.stepsCalcNumber >= 3)
                         {
                             userVariables.known_xDR.RemoveAt(userVariables.l);
                             userVariables.known_yDR.RemoveAt(userVariables.l);
@@ -596,18 +596,16 @@ namespace OpenDACT.Class_Files
                         UserInterface.logConsole("Resetting Z Max Length\n");
                         Thread.Sleep(userVariables.pauseTimeSet);
                     }
-                    else if (userVariables.stepsCalcNumber == 0)
+                    else if (UserInterface.stepsCalcNumber == 0)
                     {
                         //add one to steps calnumber
-                        userVariables.stepsCalcNumber++;
+                        UserInterface.stepsCalcNumber++;
 
                         //adds a point to the array below the stepsPerMM
                         eeprom.stepsPerMM = eeprom.tempSPM - (1 / eeprom.tempSPM) * 160;
                         UserInterface.logConsole("Steps Per Millimeter Decreased: " + eeprom.stepsPerMM.ToString());
 
-                        Thread.Sleep(userVariables.pauseTimeSet);
-                        GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
-                        UserInterface.logConsole("Setting steps per millimeter\n");
+                        //set SPM
 
                         float changeInMM = ((eeprom.stepsPerMM * eeprom.zMaxLength) - (eeprom.tempSPM * eeprom.zMaxLength)) / eeprom.stepsPerMM;
 
@@ -615,22 +613,18 @@ namespace OpenDACT.Class_Files
                         UserInterface.logConsole("zMaxLength before: " + eeprom.zMaxLength);
                         UserInterface.logConsole("zMaxLength after: " + (eeprom.zMaxLength - changeInMM));
 
-                        GCode.sendEEPROMVariable(3, 153, (eeprom.zMaxLength - changeInMM));
-                        UserInterface.logConsole("Resetting Z Max Length\n");
-                        Thread.Sleep(userVariables.pauseTimeSet);
+                        eeprom.zMaxLength -= changeInMM;
                     }
-                    else if (userVariables.stepsCalcNumber == 1)
+                    else if (UserInterface.stepsCalcNumber == 1)
                     {
                         //add one to steps calnumber
-                        userVariables.stepsCalcNumber++;
+                        UserInterface.stepsCalcNumber++;
 
                         //adds a point to the array above the stepsPerMM
                         eeprom.stepsPerMM = eeprom.tempSPM + (1 / eeprom.tempSPM) * 160;//*2 to compensate for the subtraction
                         UserInterface.logConsole("Steps Per Millimeter Increased: " + eeprom.stepsPerMM.ToString());
 
-                        Thread.Sleep(userVariables.pauseTimeSet);
-                        GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
-                        UserInterface.logConsole("Setting steps per millimeter\n");
+                        //set SPM
 
                         float changeInMM = ((eeprom.stepsPerMM * eeprom.zMaxLength) - (eeprom.tempSPM * eeprom.zMaxLength)) / eeprom.stepsPerMM;
 
@@ -638,9 +632,7 @@ namespace OpenDACT.Class_Files
                         UserInterface.logConsole("zMaxLength before: " + eeprom.zMaxLength);
                         UserInterface.logConsole("zMaxLength after: " + (eeprom.zMaxLength - changeInMM));
 
-                        GCode.sendEEPROMVariable(3, 153, (eeprom.zMaxLength - changeInMM));
-                        UserInterface.logConsole("Resetting Z Max Length\n");
-                        Thread.Sleep(userVariables.pauseTimeSet);
+                        eeprom.zMaxLength -= changeInMM;
                     }
 
                     i = 100;

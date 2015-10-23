@@ -61,7 +61,6 @@ namespace OpenDACT.Class_Files
 
         public int pauseTimeSet = 500;
         public int advancedCalCount = 0;
-        public int stepsCalcNumber = 0;
         public int maxIterations = 50;
         public int l = 0;
         
@@ -75,6 +74,7 @@ namespace OpenDACT.Class_Files
     static class UserInterface
     {
         public static bool isInitiated = false;
+        public static int stepsCalcNumber = 0;
 
 
         static public UserVariables returnUserVariablesObject()

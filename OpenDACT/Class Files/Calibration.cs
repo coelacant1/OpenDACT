@@ -15,11 +15,11 @@ namespace OpenDACT.Class_Files
         public static int iterationNum = 0;
         private static float tempAccuracy;
 
-        public static void calibrate(int value, ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
+        public static void calibrate(int value, ref EEPROM eeprom)
         {
             if (value == 0)
             {
-                basicCalibration(ref eeprom, ref heights, ref userVariables);
+                basicCalibration(ref eeprom);
             }
             else
             {
@@ -29,33 +29,33 @@ namespace OpenDACT.Class_Files
             iterationNum++;
         }
 
-        public static void learnPrinter(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
+        public static void learnPrinter(ref EEPROM eeprom)
         {
-            GCode.heuristicLearning(ref eeprom, ref userVariables, ref heights);
+            GCode.heuristicLearning(ref eeprom);
         }
 
-        public static void basicCalibration(ref EEPROM eeprom, ref Heights heights, ref UserVariables userVariables)
+        public static void basicCalibration(ref EEPROM eeprom)
         {
             //check if eeprom object remains after this function is called for the second time
 
             if (iterationNum == 0)
             {
-                if (userVariables.diagonalRodLength == Convert.ToSingle(""))
+                if (UserVariables.diagonalRodLength == Convert.ToSingle(""))
                 {
-                    userVariables.diagonalRodLength = eeprom.diagonalRod;
+                    UserVariables.diagonalRodLength = eeprom.diagonalRod;
                     UserInterface.logConsole("Using default diagonal rod length from EEPROM");
                 }
             }
 
-            tempAccuracy = (Math.Abs(heights.X) + Math.Abs(heights.XOpp) + Math.Abs(heights.Y) + Math.Abs(heights.YOpp) + Math.Abs(heights.Z) + Math.Abs(heights.ZOpp)) / 6;
+            tempAccuracy = (Math.Abs(Heights.X) + Math.Abs(Heights.XOpp) + Math.Abs(Heights.Y) + Math.Abs(Heights.YOpp) + Math.Abs(Heights.Z) + Math.Abs(Heights.ZOpp)) / 6;
             Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
-            checkAccuracy(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            HRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            DRad(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            //analyzeGeometry(ref eeprom, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            towerOffsets(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            alphaRotation(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
-            diagonalRodSPM(ref eeprom, ref userVariables, ref heights.X, ref heights.XOpp, ref heights.Y, ref heights.YOpp, ref heights.Z, ref heights.ZOpp);
+            checkAccuracy(ref eeprom, ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            HRad(ref eeprom, ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            DRad(ref eeprom, ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            //analyzeGeometry(ref eeprom, ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            towerOffsets(ref eeprom, ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            alphaRotation(ref eeprom, ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            diagonalRodSPM(ref eeprom, ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
 
             //change all instances of a new variable which calls a class object to modify the class object directly as opposed to just pulling its value
         }
@@ -64,25 +64,25 @@ namespace OpenDACT.Class_Files
 
         }
 
-        public static void checkAccuracy(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void checkAccuracy(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
-            float accuracy = userVariables.accuracy;
+            float accuracy = UserVariables.accuracy;
 
             if (X <= accuracy && X >= -accuracy && XOpp <= accuracy && XOpp >= -accuracy && Y <= accuracy && Y >= -accuracy && YOpp <= accuracy && YOpp >= -accuracy && Z <= accuracy && Z >= -accuracy && ZOpp <= accuracy && ZOpp >= -accuracy)
             {
                 //fsr plate offset
-                string zMinTemp = userVariables.probeChoice.ToString();
-                string textFSRPO = userVariables.FSROffset.ToString();
+                string zMinTemp = UserVariables.probeChoice.ToString();
+                string textFSRPO = UserVariables.FSROffset.ToString();
 
-                if (userVariables.probeChoice == "FSR")
+                if (UserVariables.probeChoice == "FSR")
                 {
                     GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength - Convert.ToSingle(textFSRPO));
                     UserInterface.logConsole("Setting Z Max Length with adjustment for FSR");
-                    Thread.Sleep(userVariables.pauseTimeSet);
+                    Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
                 calibrationState = false;
-                Thread.Sleep(userVariables.pauseTimeSet);
+                Thread.Sleep(UserVariables.pauseTimeSet);
                 GCode.homeAxes();
                 UserInterface.logConsole("Calibration Complete");
                 //end code
@@ -93,10 +93,10 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public static void HRad(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void HRad(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float HRadSA = ((X + XOpp + Y + YOpp + Z + ZOpp) / 6);
-            float HRadRatio = userVariables.HRadRatio;
+            float HRadRatio = UserVariables.HRadRatio;
 
             eeprom.HRadius = eeprom.HRadius + (HRadSA / HRadRatio);
 
@@ -110,12 +110,12 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("HRad:" + eeprom.HRadius.ToString());
         }
 
-        public static void DRad(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void DRad(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float DASA = ((X + XOpp) / 2);
             float DBSA = ((Y + YOpp) / 2);
             float DCSA = ((Z + ZOpp) / 2);
-            float DRadRatio = userVariables.DRadRatio;
+            float DRadRatio = UserVariables.DRadRatio;
 
             eeprom.DA += ((DASA) / DRadRatio);
             eeprom.DB += ((DBSA) / DRadRatio);
@@ -153,7 +153,7 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
         }
         */
-        public static void towerOffsets(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void towerOffsets(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             int j = 0;
             float accuracy = 0.001F;
@@ -169,24 +169,24 @@ namespace OpenDACT.Class_Files
             float stepsPerMM = eeprom.stepsPerMM;
 
             //
-            float offsetXCorrection = userVariables.offsetXCorrection;
-            float offsetYCorrection = userVariables.offsetYCorrection;
-            float offsetZCorrection = userVariables.offsetZCorrection;
-            float xxOppPerc = userVariables.xxOppPerc;
-            float xyPerc = userVariables.xyPerc;
-            float xyOppPerc = userVariables.xyOppPerc;
-            float xzPerc = userVariables.xzPerc;
-            float xzOppPerc = userVariables.xzOppPerc;
-            float yyOppPerc = userVariables.yyOppPerc;
-            float yxPerc = userVariables.yxPerc;
-            float yxOppPerc = userVariables.yxOppPerc;
-            float yzPerc = userVariables.yzPerc;
-            float yzOppPerc = userVariables.yzOppPerc;
-            float zzOppPerc = userVariables.zzOppPerc;
-            float zxPerc = userVariables.zxPerc;
-            float zxOppPerc = userVariables.zxOppPerc;
-            float zyPerc = userVariables.zyPerc;
-            float zyOppPerc = userVariables.zyOppPerc;
+            float offsetXCorrection = UserVariables.offsetXCorrection;
+            float offsetYCorrection = UserVariables.offsetYCorrection;
+            float offsetZCorrection = UserVariables.offsetZCorrection;
+            float xxOppPerc = UserVariables.xxOppPerc;
+            float xyPerc = UserVariables.xyPerc;
+            float xyOppPerc = UserVariables.xyOppPerc;
+            float xzPerc = UserVariables.xzPerc;
+            float xzOppPerc = UserVariables.xzOppPerc;
+            float yyOppPerc = UserVariables.yyOppPerc;
+            float yxPerc = UserVariables.yxPerc;
+            float yxOppPerc = UserVariables.yxOppPerc;
+            float yzPerc = UserVariables.yzPerc;
+            float yzOppPerc = UserVariables.yzOppPerc;
+            float zzOppPerc = UserVariables.zzOppPerc;
+            float zxPerc = UserVariables.zxPerc;
+            float zxOppPerc = UserVariables.zxOppPerc;
+            float zyPerc = UserVariables.zyPerc;
+            float zyOppPerc = UserVariables.zyOppPerc;
 
             while (j < 100)
             {
@@ -412,17 +412,17 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ);
         }
 
-        public static void alphaRotation(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void alphaRotation(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float offsetX = eeprom.offsetX;
             float offsetY = eeprom.offsetY;
             float offsetZ = eeprom.offsetZ;
-            float accuracy = userVariables.accuracy;
+            float accuracy = UserVariables.accuracy;
 
             //change to object
-            float alphaRotationPercentageX = userVariables.alphaRotationPercentageX;
-            float alphaRotationPercentageY = userVariables.alphaRotationPercentageY;
-            float alphaRotationPercentageZ = userVariables.alphaRotationPercentageZ;
+            float alphaRotationPercentageX = UserVariables.alphaRotationPercentageX;
+            float alphaRotationPercentageY = UserVariables.alphaRotationPercentageY;
+            float alphaRotationPercentageZ = UserVariables.alphaRotationPercentageZ;
 
             int k = 0;
             while (k < 100)
@@ -496,17 +496,17 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public static void diagonalRodSPM(ref EEPROM eeprom, ref UserVariables userVariables, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        public static void diagonalRodSPM(ref EEPROM eeprom, ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
 
             //opp = 0.21; //4/5
             //tower = 0.27; //9/32
 
-            float diagChange = 1 / userVariables.deltaOpp;
-            float towOppDiff = userVariables.deltaTower / userVariables.deltaOpp; //0.5
+            float diagChange = 1 / UserVariables.deltaOpp;
+            float towOppDiff = UserVariables.deltaTower / UserVariables.deltaOpp; //0.5
             float XYZ = (X + Y + Z) / 3;
             float XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-            float accuracy = userVariables.accuracy;
+            float accuracy = UserVariables.accuracy;
 
             //UserInterface.logConsole(X.ToString() + " " + XOpp.ToString() + " " + Y.ToString() + " " + YOpp.ToString() + " " + Z.ToString() + " " + ZOpp.ToString());
 
@@ -524,7 +524,7 @@ namespace OpenDACT.Class_Files
                 XYZOpp = Validation.checkZero(XYZOpp);
 
                 //hrad
-                eeprom.HRadius += (XYZ / userVariables.HRadRatio);
+                eeprom.HRadius += (XYZ / UserVariables.HRadRatio);
 
                 if (XYZOpp >= 0)
                 {
@@ -559,27 +559,27 @@ namespace OpenDACT.Class_Files
                     eeprom.diagonalRod = Validation.checkZero(eeprom.diagonalRod);
 
                     //add diagonal rod and steps per millimeter to list to use later for linear regression
-                    userVariables.known_xDR.Add(eeprom.diagonalRod);
-                    userVariables.known_yDR.Add(eeprom.stepsPerMM);
+                    UserVariables.known_xDR.Add(eeprom.diagonalRod);
+                    UserVariables.known_yDR.Add(eeprom.stepsPerMM);
 
                     //prevent using linear regression if there are not two values store
-                    if (UserInterface.stepsCalcNumber >= 2)
+                    if (UserVariables.stepsCalcNumber >= 2)
                     {
-                        if (UserInterface.stepsCalcNumber >= 3)
+                        if (UserVariables.stepsCalcNumber >= 3)
                         {
-                            userVariables.known_xDR.RemoveAt(userVariables.l);
-                            userVariables.known_yDR.RemoveAt(userVariables.l);
-                            userVariables.l++;
+                            UserVariables.known_xDR.RemoveAt(UserVariables.l);
+                            UserVariables.known_yDR.RemoveAt(UserVariables.l);
+                            UserVariables.l++;
                         }
 
                         float rsquared = 0;
                         float yintercept = 0;
                         float slope = 0;
 
-                        LinearRegression(userVariables.known_xDR.ToArray(), userVariables.known_yDR.ToArray(), 0, userVariables.known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
-                        eeprom.stepsPerMM = slope * userVariables.diagonalRodLength + yintercept;
+                        LinearRegression(UserVariables.known_xDR.ToArray(), UserVariables.known_yDR.ToArray(), 0, UserVariables.known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
+                        eeprom.stepsPerMM = slope * UserVariables.diagonalRodLength + yintercept;
 
-                        Thread.Sleep(userVariables.pauseTimeSet);
+                        Thread.Sleep(UserVariables.pauseTimeSet);
                         GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
                         UserInterface.logConsole("Steps Per Millimeter Changed: " + eeprom.stepsPerMM.ToString());
 
@@ -594,12 +594,12 @@ namespace OpenDACT.Class_Files
 
                         GCode.sendEEPROMVariable(3, 153, (eeprom.zMaxLength - changeInMM));
                         UserInterface.logConsole("Resetting Z Max Length\n");
-                        Thread.Sleep(userVariables.pauseTimeSet);
+                        Thread.Sleep(UserVariables.pauseTimeSet);
                     }
-                    else if (UserInterface.stepsCalcNumber == 0)
+                    else if (UserVariables.stepsCalcNumber == 0)
                     {
                         //add one to steps calnumber
-                        UserInterface.stepsCalcNumber++;
+                        UserVariables.stepsCalcNumber++;
 
                         //adds a point to the array below the stepsPerMM
                         eeprom.stepsPerMM = eeprom.tempSPM - (1 / eeprom.tempSPM) * 160;
@@ -615,10 +615,10 @@ namespace OpenDACT.Class_Files
 
                         eeprom.zMaxLength -= changeInMM;
                     }
-                    else if (UserInterface.stepsCalcNumber == 1)
+                    else if (UserVariables.stepsCalcNumber == 1)
                     {
                         //add one to steps calnumber
-                        UserInterface.stepsCalcNumber++;
+                        UserVariables.stepsCalcNumber++;
 
                         //adds a point to the array above the stepsPerMM
                         eeprom.stepsPerMM = eeprom.tempSPM + (1 / eeprom.tempSPM) * 160;//*2 to compensate for the subtraction

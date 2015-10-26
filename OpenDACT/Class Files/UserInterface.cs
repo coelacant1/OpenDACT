@@ -14,9 +14,10 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    public class UserVariables
+    public static class UserVariables
     {
         //misc vars, alpha offsets, tower offsets, spm offsets, hrad offsets, drad offsets
+        /*
         public float HRadRatio = -0.5F;
         public float DRadRatio = -0.5F;
         public float accuracy = 0.025F;
@@ -53,40 +54,68 @@ namespace OpenDACT.Class_Files
         public float diagonalRodLength = 269;
         public float FSROffset = 0.6F;
         public float probingSpeed = 5F;
+        */
 
-        public string probeChoice = "FSR";
+        public static float HRadRatio;
+        public static float DRadRatio;
+        public static float accuracy;
+        public static float calculationAccuracy;
+        public static float probingHeight;
 
-        public bool advancedCalibration = false;
+        public static float offsetXCorrection;
+        public static float xxOppPerc;
+        public static float xyPerc;
+        public static float xyOppPerc;
+        public static float xzPerc;
+        public static float xzOppPerc;
 
+        public static float offsetYCorrection;
+        public static float yyOppPerc;
+        public static float yxPerc;
+        public static float yxOppPerc;
+        public static float yzPerc;
+        public static float yzOppPerc;
 
-        public int pauseTimeSet = 500;
-        public int advancedCalCount = 0;
-        public int maxIterations = 50;
-        public int l = 0;
+        public static float offsetZCorrection;
+        public static float zzOppPerc;
+        public static float zxPerc;
+        public static float zxOppPerc;
+        public static float zyPerc;
+        public static float zyOppPerc;
+
+        public static float alphaRotationPercentageX;
+        public static float alphaRotationPercentageY;
+        public static float alphaRotationPercentageZ;
+        public static float deltaTower;
+        public static float deltaOpp;
+        public static float plateDiameter;
+        public static float diagonalRodLength;
+        public static float FSROffset;
+        public static float probingSpeed;
+
+        public static string probeChoice;
+
+        public static bool advancedCalibration = false;
         
-        public List<float> known_yDR = new List<float>();
-        public List<float> known_xDR = new List<float>();
+        public static int pauseTimeSet;
+        public static int advancedCalCount;
+        public static int maxIterations;
+        public static int l;
+        
+        public static List<float> known_yDR = new List<float>();
+        public static List<float> known_xDR = new List<float>();
 
-        public UserVariables() { }
+        public static bool isInitiated = false;
+        public static int stepsCalcNumber = 0;
     }
-    
+
 
     static class UserInterface
     {
-        public static bool isInitiated = false;
-        public static int stepsCalcNumber = 0;
-
-
-        static public UserVariables returnUserVariablesObject()
-        {
-            UserVariables userVariables = new UserVariables();
-            return userVariables;
-        }
-
-
+        
         public static void logConsole(string value)
         {
-            if (isInitiated == true)
+            if (UserVariables.isInitiated == true)
             {
                 Program.mainFormTest.appendMainConsole(value);
             }
@@ -95,7 +124,7 @@ namespace OpenDACT.Class_Files
 
         public static void logPrinter(string value)
         {
-            if (isInitiated == true)
+            if (UserVariables.isInitiated == true)
             {
                 Program.mainFormTest.appendPrinterConsole(value);
             }

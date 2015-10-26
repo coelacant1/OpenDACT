@@ -9,14 +9,6 @@ namespace OpenDACT.Class_Files
 {
     class Validation
     {
-        UserVariables UserVariables;
-        
-        public Validation(UserVariables _UserVariables)
-        {
-            this.UserVariables = _UserVariables;
-        }
-
-        
         public static float checkZero(float value)
         {
 

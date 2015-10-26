@@ -15,7 +15,7 @@ namespace OpenDACT.Class_Files
             {
                 try
                 {
-                    UserInterface.isInitiated = true;
+                    UserVariables.isInitiated = true;
 
                     string message = Connection._serialPort.ReadLine();
 

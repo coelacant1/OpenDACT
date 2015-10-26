@@ -10,8 +10,9 @@ namespace OpenDACT.Class_Files
     {
         public static void handleInput(string message)
         {
+            Program.mainFormTest.setUserVariables();
+
             EEPROM eeprom;
-            UserVariables userVariables;
 
             if (EEPROMFunctions.tempEEPROMSet == false)
             {
@@ -32,26 +33,23 @@ namespace OpenDACT.Class_Files
             else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
             {
                 UserInterface.logConsole("3");
-                userVariables = UserInterface.returnUserVariablesObject();
-                GCode.positionFlow(ref userVariables);
+                GCode.positionFlow();
             }
             else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
             {
                 UserInterface.logConsole("4");
                 eeprom = EEPROMFunctions.returnEEPROMObject();
-                userVariables = UserInterface.returnUserVariablesObject();
 
 
                 if (HeightFunctions.parseZProbe(message) != 1000)
                 {
-                    HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom, ref userVariables);
+                    HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom);
                     UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");
                 }
 
                 if(HeightFunctions.heightsSet == true)
                 {
-                    Heights heights = HeightFunctions.returnHeightObject();
-                    Program.mainFormTest.setHeightsInvoke(heights);
+                    Program.mainFormTest.setHeightsInvoke();
                     
                     if (Calibration.calibrationState == true && HeightFunctions.checkHeightsOnly == false)
                     {
@@ -63,15 +61,13 @@ namespace OpenDACT.Class_Files
                             EEPROMFunctions.EEPROMRequestSent = true;
                         }
 
-                        Program.mainFormTest.setUserVariables(ref userVariables);
-
-                        if (userVariables.advancedCalibration == false)
+                        if (UserVariables.advancedCalibration == false)
                         {
-                            Calibration.calibrate(Calibration.calibrationSelection, ref eeprom, ref heights, ref userVariables);
+                            Calibration.calibrate(Calibration.calibrationSelection, ref eeprom);
                         }
                         else
                         {
-                            GCode.heuristicLearning(ref eeprom, ref userVariables, ref heights);
+                            GCode.heuristicLearning(ref eeprom);
                         }
 
                         Program.mainFormTest.setEEPROMGUIList(eeprom);

@@ -7,24 +7,25 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    public class Heights
+    public static class Heights
     {
         //store every set of heights
-        public float center;
-        public float X;
-        public float XOpp;
-        public float Y;
-        public float YOpp;
-        public float Z;
-        public float ZOpp;
-        public float teX;
-        public float teXOpp;
-        public float teY;
-        public float teYOpp;
-        public float teZ;
-        public float teZOpp;
-        public bool firstHeights = true;
+        public static float center;
+        public static float X;
+        public static float XOpp;
+        public static float Y;
+        public static float YOpp;
+        public static float Z;
+        public static float ZOpp;
+        public static float teX;
+        public static float teXOpp;
+        public static float teY;
+        public static float teYOpp;
+        public static float teZ;
+        public static float teZOpp;
+        public static bool firstHeights = true;
 
+        /*
         public Heights(float _center, float _X, float _XOpp, float _Y, float _YOpp, float _Z, float _ZOpp)
         {
             center = _center;
@@ -46,88 +47,67 @@ namespace OpenDACT.Class_Files
                 firstHeights = false;
             }
         }
+        */
     }
-    
+
     public static class HeightFunctions
     {
-        public static float tempCenter;
-        public static float tempX;
-        public static float tempXOpp;
-        public static float tempY;
-        public static float tempYOpp;
-        public static float tempZ;
-        public static float tempZOpp;
         private static int position = 0;
         public static bool heightsSet = false;
         public static bool checkHeightsOnly = false;
 
-        public static Heights returnHeightObject()
-        {
-            Heights heights = new Heights(tempCenter, tempX, tempXOpp, tempY, tempYOpp, tempZ, tempZOpp);
-            return heights;
-        }
-
-        public static void setHeights(float probePosition, ref EEPROM eeprom, ref UserVariables userVariables)
+        public static void setHeights(float probePosition, ref EEPROM eeprom)
         {
             float zMaxLength = eeprom.zMaxLength;
-            float probingHeight = userVariables.probingHeight;
+            float probingHeight = UserVariables.probingHeight;
 
-            if (probePosition != 200)
+            switch (position)
             {
-                switch (position)
-                {
-                    case 0:
-                        probePosition = zMaxLength - probingHeight + probePosition;
-                        tempCenter = probePosition;
-                        position++;
-                        break;
-                    case 1:
-                        probePosition = tempCenter - (zMaxLength - probingHeight + probePosition);
-                        probePosition = -probePosition;
-                        tempX = probePosition;
-                        position++;
-                        break;
-                    case 2:
-                        probePosition = tempCenter - (zMaxLength - probingHeight + probePosition);
-                        probePosition = -probePosition;
-                        tempXOpp = probePosition;
-                        position++;
-                        break;
-                    case 3:
-                        probePosition = tempCenter - (zMaxLength - probingHeight + probePosition);
-                        probePosition = -probePosition;
-                        tempY = probePosition;
-                        position++;
-                        break;
-                    case 4:
-                        probePosition = tempCenter - (zMaxLength - probingHeight + probePosition);
-                        probePosition = -probePosition;
-                        tempYOpp = probePosition;
-                        position++;
-                        break;
-                    case 5:
-                        probePosition = tempCenter - (zMaxLength - probingHeight + probePosition);
-                        probePosition = -probePosition;
-                        tempZ = probePosition;
-                        position++;
-                        break;
-                    case 6:
-                        probePosition = tempCenter - (zMaxLength - probingHeight + probePosition);
-                        probePosition = -probePosition;
-                        tempZOpp = probePosition;
-                        position = 0;
-                        
-                        //setHeightMap();
+                case 0:
+                    probePosition = zMaxLength - probingHeight + probePosition;
+                    Heights.center = probePosition;
+                    position++;
+                    break;
+                case 1:
+                    probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
+                    probePosition = -probePosition;
+                    Heights.X = probePosition;
+                    position++;
+                    break;
+                case 2:
+                    probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
+                    probePosition = -probePosition;
+                    Heights.XOpp = probePosition;
+                    position++;
+                    break;
+                case 3:
+                    probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
+                    probePosition = -probePosition;
+                    Heights.Y = probePosition;
+                    position++;
+                    break;
+                case 4:
+                    probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
+                    probePosition = -probePosition;
+                    Heights.YOpp = probePosition;
+                    position++;
+                    break;
+                case 5:
+                    probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
+                    probePosition = -probePosition;
+                    Heights.Z = probePosition;
+                    position++;
+                    break;
+                case 6:
+                    probePosition = Heights.center - (zMaxLength - probingHeight + probePosition);
+                    probePosition = -probePosition;
+                    Heights.ZOpp = probePosition;
+                    position = 0;
 
-                        GCode.sendEEPROMVariable(3, 153, tempCenter);
-                        UserInterface.logConsole("Setting Z Max Length");
-                        Thread.Sleep(userVariables.pauseTimeSet);
+                    eeprom.zMaxLength = Heights.center;
 
-                        eeprom.zMaxLength = tempCenter;
-
-                        heightsSet = true;
-                        break;
-                }
+                    heightsSet = true;
+                    break;
             }
         }
 

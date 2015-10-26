@@ -17,8 +17,6 @@ namespace OpenDACT.Class_Files
 
         public static void connect()
         {
-            UserVariables userVariables = UserInterface.returnUserVariablesObject();
-
             if (_serialPort.IsOpen)
             {
                 UserInterface.logConsole("Already Connected");

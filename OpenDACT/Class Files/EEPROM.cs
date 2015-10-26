@@ -7,42 +7,23 @@ using System.Threading;
 
 namespace OpenDACT.Class_Files
 {
-    public class EEPROM
+    public static class EEPROM
     {
-        public float stepsPerMM;
-        public float tempSPM;
-        public float zMaxLength;
-        public float zProbe;
-        public float HRadius;
-        public float diagonalRod;
-        public float offsetX;
-        public float offsetY;
-        public float offsetZ;
-        public float A;
-        public float B;
-        public float C;
-        public float DA;
-        public float DB;
-        public float DC;
-
-        public EEPROM(float _stepsPerMM, float _tempSPM, float _zMaxLength, float _zProbe, float _diagonalRod, float _HRadius, float _offsetX, float _offsetY, float _offsetZ, float _A, float _B, float _C, float _DA, float _DB, float _DC)
-        {
-            stepsPerMM = _stepsPerMM;
-            tempSPM = _tempSPM;
-            zMaxLength = _zMaxLength;
-            zProbe = _zProbe;
-            diagonalRod = _diagonalRod;
-            HRadius = _HRadius;
-            offsetX = _offsetX;
-            offsetY = _offsetY;
-            offsetZ = _offsetZ;
-            A = _A;
-            B = _B;
-            C = _C;
-            DA = _DA;
-            DB = _DB;
-            DC = _DC;
-        }
+        public static float stepsPerMM;
+        public static float tempSPM;
+        public static float zMaxLength;
+        public static float zProbe;
+        public static float HRadius;
+        public static float diagonalRod;
+        public static float offsetX;
+        public static float offsetY;
+        public static float offsetZ;
+        public static float A;
+        public static float B;
+        public static float C;
+        public static float DA;
+        public static float DB;
+        public static float DC;
     }
 
     static class EEPROMFunctions
@@ -51,31 +32,10 @@ namespace OpenDACT.Class_Files
         public static bool EEPROMRequestSent = false;
         public static bool EEPROMReadOnly = false;
         public static int EEPROMReadCount = 0;
-        private static float tempStepsPerMM;
-        private static float tempTempSPM;
-        private static float tempZMaxLength;
-        private static float tempZProbe;
-        private static float tempHRadius;
-        private static float tempDiagonalRod;
-        private static float tempOffsetX;
-        private static float tempOffsetY;
-        private static float tempOffsetZ;
-        private static float tempA;
-        private static float tempB;
-        private static float tempC;
-        private static float tempDA;
-        private static float tempDB;
-        private static float tempDC;
 
         public static void readEEPROM()
         {
             GCode.sendReadEEPROMCommand();
-        }
-
-        public static EEPROM returnEEPROMObject()
-        {
-            EEPROM eepromObject = new EEPROM(tempStepsPerMM, tempTempSPM, tempZMaxLength, tempZProbe, tempDiagonalRod, tempHRadius, tempOffsetX, tempOffsetY, tempOffsetZ, tempA, tempB, tempC, tempDA, tempDB, tempDC);
-            return eepromObject;
         }
 
         public static void parseEEPROM(string value, out int intParse, out float floatParse2)
@@ -132,88 +92,89 @@ namespace OpenDACT.Class_Files
                 case 11:
                     UserInterface.logConsole("EEPROM capture initiated");
 
-                    tempStepsPerMM = floatParse2;
-                    tempTempSPM = floatParse2;
+                    EEPROM.stepsPerMM = floatParse2;
+                    EEPROM.tempSPM = floatParse2;
                     break;
                 case 153:
-                    tempZMaxLength = floatParse2;
+                    EEPROM.zMaxLength = floatParse2;
                     break;
                 case 808:
-                    tempZProbe = floatParse2;
+                    EEPROM.zProbe = floatParse2;
                     break;
                 case 881:
-                    tempDiagonalRod = floatParse2;
+                    EEPROM.diagonalRod = floatParse2;
                     break;
                 case 885:
-                    tempHRadius = floatParse2;
+                    EEPROM.HRadius = floatParse2;
                     break;
                 case 893:
-                    tempOffsetX = floatParse2;
+                    EEPROM.offsetX = floatParse2;
                     break;
                 case 895:
-                    tempOffsetY = floatParse2;
+                    EEPROM.offsetY = floatParse2;
                     break;
                 case 897:
-                    tempOffsetZ = floatParse2;
+                    EEPROM.offsetZ = floatParse2;
                     break;
                 case 901:
-                    tempA = floatParse2;
+                    EEPROM.A = floatParse2;
                     break;
                 case 905:
-                    tempB = floatParse2;
+                    EEPROM.B = floatParse2;
                     break;
                 case 909:
-                    tempC = floatParse2;
+                    EEPROM.C = floatParse2;
                     break;
                 case 913:
-                    tempDA = floatParse2;
+                    EEPROM.DA = floatParse2;
                     break;
                 case 917:
-                    tempDB = floatParse2;
+                    EEPROM.DB = floatParse2;
                     break;
                 case 921:
-                    tempDC = floatParse2;
+                    EEPROM.DC = floatParse2;
                     tempEEPROMSet = true;
                     GCode.checkHeights = true;
+                    EEPROMReadCount++;
 
                     break;
             }
         }
 
-        public static void sendEEPROM(EEPROM eeprom)
+        public static void sendEEPROM()
         {
             //manually set all eeprom values
             UserInterface.logConsole("Setting EEPROM.");
             Thread.Sleep(750);
             GCode.sendToPosition(0, 0, 100);
             Thread.Sleep(1000);
-            GCode.sendEEPROMVariable(3, 11, eeprom.stepsPerMM);
+            GCode.sendEEPROMVariable(3, 11, EEPROM.stepsPerMM);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 153, eeprom.zMaxLength);
+            GCode.sendEEPROMVariable(3, 153, EEPROM.zMaxLength);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 808, eeprom.zProbe);
+            GCode.sendEEPROMVariable(3, 808, EEPROM.zProbe);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 881, eeprom.diagonalRod);
+            GCode.sendEEPROMVariable(3, 881, EEPROM.diagonalRod);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 885, eeprom.HRadius);
+            GCode.sendEEPROMVariable(3, 885, EEPROM.HRadius);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(1, 893, eeprom.offsetX);
+            GCode.sendEEPROMVariable(1, 893, EEPROM.offsetX);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(1, 895, eeprom.offsetY);
+            GCode.sendEEPROMVariable(1, 895, EEPROM.offsetY);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(1, 897, eeprom.offsetZ);
+            GCode.sendEEPROMVariable(1, 897, EEPROM.offsetZ);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 901, eeprom.A);
+            GCode.sendEEPROMVariable(3, 901, EEPROM.A);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 905, eeprom.B);
+            GCode.sendEEPROMVariable(3, 905, EEPROM.B);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 909, eeprom.C);
+            GCode.sendEEPROMVariable(3, 909, EEPROM.C);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 913, eeprom.DA);
+            GCode.sendEEPROMVariable(3, 913, EEPROM.DA);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 917, eeprom.DB);
+            GCode.sendEEPROMVariable(3, 917, EEPROM.DB);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 921, eeprom.DC);
+            GCode.sendEEPROMVariable(3, 921, EEPROM.DC);
             Thread.Sleep(750);
         }
     }

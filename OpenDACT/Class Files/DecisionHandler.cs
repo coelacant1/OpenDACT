@@ -12,8 +12,6 @@ namespace OpenDACT.Class_Files
         {
             Program.mainFormTest.setUserVariables();
 
-            EEPROM eeprom;
-
             if (EEPROMFunctions.tempEEPROMSet == false)
             {
                 int intParse;
@@ -26,9 +24,7 @@ namespace OpenDACT.Class_Files
             else if (EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == true && EEPROMFunctions.EEPROMReadCount < 1)
             {
                 UserInterface.logConsole("2");
-                eeprom = EEPROMFunctions.returnEEPROMObject();
-                Program.mainFormTest.setEEPROMGUIList(eeprom);
-                EEPROMFunctions.EEPROMReadCount++;
+                Program.mainFormTest.setEEPROMGUIList();
             }
             else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
             {
@@ -38,12 +34,11 @@ namespace OpenDACT.Class_Files
             else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
             {
                 UserInterface.logConsole("4");
-                eeprom = EEPROMFunctions.returnEEPROMObject();
 
 
                 if (HeightFunctions.parseZProbe(message) != 1000)
                 {
-                    HeightFunctions.setHeights(HeightFunctions.parseZProbe(message), ref eeprom);
+                    HeightFunctions.setHeights(HeightFunctions.parseZProbe(message));
                     UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");
                 }
 
@@ -63,15 +58,15 @@ namespace OpenDACT.Class_Files
 
                         if (UserVariables.advancedCalibration == false)
                         {
-                            Calibration.calibrate(Calibration.calibrationSelection, ref eeprom);
+                            Calibration.calibrate(Calibration.calibrationSelection);
                         }
                         else
                         {
-                            GCode.heuristicLearning(ref eeprom);
+                            GCode.heuristicLearning();
                         }
 
-                        Program.mainFormTest.setEEPROMGUIList(eeprom);
-                        EEPROMFunctions.sendEEPROM(eeprom);
+                        Program.mainFormTest.setEEPROMGUIList();
+                        EEPROMFunctions.sendEEPROM();
                         Calibration.calibrateInProgress = false;
                     }
 

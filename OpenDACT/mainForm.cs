@@ -219,24 +219,24 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public void setEEPROMGUIList(EEPROM eeprom)
+        public void setEEPROMGUIList()
         {
             Invoke((MethodInvoker)delegate
             {
-                this.stepsPerMMText.Text = eeprom.stepsPerMM.ToString();
-                this.zMaxLengthText.Text = eeprom.zMaxLength.ToString();
-                this.zProbeText.Text = eeprom.zProbe.ToString();
+                this.stepsPerMMText.Text = EEPROM.stepsPerMM.ToString();
+                this.zMaxLengthText.Text = EEPROM.zMaxLength.ToString();
+                this.zProbeText.Text = EEPROM.zProbe.ToString();
                 this.zProbeSpeedText.Text = textProbingSpeed.Text;
-                this.HRadiusText.Text = eeprom.HRadius.ToString();
-                this.offsetXText.Text = eeprom.offsetX.ToString();
-                this.offsetYText.Text = eeprom.offsetY.ToString();
-                this.offsetZText.Text = eeprom.offsetZ.ToString();
-                this.AText.Text = eeprom.A.ToString();
-                this.BText.Text = eeprom.B.ToString();
-                this.CText.Text = eeprom.C.ToString();
-                this.DAText.Text = eeprom.DA.ToString();
-                this.DBText.Text = eeprom.DB.ToString();
-                this.DCText.Text = eeprom.DC.ToString();
+                this.HRadiusText.Text = EEPROM.HRadius.ToString();
+                this.offsetXText.Text = EEPROM.offsetX.ToString();
+                this.offsetYText.Text = EEPROM.offsetY.ToString();
+                this.offsetZText.Text = EEPROM.offsetZ.ToString();
+                this.AText.Text = EEPROM.A.ToString();
+                this.BText.Text = EEPROM.B.ToString();
+                this.CText.Text = EEPROM.C.ToString();
+                this.DAText.Text = EEPROM.DA.ToString();
+                this.DBText.Text = EEPROM.DB.ToString();
+                this.DCText.Text = EEPROM.DC.ToString();
             });
         }
 

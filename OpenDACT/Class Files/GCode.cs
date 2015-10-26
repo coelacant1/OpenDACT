@@ -181,7 +181,7 @@ namespace OpenDACT.Class_Files
 
 
 
-        public static void heuristicLearning(ref EEPROM eeprom)
+        public static void heuristicLearning()
         {
             //find base heights
             //find heights with each value increased by 1 - HRad, tower offset 1-3, diagonal rod
@@ -191,8 +191,8 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //set diagonal rod +1
-                    GCode.sendEEPROMVariable(3, 881, eeprom.stepsPerMM + 1);
-                    UserInterface.logConsole("Setting diagonal rod to: " + (eeprom.stepsPerMM + 1).ToString());
+                    GCode.sendEEPROMVariable(3, 881, EEPROM.stepsPerMM + 1);
+                    UserInterface.logConsole("Setting diagonal rod to: " + (EEPROM.stepsPerMM + 1).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
@@ -209,13 +209,13 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //reset diagonal rod
-                    GCode.sendEEPROMVariable(3, 881, eeprom.stepsPerMM);
-                    UserInterface.logConsole("Setting diagonal rod to: " + (eeprom.stepsPerMM).ToString());
+                    GCode.sendEEPROMVariable(3, 881, EEPROM.stepsPerMM);
+                    UserInterface.logConsole("Setting diagonal rod to: " + (EEPROM.stepsPerMM).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set Hrad +1
-                    GCode.sendEEPROMVariable(3, 885, eeprom.HRadius + 1);
-                    UserInterface.logConsole("Setting Horizontal Radius to: " + (eeprom.HRadius + 1).ToString());
+                    GCode.sendEEPROMVariable(3, 885, EEPROM.HRadius + 1);
+                    UserInterface.logConsole("Setting Horizontal Radius to: " + (EEPROM.HRadius + 1).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
@@ -230,13 +230,13 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //reset horizontal radius
-                    GCode.sendEEPROMVariable(3, 885, eeprom.HRadius);
-                    UserInterface.logConsole("Setting Horizontal Radius to: " + (eeprom.HRadius).ToString());
+                    GCode.sendEEPROMVariable(3, 885, EEPROM.HRadius);
+                    UserInterface.logConsole("Setting Horizontal Radius to: " + (EEPROM.HRadius).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set X offset
-                    GCode.sendEEPROMVariable(1, 893, eeprom.offsetX + 80);
-                    UserInterface.logConsole("Setting offset X to: " + (eeprom.offsetX + 80).ToString());
+                    GCode.sendEEPROMVariable(1, 893, EEPROM.offsetX + 80);
+                    UserInterface.logConsole("Setting offset X to: " + (EEPROM.offsetX + 80).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
@@ -257,13 +257,13 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //reset X offset
-                    GCode.sendEEPROMVariable(1, 893, eeprom.offsetX);
-                    UserInterface.logConsole("Setting offset X to: " + (eeprom.offsetX).ToString());
+                    GCode.sendEEPROMVariable(1, 893, EEPROM.offsetX);
+                    UserInterface.logConsole("Setting offset X to: " + (EEPROM.offsetX).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set Y offset
-                    GCode.sendEEPROMVariable(1, 895, eeprom.offsetY + 80);
-                    UserInterface.logConsole("Setting offset Y to: " + (eeprom.offsetY + 80).ToString());
+                    GCode.sendEEPROMVariable(1, 895, EEPROM.offsetY + 80);
+                    UserInterface.logConsole("Setting offset Y to: " + (EEPROM.offsetY + 80).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
@@ -284,13 +284,13 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //reset Y offset
-                    GCode.sendEEPROMVariable(1, 895, eeprom.offsetY);
-                    UserInterface.logConsole("Setting offset Y to: " + (eeprom.offsetY).ToString());
+                    GCode.sendEEPROMVariable(1, 895, EEPROM.offsetY);
+                    UserInterface.logConsole("Setting offset Y to: " + (EEPROM.offsetY).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set Z offset
-                    GCode.sendEEPROMVariable(1, 897, eeprom.offsetZ + 80);
-                    UserInterface.logConsole("Setting offset Z to: " + (eeprom.offsetZ + 80).ToString());
+                    GCode.sendEEPROMVariable(1, 897, EEPROM.offsetZ + 80);
+                    UserInterface.logConsole("Setting offset Z to: " + (EEPROM.offsetZ + 80).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
@@ -311,13 +311,13 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //set Z offset
-                    GCode.sendEEPROMVariable(1, 897, eeprom.offsetZ);
-                    UserInterface.logConsole("Setting offset Z to: " + (eeprom.offsetZ).ToString());
+                    GCode.sendEEPROMVariable(1, 897, EEPROM.offsetZ);
+                    UserInterface.logConsole("Setting offset Z to: " + (EEPROM.offsetZ).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set alpha rotation offset perc X
-                    GCode.sendEEPROMVariable(3, 901, eeprom.A + 1);
-                    UserInterface.logConsole("Setting Alpha A to: " + (eeprom.A + 1).ToString());
+                    GCode.sendEEPROMVariable(3, 901, EEPROM.A + 1);
+                    UserInterface.logConsole("Setting Alpha A to: " + (EEPROM.A + 1).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
@@ -334,13 +334,13 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //set alpha rotation offset perc X
-                    GCode.sendEEPROMVariable(3, 901, eeprom.A);
-                    UserInterface.logConsole("Setting Alpha A to: " + (eeprom.A).ToString());
+                    GCode.sendEEPROMVariable(3, 901, EEPROM.A);
+                    UserInterface.logConsole("Setting Alpha A to: " + (EEPROM.A).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set alpha rotation offset perc Y
-                    GCode.sendEEPROMVariable(3, 905, eeprom.B + 1);
-                    UserInterface.logConsole("Setting Alpha B to: " + (eeprom.B + 1).ToString());
+                    GCode.sendEEPROMVariable(3, 905, EEPROM.B + 1);
+                    UserInterface.logConsole("Setting Alpha B to: " + (EEPROM.B + 1).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
@@ -356,13 +356,13 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //set alpha rotation offset perc Y
-                    GCode.sendEEPROMVariable(3, 905, eeprom.B);
-                    UserInterface.logConsole("Setting Alpha B to: " + (eeprom.B).ToString());
+                    GCode.sendEEPROMVariable(3, 905, EEPROM.B);
+                    UserInterface.logConsole("Setting Alpha B to: " + (EEPROM.B).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set alpha rotation offset perc Z
-                    GCode.sendEEPROMVariable(3, 909, eeprom.C + 1);
-                    UserInterface.logConsole("Setting Alpha C to: " + (eeprom.C + 1).ToString());
+                    GCode.sendEEPROMVariable(3, 909, EEPROM.C + 1);
+                    UserInterface.logConsole("Setting Alpha C to: " + (EEPROM.C + 1).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
@@ -378,8 +378,8 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //set alpha rotation offset perc Z
-                    GCode.sendEEPROMVariable(3, 909, eeprom.C);
-                    UserInterface.logConsole("Setting Alpha C to: " + (eeprom.C).ToString());
+                    GCode.sendEEPROMVariable(3, 909, EEPROM.C);
+                    UserInterface.logConsole("Setting Alpha C to: " + (EEPROM.C).ToString());
                     Thread.Sleep(UserVariables.pauseTimeSet);
 
                 }

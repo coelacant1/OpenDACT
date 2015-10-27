@@ -22,13 +22,13 @@ namespace OpenDACT.Class_Files
             }
             else if (EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == true && EEPROMFunctions.EEPROMReadCount < 1)
             {
-
+                //rm
             }
             else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
             {
                 GCode.positionFlow();
             }
-            else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
+            else if (Calibration.calibrationState == true && Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
             {
                 if (HeightFunctions.parseZProbe(message) != 1000 && HeightFunctions.heightsSet == false)
                 {
@@ -37,7 +37,7 @@ namespace OpenDACT.Class_Files
                 else if (HeightFunctions.heightsSet == true)
                 {
                     Program.mainFormTest.setHeightsInvoke();
-                    
+
                     if (Calibration.calibrationState == true && HeightFunctions.checkHeightsOnly == false)
                     {
                         Calibration.calibrateInProgress = true;
@@ -59,6 +59,14 @@ namespace OpenDACT.Class_Files
 
                         Program.mainFormTest.setEEPROMGUIList();
                         EEPROMFunctions.sendEEPROM();
+
+                        if (Calibration.calibrationState == false)
+                        {
+                            GCode.homeAxes();
+                            UserInterface.logConsole("Calibration Complete");
+                            //end calibration
+                        }
+
                         Calibration.calibrateInProgress = false;
                     }
 

@@ -64,7 +64,7 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                UserInterface.logConsole("No ports available\n");
+                UserInterface.logConsole("No ports available");
             }
 
             accuracyTime.Series["Accuracy"].Points.AddXY(0, 1);
@@ -94,7 +94,7 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                UserInterface.logConsole("Not connected\n");
+                UserInterface.logConsole("Not connected");
             }
         }
 
@@ -106,7 +106,7 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                UserInterface.logConsole("Not connected\n");
+                UserInterface.logConsole("Not connected");
             }
         }
         public void appendMainConsole(string value)

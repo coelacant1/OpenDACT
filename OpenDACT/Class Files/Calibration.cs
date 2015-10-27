@@ -506,7 +506,8 @@ namespace OpenDACT.Class_Files
             int i = 0;
             while (i < 100)
             {
-                EEPROM.diagonalRod += (XYZOpp * diagChange);
+                EEPROM.stepsPerMM += (Math.Abs(XYZ - XYZOpp) * diagChange);
+
                 X = X - towOppDiff * XYZOpp;
                 Y = Y - towOppDiff * XYZOpp;
                 Z = Z - towOppDiff * XYZOpp;
@@ -545,86 +546,11 @@ namespace OpenDACT.Class_Files
                 YOpp = Validation.checkZero(YOpp);
                 ZOpp = Validation.checkZero(ZOpp);
 
-                UserInterface.logConsole(Math.Abs(XYZ - XYZOpp) + " " + UserVariables.calculationAccuracy);
+                UserInterface.logConsole(EEPROM.stepsPerMM.ToString());
 
                 //XYZ is zero
                 if (Math.Abs(XYZ - XYZOpp) < UserVariables.calculationAccuracy)
                 {
-                    UserInterface.logConsole("Diagonal Rod: " + EEPROM.diagonalRod.ToString());
-
-                    //add diagonal rod and steps per millimeter to list to use later for linear regression
-                    UserVariables.known_xDR.Add(EEPROM.diagonalRod);
-                    UserVariables.known_yDR.Add(EEPROM.stepsPerMM);
-
-                    //prevent using linear regression if there are not two values store
-                    if (UserVariables.stepsCalcNumber >= 3)
-                    {
-                        if (UserVariables.stepsCalcNumber >= 5)
-                        {
-                            UserVariables.known_xDR.RemoveAt(0);
-                            UserVariables.known_yDR.RemoveAt(0);
-                        }
-
-                        float rsquared = 0;
-                        float yintercept = 0;
-                        float slope = 0;
-
-                        LinearRegression(UserVariables.known_xDR.ToArray(), UserVariables.known_yDR.ToArray(), 0, UserVariables.known_yDR.ToArray().Length, out rsquared, out yintercept, out slope);
-                        EEPROM.stepsPerMM = slope * UserVariables.diagonalRodLength + yintercept;
-
-                        Thread.Sleep(UserVariables.pauseTimeSet);
-                        GCode.sendEEPROMVariable(3, 11, EEPROM.stepsPerMM);
-                        UserInterface.logConsole("Steps Per Millimeter Changed: " + EEPROM.stepsPerMM.ToString());
-
-                        UserInterface.logConsole("SPM yintercept: " + yintercept);
-                        UserInterface.logConsole("SPM slope: " + slope);
-
-                        float changeInMM = ((EEPROM.stepsPerMM * EEPROM.zMaxLength) - (EEPROM.tempSPM * EEPROM.zMaxLength)) / EEPROM.stepsPerMM;
-
-                        UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
-                        UserInterface.logConsole("zMaxLength before: " + EEPROM.zMaxLength);
-                        UserInterface.logConsole("zMaxLength after: " + (EEPROM.zMaxLength - changeInMM));
-
-                        GCode.sendEEPROMVariable(3, 153, (EEPROM.zMaxLength - changeInMM));
-                        UserInterface.logConsole("Resetting Z Max Length");
-                        Thread.Sleep(UserVariables.pauseTimeSet);
-                    }
-                    else if (UserVariables.stepsCalcNumber == 1)
-                    {
-                        //adds a point to the array below the stepsPerMM
-                        EEPROM.stepsPerMM = EEPROM.tempSPM - (1 / EEPROM.tempSPM) * 160;
-                        UserInterface.logConsole("Steps Per Millimeter Decreased: " + EEPROM.stepsPerMM.ToString());
-
-                        //set SPM
-
-                        float changeInMM = ((EEPROM.stepsPerMM * EEPROM.zMaxLength) - (EEPROM.tempSPM * EEPROM.zMaxLength)) / EEPROM.stepsPerMM + 2;
-
-                        UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
-                        UserInterface.logConsole("zMaxLength before: " + EEPROM.zMaxLength);
-                        UserInterface.logConsole("zMaxLength after: " + (EEPROM.zMaxLength - changeInMM));
-
-                        EEPROM.zMaxLength -= changeInMM;
-                    }
-                    else if (UserVariables.stepsCalcNumber == 2)
-                    {
-                        //adds a point to the array above the stepsPerMM
-                        EEPROM.stepsPerMM = EEPROM.tempSPM + (1 / EEPROM.tempSPM) * 160;//*2 to compensate for the subtraction
-                        UserInterface.logConsole("Steps Per Millimeter Increased: " + EEPROM.stepsPerMM.ToString());
-
-                        //set SPM
-
-                        float changeInMM = ((EEPROM.stepsPerMM * EEPROM.zMaxLength) - (EEPROM.tempSPM * EEPROM.zMaxLength)) / EEPROM.stepsPerMM + 5;
-
-                        UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
-                        UserInterface.logConsole("zMaxLength before: " + EEPROM.zMaxLength);
-                        UserInterface.logConsole("zMaxLength after: " + (EEPROM.zMaxLength - changeInMM));
-
-                        EEPROM.zMaxLength -= changeInMM;
-                    }
-
-                    //add one to steps calnumber
-                    UserVariables.stepsCalcNumber++;
-
                     i = 100;
                 }
                 else

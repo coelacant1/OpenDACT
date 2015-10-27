@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -200,7 +200,7 @@
             this.aboutButton = new System.Windows.Forms.Button();
             this.contactButton = new System.Windows.Forms.Button();
             this.donateButton = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.iterativeCalibrate = new System.Windows.Forms.Button();
             this.diagonalRodLengthText = new System.Windows.Forms.TextBox();
             this.textPlateDiameter = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
@@ -1714,22 +1714,22 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea4.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea4.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea4);
-            legend4.Enabled = false;
-            legend4.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend4);
+            chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea1.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend1);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series4.BackImageTransparentColor = System.Drawing.Color.White;
-            series4.BorderColor = System.Drawing.Color.Transparent;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series4.IsXValueIndexed = true;
-            series4.Legend = "Legend1";
-            series4.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series4);
+            series1.BackImageTransparentColor = System.Drawing.Color.White;
+            series1.BorderColor = System.Drawing.Color.Transparent;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series1);
             this.accuracyTime.Size = new System.Drawing.Size(317, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
@@ -1818,14 +1818,15 @@
             this.donateButton.UseVisualStyleBackColor = true;
             this.donateButton.Click += new System.EventHandler(this.donateButton_Click_1);
             // 
-            // button4
+            // iterativeCalibrate
             // 
-            this.button4.Location = new System.Drawing.Point(130, 157);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(119, 43);
-            this.button4.TabIndex = 24;
-            this.button4.Text = "Iterative Calibration";
-            this.button4.UseVisualStyleBackColor = true;
+            this.iterativeCalibrate.Location = new System.Drawing.Point(130, 157);
+            this.iterativeCalibrate.Name = "iterativeCalibrate";
+            this.iterativeCalibrate.Size = new System.Drawing.Size(119, 43);
+            this.iterativeCalibrate.TabIndex = 24;
+            this.iterativeCalibrate.Text = "Iterative Calibration";
+            this.iterativeCalibrate.UseVisualStyleBackColor = true;
+            this.iterativeCalibrate.Click += new System.EventHandler(this.iterativeCalibrate_Click);
             // 
             // diagonalRodLengthText
             // 
@@ -1886,7 +1887,7 @@
             this.Controls.Add(this.textPlateDiameter);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.diagonalRodLengthText);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.iterativeCalibrate);
             this.Controls.Add(this.donateButton);
             this.Controls.Add(this.contactButton);
             this.Controls.Add(this.aboutButton);
@@ -2068,7 +2069,7 @@
         private System.Windows.Forms.TextBox textBox25;
         private System.Windows.Forms.TextBox textBox28;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button iterativeCalibrate;
         private System.Windows.Forms.Label label52;
         private System.Windows.Forms.Label iZtext;
         private System.Windows.Forms.Label iYtext;

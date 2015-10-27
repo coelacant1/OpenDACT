@@ -47,16 +47,24 @@ namespace OpenDACT.Class_Files
                 }
             }
 
+            //FIX CHECK ACCURACY
+
             tempAccuracy = (Math.Abs(Heights.X) + Math.Abs(Heights.XOpp) + Math.Abs(Heights.Y) + Math.Abs(Heights.YOpp) + Math.Abs(Heights.Z) + Math.Abs(Heights.ZOpp)) / 6;
             Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
             checkAccuracy(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-            HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-            DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-            //analyzeGeometry(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-            towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-            alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-            diagonalRodSPM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
 
+            if (calibrationState == true)
+            {
+                HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                diagonalRodSPM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            }
+            else
+            {
+                //analyzeGeometry(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            }
             //change all instances of a new variable which calls a class object to modify the class object directly as opposed to just pulling its value
         }
         public static void iterativeCalibration()
@@ -66,30 +74,24 @@ namespace OpenDACT.Class_Files
 
         public static void checkAccuracy(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
-            float accuracy = UserVariables.calculationAccuracy;
+            float accuracy = UserVariables.accuracy;
 
             if (X <= accuracy && X >= -accuracy && XOpp <= accuracy && XOpp >= -accuracy && Y <= accuracy && Y >= -accuracy && YOpp <= accuracy && YOpp >= -accuracy && Z <= accuracy && Z >= -accuracy && ZOpp <= accuracy && ZOpp >= -accuracy)
             {
-                //fsr plate offset
-                string zMinTemp = UserVariables.probeChoice.ToString();
-                string textFSRPO = UserVariables.FSROffset.ToString();
-
                 if (UserVariables.probeChoice == "FSR")
                 {
-                    GCode.sendEEPROMVariable(3, 153, EEPROM.zMaxLength - Convert.ToSingle(textFSRPO));
+                    EEPROM.zMaxLength -= UserVariables.FSROffset;
                     UserInterface.logConsole("Setting Z Max Length with adjustment for FSR");
                     Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
                 calibrationState = false;
                 Thread.Sleep(UserVariables.pauseTimeSet);
-                GCode.homeAxes();
-                UserInterface.logConsole("Calibration Complete");
-                //end code
             }
             else
             {
                 GCode.checkHeights = true;
+                UserInterface.logConsole("Continuing Calibration");
             }
         }
 

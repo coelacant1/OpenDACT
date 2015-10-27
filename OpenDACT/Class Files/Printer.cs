@@ -145,5 +145,10 @@ namespace OpenDACT.Class_Files
                 return 1000;
             }
         }
+
+        public static void printHeights()
+        {
+            UserInterface.logConsole("Center:" + Heights.center + " X:" + Heights.X + " XOpp:" + Heights.XOpp + " Y:" + Heights.Y + " YOpp:" + Heights.YOpp + " Z:" + Heights.Z + " ZOpp:" + Heights.ZOpp);
+        }
     }
 }

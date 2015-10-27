@@ -66,7 +66,7 @@ namespace OpenDACT.Class_Files
 
         public static void checkAccuracy(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
-            float accuracy = UserVariables.accuracy;
+            float accuracy = UserVariables.calculationAccuracy;
 
             if (X <= accuracy && X >= -accuracy && XOpp <= accuracy && XOpp >= -accuracy && Y <= accuracy && Y >= -accuracy && YOpp <= accuracy && YOpp >= -accuracy && Z <= accuracy && Z >= -accuracy && ZOpp <= accuracy && ZOpp >= -accuracy)
             {
@@ -156,7 +156,7 @@ namespace OpenDACT.Class_Files
         public static void towerOffsets(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             int j = 0;
-            float accuracy = 0.001F;
+            float accuracy = UserVariables.calculationAccuracy;
             float tempX2 = X;
             float tempXOpp2 = XOpp;
             float tempY2 = Y;
@@ -482,37 +482,30 @@ namespace OpenDACT.Class_Files
                 float lTow = Math.Min(Math.Min(XOpp, YOpp), ZOpp);
                 float towDiff = hTow - lTow;
 
-                if (towDiff < accuracy && towDiff > -accuracy)
+                if (towDiff < UserVariables.calculationAccuracy && towDiff > -UserVariables.calculationAccuracy)
                 {
                     k = 100;
+
+                    //log
+                    UserInterface.logConsole("ABC:" + EEPROM.A + " " + EEPROM.B + " " + EEPROM.C);
                 }
                 else
                 {
                     k++;
                 }
-
-                //log
-                UserInterface.logConsole("ABC:" + EEPROM.A + " " + EEPROM.B + " " + EEPROM.C);
             }
         }
 
         public static void diagonalRodSPM(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
-
-            //opp = 0.21; //4/5
-            //tower = 0.27; //9/32
-
             float diagChange = 1 / UserVariables.deltaOpp;
             float towOppDiff = UserVariables.deltaTower / UserVariables.deltaOpp; //0.5
             float XYZ = (X + Y + Z) / 3;
             float XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-            float accuracy = UserVariables.accuracy;
 
-            //UserInterface.logConsole(X.ToString() + " " + XOpp.ToString() + " " + Y.ToString() + " " + YOpp.ToString() + " " + Z.ToString() + " " + ZOpp.ToString());
-
-            if (Math.Abs(XYZOpp - XYZ) > accuracy * 2)
+            int i = 0;
+            while (i < 100)
             {
-                int i = 0;
                 EEPROM.diagonalRod += (XYZOpp * diagChange);
                 X = X - towOppDiff * XYZOpp;
                 Y = Y - towOppDiff * XYZOpp;
@@ -528,21 +521,21 @@ namespace OpenDACT.Class_Files
 
                 if (XYZOpp >= 0)
                 {
-                    X = X - XYZ;
-                    Y = Y - XYZ;
-                    Z = Z - XYZ;
-                    XOpp = XOpp - XYZ;
-                    YOpp = YOpp - XYZ;
-                    ZOpp = ZOpp - XYZ;
+                    X -= XYZ;
+                    Y -= XYZ;
+                    Z -= XYZ;
+                    XOpp -= XYZ;
+                    YOpp -= XYZ;
+                    ZOpp -= XYZ;
                 }
                 else
                 {
-                    X = X + XYZ;
-                    Y = Y + XYZ;
-                    Z = Z + XYZ;
-                    XOpp = XOpp + XYZ;
-                    YOpp = YOpp + XYZ;
-                    ZOpp = ZOpp + XYZ;
+                    X += XYZ;
+                    Y += XYZ;
+                    Z += XYZ;
+                    XOpp += XYZ;
+                    YOpp += XYZ;
+                    ZOpp += XYZ;
                 }
 
                 X = Validation.checkZero(X);
@@ -552,24 +545,24 @@ namespace OpenDACT.Class_Files
                 YOpp = Validation.checkZero(YOpp);
                 ZOpp = Validation.checkZero(ZOpp);
 
+                UserInterface.logConsole(Math.Abs(XYZ - XYZOpp) + " " + UserVariables.calculationAccuracy);
+
                 //XYZ is zero
-                if (XYZOpp < accuracy && XYZOpp > -accuracy && XYZ < accuracy && XYZ > -accuracy)
+                if (Math.Abs(XYZ - XYZOpp) < UserVariables.calculationAccuracy)
                 {
-                    //end calculation
-                    EEPROM.diagonalRod = Validation.checkZero(EEPROM.diagonalRod);
+                    UserInterface.logConsole("Diagonal Rod: " + EEPROM.diagonalRod.ToString());
 
                     //add diagonal rod and steps per millimeter to list to use later for linear regression
                     UserVariables.known_xDR.Add(EEPROM.diagonalRod);
                     UserVariables.known_yDR.Add(EEPROM.stepsPerMM);
 
                     //prevent using linear regression if there are not two values store
-                    if (UserVariables.stepsCalcNumber >= 2)
+                    if (UserVariables.stepsCalcNumber >= 3)
                     {
-                        if (UserVariables.stepsCalcNumber >= 3)
+                        if (UserVariables.stepsCalcNumber >= 5)
                         {
-                            UserVariables.known_xDR.RemoveAt(UserVariables.l);
-                            UserVariables.known_yDR.RemoveAt(UserVariables.l);
-                            UserVariables.l++;
+                            UserVariables.known_xDR.RemoveAt(0);
+                            UserVariables.known_yDR.RemoveAt(0);
                         }
 
                         float rsquared = 0;
@@ -593,21 +586,18 @@ namespace OpenDACT.Class_Files
                         UserInterface.logConsole("zMaxLength after: " + (EEPROM.zMaxLength - changeInMM));
 
                         GCode.sendEEPROMVariable(3, 153, (EEPROM.zMaxLength - changeInMM));
-                        UserInterface.logConsole("Resetting Z Max Length\n");
+                        UserInterface.logConsole("Resetting Z Max Length");
                         Thread.Sleep(UserVariables.pauseTimeSet);
                     }
-                    else if (UserVariables.stepsCalcNumber == 0)
+                    else if (UserVariables.stepsCalcNumber == 1)
                     {
-                        //add one to steps calnumber
-                        UserVariables.stepsCalcNumber++;
-
                         //adds a point to the array below the stepsPerMM
                         EEPROM.stepsPerMM = EEPROM.tempSPM - (1 / EEPROM.tempSPM) * 160;
                         UserInterface.logConsole("Steps Per Millimeter Decreased: " + EEPROM.stepsPerMM.ToString());
 
                         //set SPM
 
-                        float changeInMM = ((EEPROM.stepsPerMM * EEPROM.zMaxLength) - (EEPROM.tempSPM * EEPROM.zMaxLength)) / EEPROM.stepsPerMM;
+                        float changeInMM = ((EEPROM.stepsPerMM * EEPROM.zMaxLength) - (EEPROM.tempSPM * EEPROM.zMaxLength)) / EEPROM.stepsPerMM + 2;
 
                         UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
                         UserInterface.logConsole("zMaxLength before: " + EEPROM.zMaxLength);
@@ -615,18 +605,15 @@ namespace OpenDACT.Class_Files
 
                         EEPROM.zMaxLength -= changeInMM;
                     }
-                    else if (UserVariables.stepsCalcNumber == 1)
+                    else if (UserVariables.stepsCalcNumber == 2)
                     {
-                        //add one to steps calnumber
-                        UserVariables.stepsCalcNumber++;
-
                         //adds a point to the array above the stepsPerMM
                         EEPROM.stepsPerMM = EEPROM.tempSPM + (1 / EEPROM.tempSPM) * 160;//*2 to compensate for the subtraction
                         UserInterface.logConsole("Steps Per Millimeter Increased: " + EEPROM.stepsPerMM.ToString());
 
                         //set SPM
 
-                        float changeInMM = ((EEPROM.stepsPerMM * EEPROM.zMaxLength) - (EEPROM.tempSPM * EEPROM.zMaxLength)) / EEPROM.stepsPerMM;
+                        float changeInMM = ((EEPROM.stepsPerMM * EEPROM.zMaxLength) - (EEPROM.tempSPM * EEPROM.zMaxLength)) / EEPROM.stepsPerMM + 5;
 
                         UserInterface.logConsole("zMaxLength changed by: " + changeInMM);
                         UserInterface.logConsole("zMaxLength before: " + EEPROM.zMaxLength);
@@ -634,6 +621,9 @@ namespace OpenDACT.Class_Files
 
                         EEPROM.zMaxLength -= changeInMM;
                     }
+
+                    //add one to steps calnumber
+                    UserVariables.stepsCalcNumber++;
 
                     i = 100;
                 }

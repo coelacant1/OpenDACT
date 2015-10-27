@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -48,6 +48,10 @@
             this.advancedPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label60 = new System.Windows.Forms.Label();
+            this.diagonalRod = new System.Windows.Forms.TextBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.textDRadRatio = new System.Windows.Forms.TextBox();
             this.heuristicComboBox = new System.Windows.Forms.ComboBox();
             this.label57 = new System.Windows.Forms.Label();
             this.readEEPROM = new System.Windows.Forms.Button();
@@ -202,10 +206,6 @@
             this.label36 = new System.Windows.Forms.Label();
             this.checkHeights = new System.Windows.Forms.Button();
             this.comboBoxZMin = new System.Windows.Forms.ComboBox();
-            this.textDRadRatio = new System.Windows.Forms.TextBox();
-            this.label59 = new System.Windows.Forms.Label();
-            this.label60 = new System.Windows.Forms.Label();
-            this.diagonalRod = new System.Windows.Forms.TextBox();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -481,6 +481,39 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.Location = new System.Drawing.Point(323, 138);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(75, 13);
+            this.label60.TabIndex = 204;
+            this.label60.Text = "Diagonal Rod:";
+            // 
+            // diagonalRod
+            // 
+            this.diagonalRod.Location = new System.Drawing.Point(532, 135);
+            this.diagonalRod.Name = "diagonalRod";
+            this.diagonalRod.Size = new System.Drawing.Size(100, 20);
+            this.diagonalRod.TabIndex = 203;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(11, 242);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(115, 13);
+            this.label59.TabIndex = 202;
+            this.label59.Text = "Diagonal Rod Change:";
+            // 
+            // textDRadRatio
+            // 
+            this.textDRadRatio.Location = new System.Drawing.Point(217, 241);
+            this.textDRadRatio.Name = "textDRadRatio";
+            this.textDRadRatio.Size = new System.Drawing.Size(100, 20);
+            this.textDRadRatio.TabIndex = 201;
+            this.textDRadRatio.Text = "-0.5";
             // 
             // heuristicComboBox
             // 
@@ -1086,7 +1119,7 @@
             this.textFSRPO.Name = "textFSRPO";
             this.textFSRPO.Size = new System.Drawing.Size(100, 20);
             this.textFSRPO.TabIndex = 145;
-            this.textFSRPO.Text = "0.6";
+            this.textFSRPO.Text = "0.3";
             // 
             // label31
             // 
@@ -1681,22 +1714,22 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea3.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea3.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea3);
-            legend3.Enabled = false;
-            legend3.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend3);
+            chartArea4.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea4.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea4);
+            legend4.Enabled = false;
+            legend4.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend4);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series3.BackImageTransparentColor = System.Drawing.Color.White;
-            series3.BorderColor = System.Drawing.Color.Transparent;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.IsXValueIndexed = true;
-            series3.Legend = "Legend1";
-            series3.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series3);
+            series4.BackImageTransparentColor = System.Drawing.Color.White;
+            series4.BorderColor = System.Drawing.Color.Transparent;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.IsXValueIndexed = true;
+            series4.Legend = "Legend1";
+            series4.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series4);
             this.accuracyTime.Size = new System.Drawing.Size(317, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
@@ -1840,39 +1873,6 @@
             this.comboBoxZMin.Size = new System.Drawing.Size(100, 21);
             this.comboBoxZMin.TabIndex = 203;
             this.comboBoxZMin.Text = "FSR";
-            // 
-            // textDRadRatio
-            // 
-            this.textDRadRatio.Location = new System.Drawing.Point(217, 241);
-            this.textDRadRatio.Name = "textDRadRatio";
-            this.textDRadRatio.Size = new System.Drawing.Size(100, 20);
-            this.textDRadRatio.TabIndex = 201;
-            this.textDRadRatio.Text = "-0.5";
-            // 
-            // label59
-            // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(11, 242);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(115, 13);
-            this.label59.TabIndex = 202;
-            this.label59.Text = "Diagonal Rod Change:";
-            // 
-            // label60
-            // 
-            this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(323, 138);
-            this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(75, 13);
-            this.label60.TabIndex = 204;
-            this.label60.Text = "Diagonal Rod:";
-            // 
-            // diagonalRod
-            // 
-            this.diagonalRod.Location = new System.Drawing.Point(532, 135);
-            this.diagonalRod.Name = "diagonalRod";
-            this.diagonalRod.Size = new System.Drawing.Size(100, 20);
-            this.diagonalRod.TabIndex = 203;
             // 
             // mainForm
             // 

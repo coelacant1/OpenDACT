@@ -82,11 +82,9 @@ namespace OpenDACT.Class_Files
                 {
                     EEPROM.zMaxLength -= UserVariables.FSROffset;
                     UserInterface.logConsole("Setting Z Max Length with adjustment for FSR");
-                    Thread.Sleep(UserVariables.pauseTimeSet);
                 }
 
                 calibrationState = false;
-                Thread.Sleep(UserVariables.pauseTimeSet);
             }
             else
             {

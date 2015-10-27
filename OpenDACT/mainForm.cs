@@ -225,8 +225,9 @@ namespace OpenDACT.Class_Files
             {
                 this.stepsPerMMText.Text = EEPROM.stepsPerMM.ToString();
                 this.zMaxLengthText.Text = EEPROM.zMaxLength.ToString();
-                this.zProbeText.Text = EEPROM.zProbe.ToString();
-                this.zProbeSpeedText.Text = textProbingSpeed.Text;
+                this.zProbeText.Text = EEPROM.zProbeHeight.ToString();
+                this.zProbeSpeedText.Text = EEPROM.zProbeSpeed.ToString();
+                this.diagonalRod.Text = EEPROM.diagonalRod.ToString();
                 this.HRadiusText.Text = EEPROM.HRadius.ToString();
                 this.offsetXText.Text = EEPROM.offsetX.ToString();
                 this.offsetYText.Text = EEPROM.offsetY.ToString();
@@ -251,6 +252,8 @@ namespace OpenDACT.Class_Files
             GCode.sendEEPROMVariable(3, 808, Convert.ToSingle(zProbeText.Text));
             Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 812, Convert.ToSingle(zProbeSpeedText.Text));
+            Thread.Sleep(750);
+            GCode.sendEEPROMVariable(3, 881, Convert.ToSingle(diagonalRod.Text));
             Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 885, Convert.ToSingle(HRadiusText.Text));
             Thread.Sleep(750);
@@ -318,7 +321,8 @@ namespace OpenDACT.Class_Files
             UserVariables.calculationAccuracy = Convert.ToSingle(this.textAccuracy.Text);
             UserVariables.accuracy = Convert.ToSingle(this.textAccuracy2.Text);
             UserVariables.HRadRatio = Convert.ToSingle(this.textHRadRatio.Text);
-            
+            UserVariables.DRadRatio = Convert.ToSingle(this.textDRadRatio.Text);
+
             UserVariables.probeChoice = getZMin();
             UserVariables.advancedCalibration = Convert.ToBoolean(getHeuristic());
 

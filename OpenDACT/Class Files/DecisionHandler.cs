@@ -19,30 +19,22 @@ namespace OpenDACT.Class_Files
 
                 EEPROMFunctions.parseEEPROM(message, out intParse, out floatParse2);
                 EEPROMFunctions.setEEPROM(intParse, floatParse2);
-                UserInterface.logConsole("1");
             }
             else if (EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == true && EEPROMFunctions.EEPROMReadCount < 1)
             {
-                UserInterface.logConsole("2");
-                Program.mainFormTest.setEEPROMGUIList();
+
             }
             else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
             {
-                UserInterface.logConsole("3");
                 GCode.positionFlow();
             }
             else if (Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
             {
-                UserInterface.logConsole("4");
-
-
-                if (HeightFunctions.parseZProbe(message) != 1000)
+                if (HeightFunctions.parseZProbe(message) != 1000 && HeightFunctions.heightsSet == false)
                 {
                     HeightFunctions.setHeights(HeightFunctions.parseZProbe(message));
-                    UserInterface.logConsole(HeightFunctions.parseZProbe(message) + "\n");
                 }
-
-                if(HeightFunctions.heightsSet == true)
+                else if (HeightFunctions.heightsSet == true)
                 {
                     Program.mainFormTest.setHeightsInvoke();
                     

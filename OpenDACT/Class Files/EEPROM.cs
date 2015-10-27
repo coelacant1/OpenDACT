@@ -12,7 +12,8 @@ namespace OpenDACT.Class_Files
         public static float stepsPerMM;
         public static float tempSPM;
         public static float zMaxLength;
-        public static float zProbe;
+        public static float zProbeHeight;
+        public static float zProbeSpeed;
         public static float HRadius;
         public static float diagonalRod;
         public static float offsetX;
@@ -54,10 +55,7 @@ namespace OpenDACT.Class_Files
                 {
                     parseEPRSpace = parseEPR[0].Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 }
-
-                //int intParse;
-                //float floatParse2;
-
+                
                 //check if there is a space between
                 if (parseEPRSpace[0] == ":")
                 {
@@ -99,7 +97,15 @@ namespace OpenDACT.Class_Files
                     EEPROM.zMaxLength = floatParse2;
                     break;
                 case 808:
-                    EEPROM.zProbe = floatParse2;
+                    EEPROM.zProbeHeight = floatParse2;
+                    break;
+                case 812:
+                    EEPROM.zProbeSpeed = floatParse2;
+                    tempEEPROMSet = true;
+                    GCode.checkHeights = true;
+                    EEPROMReadCount++;
+                    Program.mainFormTest.setEEPROMGUIList();
+
                     break;
                 case 881:
                     EEPROM.diagonalRod = floatParse2;
@@ -133,10 +139,6 @@ namespace OpenDACT.Class_Files
                     break;
                 case 921:
                     EEPROM.DC = floatParse2;
-                    tempEEPROMSet = true;
-                    GCode.checkHeights = true;
-                    EEPROMReadCount++;
-
                     break;
             }
         }
@@ -152,7 +154,9 @@ namespace OpenDACT.Class_Files
             Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 153, EEPROM.zMaxLength);
             Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 808, EEPROM.zProbe);
+            GCode.sendEEPROMVariable(3, 808, EEPROM.zProbeHeight);
+            Thread.Sleep(750);
+            GCode.sendEEPROMVariable(3, 812, EEPROM.zProbeSpeed);
             Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 881, EEPROM.diagonalRod);
             Thread.Sleep(750);

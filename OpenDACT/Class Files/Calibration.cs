@@ -14,10 +14,17 @@ namespace OpenDACT.Class_Files
         public static int calibrationSelection = 0;
         public static int iterationNum = 0;
         private static float tempAccuracy;
+        private static int iterativeStep = 0;
 
-        public static void calibrate(int value)
+        private static bool HRadRequired = false;
+        private static bool DRadRequired = false;
+        private static bool towerOffsetsRequired = false;
+        private static bool alphaRotationRequired = false;
+        private static bool stepsPMMRequired = false;
+
+        public static void calibrate()
         {
-            if (value == 0)
+            if (calibrationSelection == 0)
             {
                 basicCalibration();
             }
@@ -47,8 +54,6 @@ namespace OpenDACT.Class_Files
                 }
             }
 
-            //FIX CHECK ACCURACY
-
             tempAccuracy = (Math.Abs(Heights.X) + Math.Abs(Heights.XOpp) + Math.Abs(Heights.Y) + Math.Abs(Heights.YOpp) + Math.Abs(Heights.Z) + Math.Abs(Heights.ZOpp)) / 6;
             Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
             checkAccuracy(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
@@ -59,20 +64,80 @@ namespace OpenDACT.Class_Files
                 DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                diagonalRodSPM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
             }
             else
             {
                 //analyzeGeometry(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
             }
-            //change all instances of a new variable which calls a class object to modify the class object directly as opposed to just pulling its value
         }
+
         public static void iterativeCalibration()
         {
+            if (iterationNum == 0)
+            {
+                if (UserVariables.diagonalRodLength == Convert.ToSingle(""))
+                {
+                    UserVariables.diagonalRodLength = EEPROM.diagonalRod;
+                    UserInterface.logConsole("Using default diagonal rod length from EEPROM");
+                }
+            }
 
+            tempAccuracy = (Math.Abs(Heights.X) + Math.Abs(Heights.XOpp) + Math.Abs(Heights.Y) + Math.Abs(Heights.YOpp) + Math.Abs(Heights.Z) + Math.Abs(Heights.ZOpp)) / 6;
+            Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
+
+            //check accuracy of hrad, then drad, then tOffs, then aRot, then SPM
+
+            if (calibrationState == true)
+            {
+                switch (iterativeStep)
+                {
+                    case 0:
+                        checkHRad();
+
+                        if (HRadRequired) { HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
+                        else { iterativeStep++; goto case 1; }
+                        break;
+                    case 1:
+                        checkDRad();
+
+                        if (DRadRequired) { DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
+                        else { iterativeStep++; goto case 2; }
+                        break;
+                    case 2:
+                        checkTOffsets();
+
+                        if (towerOffsetsRequired) { towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
+                        else { iterativeStep++; goto case 3; }
+                        break;
+                    case 3:
+                        checkARot();
+
+                        if (alphaRotationRequired) { alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
+                        else { iterativeStep++; goto case 4; }
+                        break;
+                    case 4:
+                        checkStepsPMM();
+
+                        if (stepsPMMRequired) { stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
+                        else { iterativeStep++; }
+                        break;
+                }
+            }
+            else
+            {
+                //analyzeGeometry(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            }
         }
 
-        public static void checkAccuracy(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void checkHRad()
+        { }
+        private static void checkDRad();
+        private static void checkTOffsets();
+        private static void checkARot();
+        private static void checkStepsPMM();
+
+        private static void checkAccuracy(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float accuracy = UserVariables.accuracy;
 
@@ -93,7 +158,7 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public static void HRad(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void HRad(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float HRadSA = ((X + XOpp + Y + YOpp + Z + ZOpp) / 6);
             float HRadRatio = UserVariables.HRadRatio;
@@ -110,7 +175,7 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("HRad:" + EEPROM.HRadius.ToString());
         }
 
-        public static void DRad(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void DRad(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float DASA = ((X + XOpp) / 2);
             float DBSA = ((Y + YOpp) / 2);
@@ -153,7 +218,7 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
         }
         */
-        public static void towerOffsets(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void towerOffsets(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             int j = 0;
             float accuracy = UserVariables.calculationAccuracy;
@@ -412,7 +477,7 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ);
         }
 
-        public static void alphaRotation(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void alphaRotation(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float offsetX = EEPROM.offsetX;
             float offsetY = EEPROM.offsetY;
@@ -496,7 +561,7 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public static void diagonalRodSPM(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void stepsPMM(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float diagChange = 1 / UserVariables.deltaOpp;
             float towOppDiff = UserVariables.deltaTower / UserVariables.deltaOpp; //0.5
@@ -559,7 +624,7 @@ namespace OpenDACT.Class_Files
                 }
             }
         }
-        public static void LinearRegression(float[] xVals, float[] yVals, int inclusiveStart, int exclusiveEnd, out float rsquared, out float yintercept, out float slope)
+        private static void LinearRegression(float[] xVals, float[] yVals, int inclusiveStart, int exclusiveEnd, out float rsquared, out float yintercept, out float slope)
         {
             float sumOfX = 0;
             float sumOfY = 0;

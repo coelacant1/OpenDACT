@@ -50,7 +50,7 @@ namespace OpenDACT.Class_Files
 
                         if (UserVariables.advancedCalibration == false)
                         {
-                            Calibration.calibrate(Calibration.calibrationSelection);
+                            Calibration.calibrate();
                         }
                         else
                         {

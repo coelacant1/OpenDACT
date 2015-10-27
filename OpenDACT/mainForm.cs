@@ -97,6 +97,23 @@ namespace OpenDACT.Class_Files
                 UserInterface.logConsole("Not connected");
             }
         }
+        
+        private void iterativeCalibrate_Click(object sender, EventArgs e)
+        {
+            if (Connection._serialPort.IsOpen)
+            {
+                GCode.checkHeights = true;
+                EEPROMFunctions.readEEPROM();
+                EEPROMFunctions.EEPROMReadOnly = false;
+                Calibration.calibrationState = true;
+                Calibration.calibrationSelection = 1;
+                HeightFunctions.checkHeightsOnly = false;
+            }
+            else
+            {
+                UserInterface.logConsole("Not connected");
+            }
+        }
 
         private void resetPrinter_Click(object sender, EventArgs e)
         {

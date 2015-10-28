@@ -60,11 +60,11 @@ namespace OpenDACT.Class_Files
 
             if (calibrationState == true)
             {
-                HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                //stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                //HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                //DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                //alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
             }
             else
             {
@@ -74,6 +74,7 @@ namespace OpenDACT.Class_Files
 
         public static void iterativeCalibration()
         {
+            /*
             if (iterationNum == 0)
             {
                 if (UserVariables.diagonalRodLength == Convert.ToSingle(""))
@@ -128,14 +129,19 @@ namespace OpenDACT.Class_Files
             {
                 //analyzeGeometry(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
             }
+            */
         }
 
         private static void checkHRad()
         { }
-        private static void checkDRad();
-        private static void checkTOffsets();
-        private static void checkARot();
-        private static void checkStepsPMM();
+        private static void checkDRad()
+        { }
+        private static void checkTOffsets()
+        { }
+        private static void checkARot()
+        { }
+        private static void checkStepsPMM()
+        { }
 
         private static void checkAccuracy(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
@@ -163,7 +169,7 @@ namespace OpenDACT.Class_Files
             float HRadSA = ((X + XOpp + Y + YOpp + Z + ZOpp) / 6);
             float HRadRatio = UserVariables.HRadRatio;
 
-            EEPROM.HRadius = EEPROM.HRadius + (HRadSA / HRadRatio);
+            EEPROM.HRadius += (HRadSA / HRadRatio);
 
             X -= HRadSA;
             Y -= HRadSA;
@@ -461,12 +467,49 @@ namespace OpenDACT.Class_Files
             }
             else
             {
+                /*
+                float tempMin = Math.Min(offsetX, Math.Min(offsetY, offsetZ));
+
+                offsetX -= tempMin;
+                offsetY -= tempMin;
+                offsetZ -= tempMin;
+                
+                //offsetX = tempX2 * stepsPerMM * offsetXCorrection;
+
+                tempX2 = -tempMin / (stepsPerMM * offsetXCorrection);
+                tempY2 = -tempMin / (stepsPerMM * offsetYCorrection);
+                tempZ2 = -tempMin / (stepsPerMM * offsetZCorrection);
+
+                tempXOpp2 = tempXOpp2 + (tempX2 * xxOppPerc);
+                tempZ2 = tempZ2 + (tempX2 * xzPerc);
+                tempY2 = tempY2 + (tempX2 * xyPerc);
+                tempZOpp2 = tempZOpp2 - (tempX2 * xzOppPerc);
+                tempYOpp2 = tempYOpp2 - (tempX2 * xyOppPerc);
+                tempX2 = tempX2 - tempX2;
+
+                tempYOpp2 = tempYOpp2 + (tempY2 * yyOppPerc);
+                tempX2 = tempX2 + (tempY2 * yxPerc);
+                tempZ2 = tempZ2 + (tempY2 * yzPerc);
+                tempXOpp2 = tempXOpp2 - (tempY2 * yxOppPerc);
+                tempZOpp2 = tempZOpp2 - (tempY2 * yzOppPerc);
+                tempY2 = tempY2 - tempY2;
+
+                tempZOpp2 = tempZOpp2 + (tempZ2 * zzOppPerc);
+                tempX2 = tempX2 + (tempZ2 * zxPerc);
+                tempY2 = tempY2 + (tempZ2 * zyPerc);
+                tempXOpp2 = tempXOpp2 - (tempZ2 * zxOppPerc);
+                tempYOpp2 = tempYOpp2 - (tempZ2 * zyOppPerc);
+                tempZ2 = tempZ2 - tempZ2;
+                */
+
                 X = tempX2;
                 XOpp = tempXOpp2;
                 Y = tempY2;
                 YOpp = tempYOpp2;
                 Z = tempZ2;
                 ZOpp = tempZOpp2;
+                
+                UserInterface.logConsole("heights :" + X + " " + XOpp + " " + Y + " " + YOpp + " " + Z + " " + ZOpp);
             }
 
             //round to the nearest whole number
@@ -564,66 +607,24 @@ namespace OpenDACT.Class_Files
         private static void stepsPMM(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float diagChange = 1 / UserVariables.deltaOpp;
-            float towOppDiff = UserVariables.deltaTower / UserVariables.deltaOpp; //0.5
+            float towChange = 1 / UserVariables.deltaTower;
+
             float XYZ = (X + Y + Z) / 3;
             float XYZOpp = (XOpp + YOpp + ZOpp) / 3;
 
-            int i = 0;
-            while (i < 100)
-            {
-                EEPROM.stepsPerMM += (Math.Abs(XYZ - XYZOpp) * diagChange);
+            EEPROM.stepsPerMM -= (XYZ - XYZOpp) * ((diagChange + towChange) / 2);
 
-                X = X - towOppDiff * XYZOpp;
-                Y = Y - towOppDiff * XYZOpp;
-                Z = Z - towOppDiff * XYZOpp;
-                XOpp = XOpp - XYZOpp;
-                YOpp = YOpp - XYZOpp;
-                ZOpp = ZOpp - XYZOpp;
-                XYZOpp = (XOpp + YOpp + ZOpp) / 3;
-                XYZOpp = Validation.checkZero(XYZOpp);
+            X += (XYZ - XYZOpp) * towChange;
+            Y += (XYZ - XYZOpp) * towChange;
+            Z += (XYZ - XYZOpp) * towChange;
+            XOpp += (XYZ - XYZOpp) * diagChange;
+            YOpp += (XYZ - XYZOpp) * diagChange;
+            ZOpp += (XYZ - XYZOpp) * diagChange;
 
-                //hrad
-                EEPROM.HRadius += (XYZ / UserVariables.HRadRatio);
-
-                if (XYZOpp >= 0)
-                {
-                    X -= XYZ;
-                    Y -= XYZ;
-                    Z -= XYZ;
-                    XOpp -= XYZ;
-                    YOpp -= XYZ;
-                    ZOpp -= XYZ;
-                }
-                else
-                {
-                    X += XYZ;
-                    Y += XYZ;
-                    Z += XYZ;
-                    XOpp += XYZ;
-                    YOpp += XYZ;
-                    ZOpp += XYZ;
-                }
-
-                X = Validation.checkZero(X);
-                Y = Validation.checkZero(Y);
-                Z = Validation.checkZero(Z);
-                XOpp = Validation.checkZero(XOpp);
-                YOpp = Validation.checkZero(YOpp);
-                ZOpp = Validation.checkZero(ZOpp);
-
-                UserInterface.logConsole(EEPROM.stepsPerMM.ToString());
-
-                //XYZ is zero
-                if (Math.Abs(XYZ - XYZOpp) < UserVariables.calculationAccuracy)
-                {
-                    i = 100;
-                }
-                else
-                {
-                    i++;
-                }
-            }
+            UserInterface.logConsole("Steps per Millimeter: " + EEPROM.stepsPerMM.ToString());
         }
+
+        /*
         private static void LinearRegression(float[] xVals, float[] yVals, int inclusiveStart, int exclusiveEnd, out float rsquared, out float yintercept, out float slope)
         {
             float sumOfX = 0;
@@ -661,5 +662,6 @@ namespace OpenDACT.Class_Files
             yintercept = meanY - ((sCo / ssX) * meanX);
             slope = sCo / ssX;
         }
+        */
     }
 }

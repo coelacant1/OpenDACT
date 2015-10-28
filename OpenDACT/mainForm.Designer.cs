@@ -1119,7 +1119,7 @@
             this.textFSRPO.Name = "textFSRPO";
             this.textFSRPO.Size = new System.Drawing.Size(100, 20);
             this.textFSRPO.TabIndex = 145;
-            this.textFSRPO.Text = "0.3";
+            this.textFSRPO.Text = "0.25";
             // 
             // label31
             // 

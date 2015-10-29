@@ -292,6 +292,23 @@ namespace OpenDACT.Class_Files
             Thread.Sleep(750);
             GCode.sendEEPROMVariable(3, 921, Convert.ToSingle(DCText.Text));
             Thread.Sleep(750);
+            
+            EEPROM.stepsPerMM = Convert.ToInt32(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.stepsPerMMText.Text, out value); return value; }));
+            EEPROM.zMaxLength = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zMaxLengthText.Text, out value); return value; }));
+            EEPROM.zProbeHeight = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zProbeText.Text, out value); return value; }));
+            EEPROM.zProbeSpeed = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zProbeSpeedText.Text, out value); return value; }));
+            EEPROM.diagonalRod = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.diagonalRod.Text, out value); return value; }));
+            EEPROM.HRadius = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.HRadiusText.Text, out value); return value; }));
+            EEPROM.offsetX = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.offsetXText.Text, out value); return value; }));
+            EEPROM.offsetY = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.offsetYText.Text, out value); return value; }));
+            EEPROM.offsetZ = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.offsetZText.Text, out value); return value; }));
+            EEPROM.A = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.AText.Text, out value); return value; }));
+            EEPROM.B = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.BText.Text, out value); return value; }));
+            EEPROM.C = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.CText.Text, out value); return value; }));
+            EEPROM.DA = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.DAText.Text, out value); return value; }));
+            EEPROM.DB = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.DBText.Text, out value); return value; }));
+            EEPROM.DC = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.DCText.Text, out value); return value; }));
+
         }
 
         private void readEEPROM_Click(object sender, EventArgs e)
@@ -355,7 +372,6 @@ namespace OpenDACT.Class_Files
             UserVariables.alphaRotationPercentageZ = Convert.ToSingle(this.alphaCText.Text);
             UserVariables.plateDiameter = Convert.ToSingle(this.textPlateDiameter.Text);
             UserVariables.probingHeight = Convert.ToSingle(this.textProbingHeight.Text);
-            
 
             //XYZ Offset percs
             UserVariables.offsetXCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxxPerc.Text, out value); return value; }));

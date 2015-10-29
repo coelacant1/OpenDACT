@@ -75,11 +75,11 @@ namespace OpenDACT.Class_Files
             {
                 if (type == 1)
                 {
-                    Connection._serialPort.WriteLine("M206 M206 T1 P" + position + " S" + value);
+                    Connection._serialPort.WriteLine("M206 T1 P" + position + " S" + value);
                 }
                 else if (type == 3)
                 {
-                    Connection._serialPort.WriteLine("M206 M206 T3 P" + position + " X" + value);
+                    Connection._serialPort.WriteLine("M206 T3 P" + position + " X" + value);
                 }
                 else
                 {

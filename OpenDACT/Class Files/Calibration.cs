@@ -61,10 +61,10 @@ namespace OpenDACT.Class_Files
             if (calibrationState == true)
             {
                 //stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                //HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 //DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                //alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
             }
             else
             {
@@ -186,6 +186,7 @@ namespace OpenDACT.Class_Files
             float DASA = ((X + XOpp) / 2);
             float DBSA = ((Y + YOpp) / 2);
             float DCSA = ((Z + ZOpp) / 2);
+
             float DRadRatio = UserVariables.DRadRatio;
 
             EEPROM.DA += ((DASA) / DRadRatio);
@@ -212,7 +213,7 @@ namespace OpenDACT.Class_Files
             YOpp = YOpp + ((DCSA) / DRadRatio) * 0.1375F;
             Z = Z + ((DCSA) / DRadRatio) * 0.5F;
             ZOpp = ZOpp + ((DCSA) / DRadRatio) * 0.225F;
-
+            
             UserInterface.logConsole("DRad: " + EEPROM.DA.ToString() + ", " + EEPROM.DB.ToString() + ", " + EEPROM.DC.ToString());
         }
         /*
@@ -261,152 +262,60 @@ namespace OpenDACT.Class_Files
 
             while (j < 100)
             {
-                float theoryX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
-
-                //correction of one tower allows for XY dimensional accuracy
-                if (tempX2 > 0)
+                if (offsetX >= 50 && offsetY >= 50 && offsetZ >= 50)
                 {
-                    //if x is positive
-                    offsetX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
+                    offsetX += tempX2 * stepsPerMM * (1 / 0.60F);
 
-                    tempXOpp2 = tempXOpp2 + (tempX2 * xxOppPerc);//0.5
-                    tempZ2 = tempZ2 + (tempX2 * xzPerc);//0.25
-                    tempY2 = tempY2 + (tempX2 * xyPerc);//0.25
-                    tempZOpp2 = tempZOpp2 - (tempX2 * xzOppPerc);//0.25
-                    tempYOpp2 = tempYOpp2 - (tempX2 * xyOppPerc);//0.25
-                    tempX2 = tempX2 - tempX2;
-                }
-                else if (theoryX > 0 && tempX2 < 0)
-                {
-                    //if x is negative and can be decreased
-                    offsetX = offsetX + tempX2 * stepsPerMM * offsetXCorrection;
+                    tempXOpp2 += tempX2 * (0.5F / 0.60F);
+                    tempY2 += tempX2 * (0.3F / 0.60F);
+                    tempYOpp2 += tempX2 * (-0.25F / 0.60F);
+                    tempZ2 += tempX2 * (0.3F / 0.60F);
+                    tempZOpp2 += tempX2 * (-0.25F / 0.60F);
+                    tempX2 += tempX2 / -1;
 
-                    tempXOpp2 = tempXOpp2 + (tempX2 * xxOppPerc);//0.5
-                    tempZ2 = tempZ2 + (tempX2 * xzPerc);//0.25
-                    tempY2 = tempY2 + (tempX2 * xyPerc);//0.25
-                    tempZOpp2 = tempZOpp2 - (tempX2 * xzOppPerc);//0.25
-                    tempYOpp2 = tempYOpp2 - (tempX2 * xyOppPerc);//0.25
-                    tempX2 = tempX2 - tempX2;
-                }
-                else
-                {
-                    //if tempX2 is negative
-                    offsetY = offsetY - tempX2 * stepsPerMM * offsetYCorrection * 2;
-                    offsetZ = offsetZ - tempX2 * stepsPerMM * offsetZCorrection * 2;
+                    offsetY += tempY2 * stepsPerMM * (1 / 0.60F);
 
-                    tempYOpp2 = tempYOpp2 - (tempX2 * 2 * yyOppPerc);
-                    tempX2 = tempX2 - (tempX2 * 2 * yxPerc);
-                    tempZ2 = tempZ2 - (tempX2 * 2 * yzPerc);
-                    tempXOpp2 = tempXOpp2 + (tempX2 * 2 * yxOppPerc);
-                    tempZOpp2 = tempZOpp2 + (tempX2 * 2 * yzOppPerc);
-                    tempY2 = tempY2 + tempX2 * 2;
+                    tempYOpp2 += tempY2 * (0.5F / 0.60F);
+                    tempX2 += tempY2 * (0.3F / 0.60F);
+                    tempXOpp2 += tempY2 * (-0.25F / 0.60F);
+                    tempZ2 += tempY2 * (0.3F / 0.60F);
+                    tempZOpp2 += tempY2 * (-0.25F / 0.60F);
+                    tempY2 += tempY2 / -1;
 
-                    tempZOpp2 = tempZOpp2 - (tempX2 * 2 * zzOppPerc);
-                    tempX2 = tempX2 - (tempX2 * 2 * zxPerc);
-                    tempY2 = tempY2 - (tempX2 * 2 * zyPerc);
-                    tempXOpp2 = tempXOpp2 + (tempX2 * 2 * zxOppPerc);
-                    tempYOpp2 = tempYOpp2 + (tempX2 * 2 * zyOppPerc);
-                    tempZ2 = tempZ2 + tempX2 * 2;
-                }
+                    offsetZ += tempZ2 * stepsPerMM * (1 / 0.60F);
 
-                float theoryY = offsetY + tempY2 * stepsPerMM * offsetYCorrection;
+                    tempZOpp2 += tempZ2 * (0.5F / 0.60F);
+                    tempX2 += tempZ2 * (0.3F / 0.60F);
+                    tempXOpp2 += tempZ2 * (-0.25F / 0.60F);
+                    tempY2 += tempZ2 * (0.3F / 0.60F);
+                    tempYOpp2 += tempZ2 * (-0.25F / 0.60F);
+                    tempZ2 += tempZ2 / -1;
 
-                //Y
-                if (tempY2 > 0)
-                {
-                    offsetY = offsetY + tempY2 * stepsPerMM * offsetYCorrection;
+                    tempX2 = Validation.checkZero(tempX2);
+                    tempY2 = Validation.checkZero(tempY2);
+                    tempZ2 = Validation.checkZero(tempZ2);
+                    tempXOpp2 = Validation.checkZero(tempXOpp2);
+                    tempYOpp2 = Validation.checkZero(tempYOpp2);
+                    tempZOpp2 = Validation.checkZero(tempZOpp2);
 
-                    tempYOpp2 = tempYOpp2 + (tempY2 * yyOppPerc);
-                    tempX2 = tempX2 + (tempY2 * yxPerc);
-                    tempZ2 = tempZ2 + (tempY2 * yzPerc);
-                    tempXOpp2 = tempXOpp2 - (tempY2 * yxOppPerc);
-                    tempZOpp2 = tempZOpp2 - (tempY2 * yzOppPerc);
-                    tempY2 = tempY2 - tempY2;
-                }
-                else if (theoryY > 0 && tempY2 < 0)
-                {
-                    offsetY = offsetY + tempY2 * stepsPerMM * offsetYCorrection;
-
-                    tempYOpp2 = tempYOpp2 + (tempY2 * yyOppPerc);
-                    tempX2 = tempX2 + (tempY2 * yxPerc);
-                    tempZ2 = tempZ2 + (tempY2 * yzPerc);
-                    tempXOpp2 = tempXOpp2 - (tempY2 * yxOppPerc);
-                    tempZOpp2 = tempZOpp2 - (tempY2 * yzOppPerc);
-                    tempY2 = tempY2 - tempY2;
+                    UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
+                    UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                 }
                 else
                 {
-                    offsetX = offsetX - tempY2 * stepsPerMM * offsetXCorrection * 2;
-                    offsetZ = offsetZ - tempY2 * stepsPerMM * offsetZCorrection * 2;
-
-                    tempXOpp2 = tempXOpp2 - (tempY2 * 2 * xxOppPerc);//0.5
-                    tempZ2 = tempZ2 - (tempY2 * 2 * xzPerc);//0.25
-                    tempY2 = tempY2 - (tempY2 * 2 * xyPerc);//0.25
-                    tempZOpp2 = tempZOpp2 + (tempY2 * 2 * xzOppPerc);//0.25
-                    tempYOpp2 = tempYOpp2 + (tempY2 * 2 * xyOppPerc);//0.25
-                    tempX2 = tempX2 + tempY2 * 2;
-
-                    tempZOpp2 = tempZOpp2 - (tempY2 * 2 * zzOppPerc);
-                    tempX2 = tempX2 - (tempY2 * 2 * zxPerc);
-                    tempY2 = tempY2 - (tempY2 * 2 * zyPerc);
-                    tempXOpp2 = tempXOpp2 + (tempY2 * 2 * zxOppPerc);
-                    tempYOpp2 = tempYOpp2 + (tempY2 * 2 * zyOppPerc);
-                    tempZ2 = tempZ2 + tempY2 * 2;
+                    DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 }
 
-                float theoryZ = offsetZ + tempZ2 * stepsPerMM * offsetZCorrection;
-
-                //Z
-                if (tempZ2 > 0)
+                if (offsetX < 50 || offsetY < 50 || offsetZ < 50)
                 {
-                    offsetZ = offsetZ + tempZ2 * stepsPerMM * offsetZCorrection;
-
-                    tempZOpp2 = tempZOpp2 + (tempZ2 * zzOppPerc);
-                    tempX2 = tempX2 + (tempZ2 * zxPerc);
-                    tempY2 = tempY2 + (tempZ2 * zyPerc);
-                    tempXOpp2 = tempXOpp2 - (tempZ2 * zxOppPerc);
-                    tempYOpp2 = tempYOpp2 - (tempZ2 * zyOppPerc);
-                    tempZ2 = tempZ2 - tempZ2;
-                }
-                else if (theoryZ > 0 && tempZ2 < 0)
-                {
-                    offsetZ = offsetZ + tempZ2 * stepsPerMM * offsetZCorrection;
-
-                    tempZOpp2 = tempZOpp2 + (tempZ2 * zzOppPerc);
-                    tempX2 = tempX2 + (tempZ2 * zxPerc);
-                    tempY2 = tempY2 + (tempZ2 * zyPerc);
-                    tempXOpp2 = tempXOpp2 - (tempZ2 * zxOppPerc);
-                    tempYOpp2 = tempYOpp2 - (tempZ2 * zyOppPerc);
-                    tempZ2 = tempZ2 - tempZ2;
+                    j = 100;
                 }
                 else
                 {
-                    offsetY = offsetY - tempZ2 * stepsPerMM * offsetYCorrection * 2;
-                    offsetX = offsetX - tempZ2 * stepsPerMM * offsetXCorrection * 2;
-
-                    tempXOpp2 = tempXOpp2 - (tempZ2 * 2 * xxOppPerc);//0.5
-                    tempZ2 = tempZ2 - (tempZ2 * 2 * xzPerc);//0.25
-                    tempY2 = tempY2 - (tempZ2 * 2 * xyPerc);//0.25
-                    tempZOpp2 = tempZOpp2 + (tempZ2 * 2 * xzOppPerc);//0.25
-                    tempYOpp2 = tempYOpp2 + (tempZ2 * 2 * xyOppPerc);//0.25
-                    tempX2 = tempX2 + tempZ2 * 2;
-
-                    tempYOpp2 = tempYOpp2 - (tempZ2 * 2 * yyOppPerc);
-                    tempX2 = tempX2 - (tempZ2 * 2 * yxPerc);
-                    tempZ2 = tempZ2 - (tempZ2 * 2 * yzPerc);
-                    tempXOpp2 = tempXOpp2 + (tempZ2 * 2 * yxOppPerc);
-                    tempZOpp2 = tempZOpp2 + (tempZ2 * 2 * yzOppPerc);
-                    tempY2 = tempY2 + tempZ2 * 2;
+                    j++;
                 }
 
-                tempX2 = Validation.checkZero(tempX2);
-                tempY2 = Validation.checkZero(tempY2);
-                tempZ2 = Validation.checkZero(tempZ2);
-                tempXOpp2 = Validation.checkZero(tempXOpp2);
-                tempYOpp2 = Validation.checkZero(tempYOpp2);
-                tempZOpp2 = Validation.checkZero(tempZOpp2);
-
-
+                /*
                 if (tempX2 < accuracy && tempX2 > -accuracy && tempY2 < accuracy && tempY2 > -accuracy && tempZ2 < accuracy && tempZ2 > -accuracy && offsetX < 1000 && offsetY < 1000 && offsetZ < 1000)
                 {
                     j = 100;
@@ -455,6 +364,7 @@ namespace OpenDACT.Class_Files
                 {
                     j++;
                 }
+                */
             }
 
             if (offsetX > 1000 || offsetY > 1000 || offsetZ > 1000)
@@ -476,30 +386,9 @@ namespace OpenDACT.Class_Files
                 
                 //offsetX = tempX2 * stepsPerMM * offsetXCorrection;
 
-                tempX2 = -tempMin / (stepsPerMM * offsetXCorrection);
-                tempY2 = -tempMin / (stepsPerMM * offsetYCorrection);
-                tempZ2 = -tempMin / (stepsPerMM * offsetZCorrection);
-
-                tempXOpp2 = tempXOpp2 + (tempX2 * xxOppPerc);
-                tempZ2 = tempZ2 + (tempX2 * xzPerc);
-                tempY2 = tempY2 + (tempX2 * xyPerc);
-                tempZOpp2 = tempZOpp2 - (tempX2 * xzOppPerc);
-                tempYOpp2 = tempYOpp2 - (tempX2 * xyOppPerc);
-                tempX2 = tempX2 - tempX2;
-
-                tempYOpp2 = tempYOpp2 + (tempY2 * yyOppPerc);
-                tempX2 = tempX2 + (tempY2 * yxPerc);
-                tempZ2 = tempZ2 + (tempY2 * yzPerc);
-                tempXOpp2 = tempXOpp2 - (tempY2 * yxOppPerc);
-                tempZOpp2 = tempZOpp2 - (tempY2 * yzOppPerc);
-                tempY2 = tempY2 - tempY2;
-
-                tempZOpp2 = tempZOpp2 + (tempZ2 * zzOppPerc);
-                tempX2 = tempX2 + (tempZ2 * zxPerc);
-                tempY2 = tempY2 + (tempZ2 * zyPerc);
-                tempXOpp2 = tempXOpp2 - (tempZ2 * zxOppPerc);
-                tempYOpp2 = tempYOpp2 - (tempZ2 * zyOppPerc);
-                tempZ2 = tempZ2 - tempZ2;
+                tempX2 = -tempMin / (stepsPerMM * (1 / 0.60F));
+                tempY2 = -tempMin / (stepsPerMM * (1 / 0.60F));
+                tempZ2 = -tempMin / (stepsPerMM * (1 / 0.60F));
                 */
 
                 X = tempX2;
@@ -509,15 +398,14 @@ namespace OpenDACT.Class_Files
                 Z = tempZ2;
                 ZOpp = tempZOpp2;
                 
-                UserInterface.logConsole("heights :" + X + " " + XOpp + " " + Y + " " + YOpp + " " + Z + " " + ZOpp);
+                //UserInterface.logConsole("heights :" + X + " " + XOpp + " " + Y + " " + YOpp + " " + Z + " " + ZOpp);
+                //UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ);
+
+                //round to the nearest whole number
+                EEPROM.offsetX = Convert.ToInt32(offsetX);
+                EEPROM.offsetY = Convert.ToInt32(offsetY);
+                EEPROM.offsetZ = Convert.ToInt32(offsetZ);
             }
-
-            //round to the nearest whole number
-            EEPROM.offsetX = Convert.ToInt32(offsetX);
-            EEPROM.offsetY = Convert.ToInt32(offsetY);
-            EEPROM.offsetZ = Convert.ToInt32(offsetZ);
-
-            UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ);
         }
 
         private static void alphaRotation(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)

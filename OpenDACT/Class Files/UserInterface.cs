@@ -62,30 +62,12 @@ namespace OpenDACT.Class_Files
         public static float calculationAccuracy;
         public static float probingHeight;
 
-        public static float offsetXCorrection;
-        public static float xxOppPerc;
-        public static float xyPerc;
-        public static float xyOppPerc;
-        public static float xzPerc;
-        public static float xzOppPerc;
+        public static float offsetCorrection;
+        public static float mainOppPerc;
+        public static float towPerc;
+        public static float oppPerc;
 
-        public static float offsetYCorrection;
-        public static float yyOppPerc;
-        public static float yxPerc;
-        public static float yxOppPerc;
-        public static float yzPerc;
-        public static float yzOppPerc;
-
-        public static float offsetZCorrection;
-        public static float zzOppPerc;
-        public static float zxPerc;
-        public static float zxOppPerc;
-        public static float zyPerc;
-        public static float zyOppPerc;
-
-        public static float alphaRotationPercentageX;
-        public static float alphaRotationPercentageY;
-        public static float alphaRotationPercentageZ;
+        public static float alphaRotationPercentage;
         public static float deltaTower;
         public static float deltaOpp;
         public static float plateDiameter;

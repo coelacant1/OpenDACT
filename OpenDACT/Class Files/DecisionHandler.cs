@@ -42,30 +42,38 @@ namespace OpenDACT.Class_Files
                     {
                         Calibration.calibrateInProgress = true;
 
+                        /*
                         if (EEPROMFunctions.EEPROMRequestSent == false)
                         {
                             EEPROMFunctions.readEEPROM();
                             EEPROMFunctions.EEPROMRequestSent = true;
                         }
+                        */
 
                         if (UserVariables.advancedCalibration == false)
                         {
+                            UserInterface.logConsole("Calibration Iteration Number: " + Calibration.iterationNum);
                             Calibration.calibrate();
+
+                            Program.mainFormTest.setEEPROMGUIList();
+                            EEPROMFunctions.sendEEPROM();
+
+                            if (Calibration.calibrationState == false)
+                            {
+                                GCode.homeAxes();
+                                UserInterface.logConsole("Calibration Complete");
+                                //end calibration
+                            }
                         }
                         else
                         {
+                            UserInterface.logConsole("Heuristic Step: " + UserVariables.advancedCalCount);
                             GCode.heuristicLearning();
-                        }
 
-                        Program.mainFormTest.setEEPROMGUIList();
-                        EEPROMFunctions.sendEEPROM();
-
-                        if (Calibration.calibrationState == false)
-                        {
-                            GCode.homeAxes();
-                            UserInterface.logConsole("Calibration Complete");
-                            //end calibration
+                            Program.mainFormTest.setEEPROMGUIList();
+                            EEPROMFunctions.sendEEPROM();
                         }
+                        
 
                         Calibration.calibrateInProgress = false;
                     }

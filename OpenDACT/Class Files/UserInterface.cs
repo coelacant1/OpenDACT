@@ -67,6 +67,11 @@ namespace OpenDACT.Class_Files
         public static float towPerc;
         public static float oppPerc;
 
+        public static float dRadCorrection;
+        public static float dRadMainOppPerc;
+        public static float dRadTowPerc;
+        public static float dRadOppPerc;
+
         public static float alphaRotationPercentage;
         public static float deltaTower;
         public static float deltaOpp;

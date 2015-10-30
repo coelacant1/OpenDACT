@@ -178,6 +178,13 @@ namespace OpenDACT.Class_Files
             YOpp -= HRadSA;
             ZOpp -= HRadSA;
 
+            X = Validation.checkZero(X);
+            Y = Validation.checkZero(Y);
+            Z = Validation.checkZero(Z);
+            XOpp = Validation.checkZero(XOpp);
+            YOpp = Validation.checkZero(YOpp);
+            ZOpp = Validation.checkZero(ZOpp);
+
             UserInterface.logConsole("HRad:" + EEPROM.HRadius.ToString());
         }
 
@@ -208,6 +215,13 @@ namespace OpenDACT.Class_Files
             ZOpp += Z * (0.225F / 0.5F);
             Z += Z / 0.5F;
 
+            X = Validation.checkZero(X);
+            Y = Validation.checkZero(Y);
+            Z = Validation.checkZero(Z);
+            XOpp = Validation.checkZero(XOpp);
+            YOpp = Validation.checkZero(YOpp);
+            ZOpp = Validation.checkZero(ZOpp);
+
             UserInterface.logConsole("DRad: " + EEPROM.DA.ToString() + ", " + EEPROM.DB.ToString() + ", " + EEPROM.DC.ToString());
         }
 
@@ -235,38 +249,41 @@ namespace OpenDACT.Class_Files
             float offsetY = EEPROM.offsetY;
             float offsetZ = EEPROM.offsetZ;
             float stepsPerMM = EEPROM.stepsPerMM;
-            
 
+            float main = UserVariables.offsetCorrection;//-0.6
+            float mainOpp = UserVariables.mainOppPerc;//0.5
+            float secTow = UserVariables.towPerc;//0.3
+            float secOpp = UserVariables.oppPerc;//-0.25
 
             while (j < 100)
             {
                 if (offsetX >= 50 && offsetY >= 50 && offsetZ >= 50)
                 {
-                    offsetX += tempX2 * stepsPerMM * (1 / 0.60F);
+                    offsetX += tempX2 * stepsPerMM * (1 / -main);
 
-                    tempXOpp2 += tempX2 * (0.5F / 0.60F);
-                    tempY2 += tempX2 * (0.3F / 0.60F);
-                    tempYOpp2 += tempX2 * (-0.25F / 0.60F);
-                    tempZ2 += tempX2 * (0.3F / 0.60F);
-                    tempZOpp2 += tempX2 * (-0.25F / 0.60F);
+                    tempXOpp2 += tempX2 * (mainOpp / -main);
+                    tempY2 += tempX2 * (secTow / -main);
+                    tempYOpp2 += tempX2 * (secOpp / -main);
+                    tempZ2 += tempX2 * (secTow / -main);
+                    tempZOpp2 += tempX2 * (secOpp / -main);
                     tempX2 += tempX2 / -1;
 
-                    offsetY += tempY2 * stepsPerMM * (1 / 0.60F);
+                    offsetY += tempY2 * stepsPerMM * (1 / -main);
 
-                    tempYOpp2 += tempY2 * (0.5F / 0.60F);
-                    tempX2 += tempY2 * (0.3F / 0.60F);
-                    tempXOpp2 += tempY2 * (-0.25F / 0.60F);
-                    tempZ2 += tempY2 * (0.3F / 0.60F);
-                    tempZOpp2 += tempY2 * (-0.25F / 0.60F);
+                    tempYOpp2 += tempY2 * (mainOpp / -main);
+                    tempX2 += tempY2 * (secTow / -main);
+                    tempXOpp2 += tempY2 * (secOpp / -main);
+                    tempZ2 += tempY2 * (secTow / -main);
+                    tempZOpp2 += tempY2 * (secOpp / -main);
                     tempY2 += tempY2 / -1;
 
-                    offsetZ += tempZ2 * stepsPerMM * (1 / 0.60F);
+                    offsetZ += tempZ2 * stepsPerMM * (1 / -main);
 
-                    tempZOpp2 += tempZ2 * (0.5F / 0.60F);
-                    tempX2 += tempZ2 * (0.3F / 0.60F);
-                    tempXOpp2 += tempZ2 * (-0.25F / 0.60F);
-                    tempY2 += tempZ2 * (0.3F / 0.60F);
-                    tempYOpp2 += tempZ2 * (-0.25F / 0.60F);
+                    tempZOpp2 += tempZ2 * (mainOpp / -main);
+                    tempX2 += tempZ2 * (secTow / -main);
+                    tempXOpp2 += tempZ2 * (secOpp / -main);
+                    tempY2 += tempZ2 * (secTow / -main);
+                    tempYOpp2 += tempZ2 * (-secOpp / -main);
                     tempZ2 += tempZ2 / -1;
 
                     tempX2 = Validation.checkZero(tempX2);
@@ -275,9 +292,6 @@ namespace OpenDACT.Class_Files
                     tempXOpp2 = Validation.checkZero(tempXOpp2);
                     tempYOpp2 = Validation.checkZero(tempYOpp2);
                     tempZOpp2 = Validation.checkZero(tempZOpp2);
-
-                    UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
-                    UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                 }
                 else
                 {
@@ -293,57 +307,6 @@ namespace OpenDACT.Class_Files
                 {
                     j++;
                 }
-
-                /*
-                if (tempX2 < accuracy && tempX2 > -accuracy && tempY2 < accuracy && tempY2 > -accuracy && tempZ2 < accuracy && tempZ2 > -accuracy && offsetX < 1000 && offsetY < 1000 && offsetZ < 1000)
-                {
-                    j = 100;
-                }
-                else if (j == 50)
-                {
-                    //error protection
-                    tempX2 = X;
-                    tempXOpp2 = XOpp;
-                    tempY2 = Y;
-                    tempYOpp2 = YOpp;
-                    tempZ2 = Z;
-                    tempZOpp2 = ZOpp;
-
-                    //X
-                    offsetXCorrection = 1.5F;
-                    xxOppPerc = 0.5F;
-                    xyPerc = 0.25F;
-                    xyOppPerc = 0.25F;
-                    xzPerc = 0.25F;
-                    xzOppPerc = 0.25F;
-
-                    //Y
-                    offsetYCorrection = 1.5F;
-                    yyOppPerc = 0.5F;
-                    yxPerc = 0.25F;
-                    yxOppPerc = 0.25F;
-                    yzPerc = 0.25F;
-                    yzOppPerc = 0.25F;
-
-                    //Z
-                    offsetZCorrection = 1.5F;
-                    zzOppPerc = 0.5F;
-                    zxPerc = 0.25F;
-                    zxOppPerc = 0.25F;
-                    zyPerc = 0.25F;
-                    zyOppPerc = 0.25F;
-
-                    offsetX = 0;
-                    offsetY = 0;
-                    offsetZ = 0;
-
-                    j++;
-                }
-                else
-                {
-                    j++;
-                }
-                */
             }
 
             if (offsetX > 1000 || offsetY > 1000 || offsetZ > 1000)
@@ -356,20 +319,6 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                /*
-                float tempMin = Math.Min(offsetX, Math.Min(offsetY, offsetZ));
-
-                offsetX -= tempMin;
-                offsetY -= tempMin;
-                offsetZ -= tempMin;
-                
-                //offsetX = tempX2 * stepsPerMM * offsetXCorrection;
-
-                tempX2 = -tempMin / (stepsPerMM * (1 / 0.60F));
-                tempY2 = -tempMin / (stepsPerMM * (1 / 0.60F));
-                tempZ2 = -tempMin / (stepsPerMM * (1 / 0.60F));
-                */
-
                 X = tempX2;
                 XOpp = tempXOpp2;
                 Y = tempY2;
@@ -378,7 +327,7 @@ namespace OpenDACT.Class_Files
                 ZOpp = tempZOpp2;
                 
                 //UserInterface.logConsole("heights :" + X + " " + XOpp + " " + Y + " " + YOpp + " " + Z + " " + ZOpp);
-                //UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ);
+                UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ);
 
                 //round to the nearest whole number
                 EEPROM.offsetX = Convert.ToInt32(offsetX);
@@ -459,6 +408,13 @@ namespace OpenDACT.Class_Files
                 {
                     k = 100;
 
+                    X = Validation.checkZero(X);
+                    Y = Validation.checkZero(Y);
+                    Z = Validation.checkZero(Z);
+                    XOpp = Validation.checkZero(XOpp);
+                    YOpp = Validation.checkZero(YOpp);
+                    ZOpp = Validation.checkZero(ZOpp);
+
                     //log
                     UserInterface.logConsole("ABC:" + EEPROM.A + " " + EEPROM.B + " " + EEPROM.C);
                 }
@@ -485,6 +441,13 @@ namespace OpenDACT.Class_Files
             XOpp += (XYZ - XYZOpp) * diagChange;
             YOpp += (XYZ - XYZOpp) * diagChange;
             ZOpp += (XYZ - XYZOpp) * diagChange;
+
+            X = Validation.checkZero(X);
+            Y = Validation.checkZero(Y);
+            Z = Validation.checkZero(Z);
+            XOpp = Validation.checkZero(XOpp);
+            YOpp = Validation.checkZero(YOpp);
+            ZOpp = Validation.checkZero(ZOpp);
 
             UserInterface.logConsole("Steps per Millimeter: " + EEPROM.stepsPerMM.ToString());
         }

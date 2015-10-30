@@ -310,7 +310,8 @@ namespace OpenDACT.Class_Files
 
             }
             else if (UserVariables.advancedCalCount == 6)//6
-            {//get A alpha rotation
+            {
+                //get A alpha rotation
 
                 UserVariables.alphaRotationPercentage += (2 / Math.Abs((Heights.YOpp - Heights.ZOpp) - (Heights.teYOpp - Heights.teZOpp)));
 
@@ -366,7 +367,7 @@ namespace OpenDACT.Class_Files
                 UserInterface.logConsole("Alpha offset percentage: " + UserVariables.alphaRotationPercentage);
 
                 UserVariables.advancedCalibration = false;
-                Program.set
+                Program.mainFormTest.setButtonValues();
                 UserVariables.advancedCalCount = 0;
 
                 //check heights

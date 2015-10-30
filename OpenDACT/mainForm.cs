@@ -301,29 +301,28 @@ namespace OpenDACT.Class_Files
             Invoke((MethodInvoker)delegate
             {
                 this.textAccuracy.Text = UserVariables.calculationAccuracy.ToString();
-                UserVariables.accuracy = Convert.ToSingle(this.textAccuracy2.Text);
-                UserVariables.HRadRatio = Convert.ToSingle(this.textHRadRatio.Text);
-                UserVariables.DRadRatio = Convert.ToSingle(this.textDRadRatio.Text);
+                this.textAccuracy2.Text = UserVariables.accuracy.ToString();
+                this.textHRadRatio.Text = UserVariables.HRadRatio.ToString();
+                this.textDRadRatio.Text = UserVariables.DRadRatio.ToString();
 
-                UserVariables.probeChoice = getZMin();
-                UserVariables.advancedCalibration = Convert.ToBoolean(getHeuristic());
+                this.comboBoxZMin.Text = UserVariables.probeChoice;
+                this.heuristicComboBox.Text = UserVariables.advancedCalibration.ToString();
 
-                UserVariables.pauseTimeSet = Convert.ToInt32(this.textPauseTimeSet.Text);
-                UserVariables.maxIterations = Convert.ToInt32(this.textMaxIterations.Text);
-                UserVariables.probingSpeed = Convert.ToSingle(this.textProbingSpeed.Text);
-                UserVariables.FSROffset = Convert.ToSingle(this.textFSRPO.Text);
-                UserVariables.deltaOpp = Convert.ToSingle(this.textDeltaOpp.Text);
-                UserVariables.deltaTower = Convert.ToSingle(this.textDeltaTower.Text);
-                UserVariables.diagonalRodLength = Convert.ToSingle(this.diagonalRodLengthText.Text);
-                UserVariables.alphaRotationPercentage = Convert.ToSingle(this.alphaText.Text);
-                UserVariables.plateDiameter = Convert.ToSingle(this.textPlateDiameter.Text);
-                UserVariables.probingHeight = Convert.ToSingle(this.textProbingHeight.Text);
+                this.textPauseTimeSet.Text = UserVariables.pauseTimeSet.ToString();
+                this.textMaxIterations.Text = UserVariables.maxIterations.ToString();
+                this.textProbingSpeed.Text = UserVariables.probingSpeed.ToString();
+                this.textFSRPO.Text = UserVariables.FSROffset.ToString();
+                this.textDeltaOpp.Text = UserVariables.deltaOpp.ToString();
+                this.textDeltaTower.Text = UserVariables.deltaTower.ToString();
+                this.diagonalRodLengthText.Text = UserVariables.diagonalRodLength.ToString();
+                this.alphaText.Text = UserVariables.alphaRotationPercentage.ToString();
+                this.textPlateDiameter.Text = UserVariables.plateDiameter.ToString();
+                this.textProbingHeight.Text = UserVariables.probingHeight.ToString();
 
-                //XYZ Offset percs
-                UserVariables.offsetCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textOffsetPerc.Text, out value); return value; }));
-                UserVariables.mainOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textMainOppPerc.Text, out value); return value; }));
-                UserVariables.towPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textTowPerc.Text, out value); return value; }));
-                UserVariables.oppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textOppPerc.Text, out value); return value; }));
+                this.textOffsetPerc.Text = UserVariables.offsetCorrection.ToString();
+                this.textMainOppPerc.Text = UserVariables.mainOppPerc.ToString();
+                this.textTowPerc.Text = UserVariables.towPerc.ToString();
+                this.textOppPerc.Text = UserVariables.oppPerc.ToString();
             });
         }
         private string getZMin()

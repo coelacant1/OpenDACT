@@ -173,6 +173,8 @@ namespace OpenDACT.Class_Files
                     pauseTime();
                     Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
                     pauseTime();
+                    Connection._serialPort.WriteLine("G1 Z100 X0 Y0");
+                    pauseTime();
                     currentPosition = 0;
                     checkHeights = false;
                     break;
@@ -190,10 +192,8 @@ namespace OpenDACT.Class_Files
             {//start
                 if (Connection._serialPort.IsOpen)
                 {
-                    //set diagonal rod +1
-                    GCode.sendEEPROMVariable(3, 881, EEPROM.stepsPerMM + 1);
-                    UserInterface.logConsole("Setting diagonal rod to: " + (EEPROM.stepsPerMM + 1).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.stepsPerMM += 1;
+                    UserInterface.logConsole("Setting steps per millimeter to: " + (EEPROM.stepsPerMM).ToString());
                 }
 
                 //check heights
@@ -208,15 +208,12 @@ namespace OpenDACT.Class_Files
 
                 if (Connection._serialPort.IsOpen)
                 {
-                    //reset diagonal rod
-                    GCode.sendEEPROMVariable(3, 881, EEPROM.stepsPerMM);
-                    UserInterface.logConsole("Setting diagonal rod to: " + (EEPROM.stepsPerMM).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.stepsPerMM -= 1;
+                    UserInterface.logConsole("Setting steps per millimeter to: " + (EEPROM.stepsPerMM).ToString());
 
                     //set Hrad +1
-                    GCode.sendEEPROMVariable(3, 885, EEPROM.HRadius + 1);
-                    UserInterface.logConsole("Setting Horizontal Radius to: " + (EEPROM.HRadius + 1).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.HRadius += 1;
+                    UserInterface.logConsole("Setting horizontal radius to: " + (EEPROM.HRadius).ToString());
                 }
 
                 //check heights
@@ -230,14 +227,12 @@ namespace OpenDACT.Class_Files
                 if (Connection._serialPort.IsOpen)
                 {
                     //reset horizontal radius
-                    GCode.sendEEPROMVariable(3, 885, EEPROM.HRadius);
-                    UserInterface.logConsole("Setting Horizontal Radius to: " + (EEPROM.HRadius).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.HRadius -= 1;
+                    UserInterface.logConsole("Setting horizontal radius to: " + (EEPROM.HRadius).ToString());
 
                     //set X offset
-                    GCode.sendEEPROMVariable(1, 893, EEPROM.offsetX + 80);
-                    UserInterface.logConsole("Setting offset X to: " + (EEPROM.offsetX + 80).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.offsetX += 80;
+                    UserInterface.logConsole("Setting offset X to: " + (EEPROM.offsetX).ToString());
                 }
 
                 //check heights
@@ -247,24 +242,20 @@ namespace OpenDACT.Class_Files
             else if (UserVariables.advancedCalCount == 3)
             {//get X offset percentages
 
-                UserVariables.offsetXCorrection = Math.Abs(1 / (Heights.X - Heights.teX));
-                UserVariables.xxOppPerc = Math.Abs((Heights.XOpp - Heights.teXOpp) / (Heights.X - Heights.teX));
-                UserVariables.xyPerc = Math.Abs((Heights.Y - Heights.teY) / (Heights.X - Heights.teX));
-                UserVariables.xyOppPerc = Math.Abs((Heights.YOpp - Heights.teYOpp) / (Heights.X - Heights.teX));
-                UserVariables.xzPerc = Math.Abs((Heights.Z - Heights.teZ) / (Heights.X - Heights.teX));
-                UserVariables.xzOppPerc = Math.Abs((Heights.ZOpp - Heights.teZOpp) / (Heights.X - Heights.teX));
+                UserVariables.offsetCorrection += Math.Abs(1 / (Heights.X - Heights.teX));
+                UserVariables.mainOppPerc += Math.Abs((Heights.XOpp - Heights.teXOpp) / (Heights.X - Heights.teX));
+                UserVariables.towPerc += (Math.Abs((Heights.Y - Heights.teY) / (Heights.X - Heights.teX)) + Math.Abs((Heights.Z - Heights.teZ) / (Heights.X - Heights.teX))) / 2;
+                UserVariables.oppPerc += (Math.Abs((Heights.YOpp - Heights.teYOpp) / (Heights.X - Heights.teX)) + Math.Abs((Heights.ZOpp - Heights.teZOpp) / (Heights.X - Heights.teX))) / 2;
 
                 if (Connection._serialPort.IsOpen)
                 {
                     //reset X offset
-                    GCode.sendEEPROMVariable(1, 893, EEPROM.offsetX);
+                    EEPROM.offsetX -= 80;
                     UserInterface.logConsole("Setting offset X to: " + (EEPROM.offsetX).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set Y offset
-                    GCode.sendEEPROMVariable(1, 895, EEPROM.offsetY + 80);
-                    UserInterface.logConsole("Setting offset Y to: " + (EEPROM.offsetY + 80).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.offsetY += 80;
+                    UserInterface.logConsole("Setting offset Y to: " + (EEPROM.offsetY).ToString());
                 }
 
                 //check heights
@@ -274,24 +265,20 @@ namespace OpenDACT.Class_Files
             else if (UserVariables.advancedCalCount == 4)
             {//get Y offset percentages
 
-                UserVariables.offsetYCorrection = Math.Abs(1 / (Heights.Y - Heights.teY));
-                UserVariables.yyOppPerc = Math.Abs((Heights.YOpp - Heights.teYOpp) / (Heights.Y - Heights.teY));
-                UserVariables.yxPerc = Math.Abs((Heights.X - Heights.teX) / (Heights.Y - Heights.teY));
-                UserVariables.yxOppPerc = Math.Abs((Heights.XOpp - Heights.teXOpp) / (Heights.Y - Heights.teY));
-                UserVariables.yzPerc = Math.Abs((Heights.Z - Heights.teZ) / (Heights.Y - Heights.teY));
-                UserVariables.yzOppPerc = Math.Abs((Heights.ZOpp - Heights.teZOpp) / (Heights.Y - Heights.teY));
+                UserVariables.offsetCorrection += Math.Abs(1 / (Heights.Y - Heights.teY));
+                UserVariables.mainOppPerc += Math.Abs((Heights.YOpp - Heights.teYOpp) / (Heights.Y - Heights.teY));
+                UserVariables.towPerc += (Math.Abs((Heights.X - Heights.teX) / (Heights.Y - Heights.teY)) + Math.Abs((Heights.Z - Heights.teZ) / (Heights.Y - Heights.teY))) / 2;
+                UserVariables.oppPerc += (Math.Abs((Heights.XOpp - Heights.teXOpp) / (Heights.Y - Heights.teY)) + Math.Abs((Heights.ZOpp - Heights.teZOpp) / (Heights.Y - Heights.teY))) / 2;
 
                 if (Connection._serialPort.IsOpen)
                 {
                     //reset Y offset
-                    GCode.sendEEPROMVariable(1, 895, EEPROM.offsetY);
+                    EEPROM.offsetY -= 80;
                     UserInterface.logConsole("Setting offset Y to: " + (EEPROM.offsetY).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set Z offset
-                    GCode.sendEEPROMVariable(1, 897, EEPROM.offsetZ + 80);
-                    UserInterface.logConsole("Setting offset Z to: " + (EEPROM.offsetZ + 80).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.offsetZ += 80;
+                    UserInterface.logConsole("Setting offset Z to: " + (EEPROM.offsetZ).ToString());
                 }
 
                 //check heights
@@ -301,24 +288,20 @@ namespace OpenDACT.Class_Files
             else if (UserVariables.advancedCalCount == 5)
             {//get Z offset percentages
 
-                UserVariables.offsetZCorrection = Math.Abs(1 / (Heights.Z - Heights.teZ));
-                UserVariables.zzOppPerc = Math.Abs((Heights.ZOpp - Heights.teZOpp) / (Heights.Z - Heights.teZ));
-                UserVariables.zxPerc = Math.Abs((Heights.X - Heights.teX) / (Heights.Z - Heights.teZ));
-                UserVariables.zxOppPerc = Math.Abs((Heights.XOpp - Heights.teXOpp) / (Heights.Z - Heights.teZ));
-                UserVariables.zyPerc = Math.Abs((Heights.Y - Heights.teY) / (Heights.Z - Heights.teZ));
-                UserVariables.zyOppPerc = Math.Abs((Heights.YOpp - Heights.teYOpp) / (Heights.Z - Heights.teZ));
+                UserVariables.offsetCorrection += Math.Abs(1 / (Heights.Z - Heights.teZ));
+                UserVariables.mainOppPerc += Math.Abs((Heights.ZOpp - Heights.teZOpp) / (Heights.Z - Heights.teZ));
+                UserVariables.towPerc += (Math.Abs((Heights.X - Heights.teX) / (Heights.Z - Heights.teZ)) + Math.Abs((Heights.Y - Heights.teY) / (Heights.Z - Heights.teZ))) / 2;
+                UserVariables.oppPerc += (Math.Abs((Heights.XOpp - Heights.teXOpp) / (Heights.Z - Heights.teZ)) + Math.Abs((Heights.YOpp - Heights.teYOpp) / (Heights.Z - Heights.teZ))) / 2;
 
                 if (Connection._serialPort.IsOpen)
                 {
                     //set Z offset
-                    GCode.sendEEPROMVariable(1, 897, EEPROM.offsetZ);
+                    EEPROM.offsetZ -= 80;
                     UserInterface.logConsole("Setting offset Z to: " + (EEPROM.offsetZ).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set alpha rotation offset perc X
-                    GCode.sendEEPROMVariable(3, 901, EEPROM.A + 1);
-                    UserInterface.logConsole("Setting Alpha A to: " + (EEPROM.A + 1).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.A += 1;
+                    UserInterface.logConsole("Setting Alpha A to: " + (EEPROM.A).ToString());
                 }
 
                 //check heights
@@ -329,19 +312,17 @@ namespace OpenDACT.Class_Files
             else if (UserVariables.advancedCalCount == 6)//6
             {//get A alpha rotation
 
-                UserVariables.alphaRotationPercentageX = (2 / Math.Abs((Heights.YOpp - Heights.ZOpp) - (Heights.teYOpp - Heights.teZOpp)));
+                UserVariables.alphaRotationPercentage += (2 / Math.Abs((Heights.YOpp - Heights.ZOpp) - (Heights.teYOpp - Heights.teZOpp)));
 
                 if (Connection._serialPort.IsOpen)
                 {
                     //set alpha rotation offset perc X
-                    GCode.sendEEPROMVariable(3, 901, EEPROM.A);
+                    EEPROM.A -= 1;
                     UserInterface.logConsole("Setting Alpha A to: " + (EEPROM.A).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set alpha rotation offset perc Y
-                    GCode.sendEEPROMVariable(3, 905, EEPROM.B + 1);
-                    UserInterface.logConsole("Setting Alpha B to: " + (EEPROM.B + 1).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.B += 1;
+                    UserInterface.logConsole("Setting Alpha B to: " + (EEPROM.B).ToString());
                 }
 
                 //check heights
@@ -351,19 +332,17 @@ namespace OpenDACT.Class_Files
             else if (UserVariables.advancedCalCount == 7)//7
             {//get B alpha rotation
 
-                UserVariables.alphaRotationPercentageY = (2 / Math.Abs((Heights.ZOpp - Heights.XOpp) - (Heights.teXOpp - Heights.teXOpp)));
+                UserVariables.alphaRotationPercentage += (2 / Math.Abs((Heights.ZOpp - Heights.XOpp) - (Heights.teXOpp - Heights.teXOpp)));
 
                 if (Connection._serialPort.IsOpen)
                 {
                     //set alpha rotation offset perc Y
-                    GCode.sendEEPROMVariable(3, 905, EEPROM.B);
+                    EEPROM.B -= 1;
                     UserInterface.logConsole("Setting Alpha B to: " + (EEPROM.B).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
 
                     //set alpha rotation offset perc Z
-                    GCode.sendEEPROMVariable(3, 909, EEPROM.C + 1);
-                    UserInterface.logConsole("Setting Alpha C to: " + (EEPROM.C + 1).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
+                    EEPROM.C += 1;
+                    UserInterface.logConsole("Setting Alpha C to: " + (EEPROM.C).ToString());
                 }
 
                 //check heights
@@ -373,26 +352,29 @@ namespace OpenDACT.Class_Files
             else if (UserVariables.advancedCalCount == 8)//8
             {//get C alpha rotation
 
-                UserVariables.alphaRotationPercentageZ = (2 / Math.Abs((Heights.XOpp - Heights.YOpp) - (Heights.teXOpp - Heights.teYOpp)));
+                UserVariables.alphaRotationPercentage += (2 / Math.Abs((Heights.XOpp - Heights.YOpp) - (Heights.teXOpp - Heights.teYOpp)));
+                UserVariables.alphaRotationPercentage /= 3;
 
                 if (Connection._serialPort.IsOpen)
                 {
                     //set alpha rotation offset perc Z
-                    GCode.sendEEPROMVariable(3, 909, EEPROM.C);
+                    EEPROM.C -= 1;
                     UserInterface.logConsole("Setting Alpha C to: " + (EEPROM.C).ToString());
-                    Thread.Sleep(UserVariables.pauseTimeSet);
 
                 }
 
-                UserInterface.logConsole("Alpha offset percentages: " + UserVariables.alphaRotationPercentageX + ", " + UserVariables.alphaRotationPercentageY + ", and" + UserVariables.alphaRotationPercentageZ);
+                UserInterface.logConsole("Alpha offset percentage: " + UserVariables.alphaRotationPercentage);
 
                 UserVariables.advancedCalibration = false;
+                Program.set
                 UserVariables.advancedCalCount = 0;
 
                 //check heights
 
                 UserInterface.setAdvancedCalVars();
             }
+
+            GCode.checkHeights = true;
         }
     }
 }

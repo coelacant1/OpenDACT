@@ -60,11 +60,11 @@ namespace OpenDACT.Class_Files
 
             if (calibrationState == true)
             {
-                //stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 //DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
             }
             else
             {
@@ -189,9 +189,9 @@ namespace OpenDACT.Class_Files
 
             float DRadRatio = UserVariables.DRadRatio;
 
-            EEPROM.DA += X / 0.5F;
-            EEPROM.DB += Y / 0.5F;
-            EEPROM.DC += Z / 0.5F;
+            EEPROM.DA -= X / 0.5F;
+            EEPROM.DB -= Y / 0.5F;
+            EEPROM.DC -= Z / 0.5F;
 
             XOpp += X * (0.225F / 0.5F);
             YOpp += X * (0.1375F / 0.5F);
@@ -235,26 +235,8 @@ namespace OpenDACT.Class_Files
             float offsetY = EEPROM.offsetY;
             float offsetZ = EEPROM.offsetZ;
             float stepsPerMM = EEPROM.stepsPerMM;
+            
 
-            //
-            float offsetXCorrection = UserVariables.offsetXCorrection;
-            float offsetYCorrection = UserVariables.offsetYCorrection;
-            float offsetZCorrection = UserVariables.offsetZCorrection;
-            float xxOppPerc = UserVariables.xxOppPerc;
-            float xyPerc = UserVariables.xyPerc;
-            float xyOppPerc = UserVariables.xyOppPerc;
-            float xzPerc = UserVariables.xzPerc;
-            float xzOppPerc = UserVariables.xzOppPerc;
-            float yyOppPerc = UserVariables.yyOppPerc;
-            float yxPerc = UserVariables.yxPerc;
-            float yxOppPerc = UserVariables.yxOppPerc;
-            float yzPerc = UserVariables.yzPerc;
-            float yzOppPerc = UserVariables.yzOppPerc;
-            float zzOppPerc = UserVariables.zzOppPerc;
-            float zxPerc = UserVariables.zxPerc;
-            float zxOppPerc = UserVariables.zxOppPerc;
-            float zyPerc = UserVariables.zyPerc;
-            float zyOppPerc = UserVariables.zyOppPerc;
 
             while (j < 100)
             {
@@ -299,6 +281,7 @@ namespace OpenDACT.Class_Files
                 }
                 else
                 {
+                    j = 100;
                     DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 }
 
@@ -412,9 +395,7 @@ namespace OpenDACT.Class_Files
             float accuracy = UserVariables.accuracy;
 
             //change to object
-            float alphaRotationPercentageX = UserVariables.alphaRotationPercentageX;
-            float alphaRotationPercentageY = UserVariables.alphaRotationPercentageY;
-            float alphaRotationPercentageZ = UserVariables.alphaRotationPercentageZ;
+            float alphaRotationPercentage = UserVariables.alphaRotationPercentage;
 
             int k = 0;
             while (k < 100)
@@ -423,7 +404,7 @@ namespace OpenDACT.Class_Files
                 if (YOpp > ZOpp)
                 {
                     float ZYOppAvg = (YOpp - ZOpp) / 2;
-                    EEPROM.A = EEPROM.A + (ZYOppAvg * alphaRotationPercentageX); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
+                    EEPROM.A = EEPROM.A + (ZYOppAvg * alphaRotationPercentage); // (0.5/((diff y0 and z0 at X + 0.5)-(diff y0 and z0 at X = 0))) * 2 = 1.75
                     YOpp = YOpp - ZYOppAvg;
                     ZOpp = ZOpp + ZYOppAvg;
                 }
@@ -431,7 +412,7 @@ namespace OpenDACT.Class_Files
                 {
                     float ZYOppAvg = (ZOpp - YOpp) / 2;
 
-                    EEPROM.A = EEPROM.A - (ZYOppAvg * alphaRotationPercentageX);
+                    EEPROM.A = EEPROM.A - (ZYOppAvg * alphaRotationPercentage);
                     YOpp = YOpp + ZYOppAvg;
                     ZOpp = ZOpp - ZYOppAvg;
                 }
@@ -440,7 +421,7 @@ namespace OpenDACT.Class_Files
                 if (ZOpp > XOpp)
                 {
                     float XZOppAvg = (ZOpp - XOpp) / 2;
-                    EEPROM.B = EEPROM.B + (XZOppAvg * alphaRotationPercentageY);
+                    EEPROM.B = EEPROM.B + (XZOppAvg * alphaRotationPercentage);
                     ZOpp = ZOpp - XZOppAvg;
                     XOpp = XOpp + XZOppAvg;
                 }
@@ -448,7 +429,7 @@ namespace OpenDACT.Class_Files
                 {
                     float XZOppAvg = (XOpp - ZOpp) / 2;
 
-                    EEPROM.B = EEPROM.B - (XZOppAvg * alphaRotationPercentageY);
+                    EEPROM.B = EEPROM.B - (XZOppAvg * alphaRotationPercentage);
                     ZOpp = ZOpp + XZOppAvg;
                     XOpp = XOpp - XZOppAvg;
                 }
@@ -456,7 +437,7 @@ namespace OpenDACT.Class_Files
                 if (XOpp > YOpp)
                 {
                     float YXOppAvg = (XOpp - YOpp) / 2;
-                    EEPROM.C = EEPROM.C + (YXOppAvg * alphaRotationPercentageZ);
+                    EEPROM.C = EEPROM.C + (YXOppAvg * alphaRotationPercentage);
                     XOpp = XOpp - YXOppAvg;
                     YOpp = YOpp + YXOppAvg;
                 }
@@ -464,7 +445,7 @@ namespace OpenDACT.Class_Files
                 {
                     float YXOppAvg = (YOpp - XOpp) / 2;
 
-                    EEPROM.C = EEPROM.C - (YXOppAvg * alphaRotationPercentageZ);
+                    EEPROM.C = EEPROM.C - (YXOppAvg * alphaRotationPercentage);
                     XOpp = XOpp + YXOppAvg;
                     YOpp = YOpp - YXOppAvg;
                 }

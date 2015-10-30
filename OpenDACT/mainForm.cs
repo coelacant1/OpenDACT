@@ -260,38 +260,7 @@ namespace OpenDACT.Class_Files
 
         private void sendEEPROMButton_Click(object sender, EventArgs e)
         {
-            UserInterface.logConsole("Setting EEPROM.");
-            Thread.Sleep(1000);
-            GCode.sendEEPROMVariable(3, 11, Convert.ToSingle(stepsPerMMText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 153, Convert.ToSingle(zMaxLengthText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 808, Convert.ToSingle(zProbeText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 812, Convert.ToSingle(zProbeSpeedText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 881, Convert.ToSingle(diagonalRod.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 885, Convert.ToSingle(HRadiusText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(1, 893, Convert.ToSingle(offsetXText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(1, 895, Convert.ToSingle(offsetYText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(1, 897, Convert.ToSingle(offsetZText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 901, Convert.ToSingle(AText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 905, Convert.ToSingle(BText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 909, Convert.ToSingle(CText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 913, Convert.ToSingle(DAText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 917, Convert.ToSingle(DBText.Text));
-            Thread.Sleep(750);
-            GCode.sendEEPROMVariable(3, 921, Convert.ToSingle(DCText.Text));
-            Thread.Sleep(750);
+            EEPROMFunctions.sendEEPROM();
             
             EEPROM.stepsPerMM = Convert.ToInt32(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.stepsPerMMText.Text, out value); return value; }));
             EEPROM.zMaxLength = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zMaxLengthText.Text, out value); return value; }));
@@ -315,6 +284,7 @@ namespace OpenDACT.Class_Files
         {
             if (Connection._serialPort.IsOpen)
             {
+                EEPROMFunctions.tempEEPROMSet = false;
                 EEPROMFunctions.readEEPROM();
                 EEPROMFunctions.EEPROMReadOnly = true;
                 HeightFunctions.checkHeightsOnly = false;
@@ -326,6 +296,36 @@ namespace OpenDACT.Class_Files
             }
         }
 
+        public void setButtonValues()
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                this.textAccuracy.Text = UserVariables.calculationAccuracy.ToString();
+                UserVariables.accuracy = Convert.ToSingle(this.textAccuracy2.Text);
+                UserVariables.HRadRatio = Convert.ToSingle(this.textHRadRatio.Text);
+                UserVariables.DRadRatio = Convert.ToSingle(this.textDRadRatio.Text);
+
+                UserVariables.probeChoice = getZMin();
+                UserVariables.advancedCalibration = Convert.ToBoolean(getHeuristic());
+
+                UserVariables.pauseTimeSet = Convert.ToInt32(this.textPauseTimeSet.Text);
+                UserVariables.maxIterations = Convert.ToInt32(this.textMaxIterations.Text);
+                UserVariables.probingSpeed = Convert.ToSingle(this.textProbingSpeed.Text);
+                UserVariables.FSROffset = Convert.ToSingle(this.textFSRPO.Text);
+                UserVariables.deltaOpp = Convert.ToSingle(this.textDeltaOpp.Text);
+                UserVariables.deltaTower = Convert.ToSingle(this.textDeltaTower.Text);
+                UserVariables.diagonalRodLength = Convert.ToSingle(this.diagonalRodLengthText.Text);
+                UserVariables.alphaRotationPercentage = Convert.ToSingle(this.alphaText.Text);
+                UserVariables.plateDiameter = Convert.ToSingle(this.textPlateDiameter.Text);
+                UserVariables.probingHeight = Convert.ToSingle(this.textProbingHeight.Text);
+
+                //XYZ Offset percs
+                UserVariables.offsetCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textOffsetPerc.Text, out value); return value; }));
+                UserVariables.mainOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textMainOppPerc.Text, out value); return value; }));
+                UserVariables.towPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textTowPerc.Text, out value); return value; }));
+                UserVariables.oppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textOppPerc.Text, out value); return value; }));
+            });
+        }
         private string getZMin()
         {
             if (comboBoxZMin.InvokeRequired)
@@ -367,33 +367,15 @@ namespace OpenDACT.Class_Files
             UserVariables.deltaOpp = Convert.ToSingle(this.textDeltaOpp.Text);
             UserVariables.deltaTower = Convert.ToSingle(this.textDeltaTower.Text);
             UserVariables.diagonalRodLength = Convert.ToSingle(this.diagonalRodLengthText.Text);
-            UserVariables.alphaRotationPercentageX = Convert.ToSingle(this.alphaAText.Text);
-            UserVariables.alphaRotationPercentageY = Convert.ToSingle(this.alphaBText.Text);
-            UserVariables.alphaRotationPercentageZ = Convert.ToSingle(this.alphaCText.Text);
+            UserVariables.alphaRotationPercentage = Convert.ToSingle(this.alphaText.Text);
             UserVariables.plateDiameter = Convert.ToSingle(this.textPlateDiameter.Text);
             UserVariables.probingHeight = Convert.ToSingle(this.textProbingHeight.Text);
 
             //XYZ Offset percs
-            UserVariables.offsetXCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxxPerc.Text, out value); return value; }));
-            UserVariables.xxOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxxOppPerc.Text, out value); return value; }));
-            UserVariables.xyPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxyPerc.Text, out value); return value; }));
-            UserVariables.xyOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxyOppPerc.Text, out value); return value; }));
-            UserVariables.xzPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxzPerc.Text, out value); return value;  }));
-            UserVariables.xzOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textxzOppPerc.Text, out value); return value;  }));
-
-            UserVariables.offsetYCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyyPerc.Text, out value); return value;  }));
-            UserVariables.yyOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyyOppPerc.Text, out value); return value;  }));
-            UserVariables.yxPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyxPerc.Text, out value); return value;  }));
-            UserVariables.yxOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyxOppPerc.Text, out value); return value;  }));
-            UserVariables.yzPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyzPerc.Text, out value); return value;  }));
-            UserVariables.yzOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textyzOppPerc.Text, out value); return value;  }));
-
-            UserVariables.offsetZCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzzPerc.Text, out value); return value;  }));
-            UserVariables.zzOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzzOppPerc.Text, out value); return value;  }));
-            UserVariables.zxPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzxPerc.Text, out value); return value;  }));
-            UserVariables.zxOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzxOppPerc.Text, out value); return value;  }));
-            UserVariables.zyPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzyPerc.Text, out value); return value;  }));
-            UserVariables.zyOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textzyOppPerc.Text, out value); return value; }));
+            UserVariables.offsetCorrection = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textOffsetPerc.Text, out value); return value; }));
+            UserVariables.mainOppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textMainOppPerc.Text, out value); return value; }));
+            UserVariables.towPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textTowPerc.Text, out value); return value; }));
+            UserVariables.oppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textOppPerc.Text, out value); return value; }));
         }
 
         private void checkHeights_Click(object sender, EventArgs e)

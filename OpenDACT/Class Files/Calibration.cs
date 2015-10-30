@@ -189,33 +189,28 @@ namespace OpenDACT.Class_Files
 
             float DRadRatio = UserVariables.DRadRatio;
 
-            EEPROM.DA += ((DASA) / DRadRatio);
-            EEPROM.DB += ((DBSA) / DRadRatio);
-            EEPROM.DC += ((DCSA) / DRadRatio);
+            EEPROM.DA += X / 0.5F;
+            EEPROM.DB += Y / 0.5F;
+            EEPROM.DC += Z / 0.5F;
 
-            X = X + ((DASA) / DRadRatio) * 0.5F;
-            XOpp = XOpp + ((DASA) / DRadRatio) * 0.225F;
-            Y = Y + ((DASA) / DRadRatio) * 0.1375F;
-            YOpp = YOpp + ((DASA) / DRadRatio) * 0.1375F;
-            Z = Z + ((DASA) / DRadRatio) * 0.1375F;
-            ZOpp = ZOpp + ((DASA) / DRadRatio) * 0.1375F;
+            XOpp += X * (0.225F / 0.5F);
+            YOpp += X * (0.1375F / 0.5F);
+            ZOpp += X * (0.1375F / 0.5F);
+            X += X / 0.5F;
 
-            X = X + ((DBSA) / DRadRatio) * 0.1375F;
-            XOpp = XOpp + ((DBSA) / DRadRatio) * 0.1375F;
-            Y = Y + ((DBSA) / DRadRatio) * 0.5F;
-            YOpp = YOpp + ((DBSA) / DRadRatio) * 0.225F;
-            Z = Z + ((DBSA) / DRadRatio) * 0.1375F;
-            ZOpp = ZOpp + ((DBSA) / DRadRatio) * 0.1375F;
+            XOpp += Y * (0.1375F / 0.5F);
+            YOpp += Y * (0.225F / 0.5F);
+            ZOpp += Y * (0.1375F / 0.5F);
+            Y += Y / 0.5F;
 
-            X = X + ((DCSA) / DRadRatio) * 0.1375F;
-            XOpp = XOpp + ((DCSA) / DRadRatio) * 0.1375F;
-            Y = Y + ((DCSA) / DRadRatio) * 0.1375F;
-            YOpp = YOpp + ((DCSA) / DRadRatio) * 0.1375F;
-            Z = Z + ((DCSA) / DRadRatio) * 0.5F;
-            ZOpp = ZOpp + ((DCSA) / DRadRatio) * 0.225F;
-            
+            XOpp += Z * (0.1375F / 0.5F);
+            YOpp += Z * (0.1375F / 0.5F);
+            ZOpp += Z * (0.225F / 0.5F);
+            Z += Z / 0.5F;
+
             UserInterface.logConsole("DRad: " + EEPROM.DA.ToString() + ", " + EEPROM.DB.ToString() + ", " + EEPROM.DC.ToString());
         }
+
         /*
         public void analyzeGeometry(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
         {
@@ -225,6 +220,7 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
         }
         */
+
         private static void towerOffsets(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             int j = 0;

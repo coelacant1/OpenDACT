@@ -164,6 +164,9 @@
             this.label36 = new System.Windows.Forms.Label();
             this.checkHeights = new System.Windows.Forms.Button();
             this.comboBoxZMin = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -314,6 +317,9 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label17);
+            this.tabPage1.Controls.Add(this.label16);
+            this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Controls.Add(this.label60);
             this.tabPage1.Controls.Add(this.diagonalRod);
             this.tabPage1.Controls.Add(this.label59);
@@ -556,18 +562,18 @@
             this.label44.AutoSize = true;
             this.label44.Location = new System.Drawing.Point(323, 371);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(112, 13);
+            this.label44.Size = new System.Drawing.Size(116, 13);
             this.label44.TabIndex = 188;
-            this.label44.Text = "Delta Radius Offset C:";
+            this.label44.Text = "Diagonal Rod Offset C:";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(323, 345);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(112, 13);
+            this.label20.Size = new System.Drawing.Size(116, 13);
             this.label20.TabIndex = 187;
-            this.label20.Text = "Delta Radius Offset B:";
+            this.label20.Text = "Diagonal Rod Offset B:";
             // 
             // label43
             // 
@@ -654,9 +660,9 @@
             this.label30.AutoSize = true;
             this.label30.Location = new System.Drawing.Point(324, 319);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(112, 13);
+            this.label30.Size = new System.Drawing.Size(116, 13);
             this.label30.TabIndex = 179;
-            this.label30.Text = "Delta Radius Offset A:";
+            this.label30.Text = "Diagonal Rod Offset A:";
             // 
             // DBText
             // 
@@ -929,9 +935,9 @@
             // 
             // textOffsetPerc
             // 
-            this.textOffsetPerc.Location = new System.Drawing.Point(7, 437);
+            this.textOffsetPerc.Location = new System.Drawing.Point(217, 346);
             this.textOffsetPerc.Name = "textOffsetPerc";
-            this.textOffsetPerc.Size = new System.Drawing.Size(99, 20);
+            this.textOffsetPerc.Size = new System.Drawing.Size(100, 20);
             this.textOffsetPerc.TabIndex = 126;
             this.textOffsetPerc.Text = "-0.6";
             // 
@@ -973,11 +979,11 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(8, 354);
+            this.label12.Location = new System.Drawing.Point(8, 349);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(122, 13);
+            this.label12.Size = new System.Drawing.Size(148, 13);
             this.label12.TabIndex = 110;
-            this.label12.Text = "Tower Offset Correction:";
+            this.label12.Text = "Tower Offset Correction Main:";
             // 
             // textBox4
             // 
@@ -989,9 +995,9 @@
             // 
             // textMainOppPerc
             // 
-            this.textMainOppPerc.Location = new System.Drawing.Point(112, 437);
+            this.textMainOppPerc.Location = new System.Drawing.Point(217, 372);
             this.textMainOppPerc.Name = "textMainOppPerc";
-            this.textMainOppPerc.Size = new System.Drawing.Size(99, 20);
+            this.textMainOppPerc.Size = new System.Drawing.Size(100, 20);
             this.textMainOppPerc.TabIndex = 95;
             this.textMainOppPerc.Text = "0.5";
             // 
@@ -1005,9 +1011,9 @@
             // 
             // textTowPerc
             // 
-            this.textTowPerc.Location = new System.Drawing.Point(217, 437);
+            this.textTowPerc.Location = new System.Drawing.Point(217, 398);
             this.textTowPerc.Name = "textTowPerc";
-            this.textTowPerc.Size = new System.Drawing.Size(99, 20);
+            this.textTowPerc.Size = new System.Drawing.Size(100, 20);
             this.textTowPerc.TabIndex = 96;
             this.textTowPerc.Text = "0.3";
             // 
@@ -1021,9 +1027,9 @@
             // 
             // textOppPerc
             // 
-            this.textOppPerc.Location = new System.Drawing.Point(322, 437);
+            this.textOppPerc.Location = new System.Drawing.Point(217, 424);
             this.textOppPerc.Name = "textOppPerc";
-            this.textOppPerc.Size = new System.Drawing.Size(99, 20);
+            this.textOppPerc.Size = new System.Drawing.Size(100, 20);
             this.textOppPerc.TabIndex = 97;
             this.textOppPerc.Text = "-0.25";
             // 
@@ -1441,6 +1447,33 @@
             this.comboBoxZMin.TabIndex = 203;
             this.comboBoxZMin.Text = "FSR";
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(9, 375);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(193, 13);
+            this.label14.TabIndex = 205;
+            this.label14.Text = "Tower Offset Correction Main Opposite:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(9, 401);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(176, 13);
+            this.label16.TabIndex = 206;
+            this.label16.Text = "Tower Offset Correction Secondary:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(9, 427);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(199, 13);
+            this.label17.TabIndex = 207;
+            this.label17.Text = "Tower Offset Correction Secondary Opp:";
+            // 
             // mainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -1627,5 +1660,8 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label14;
     }
 }

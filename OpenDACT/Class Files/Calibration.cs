@@ -60,11 +60,13 @@ namespace OpenDACT.Class_Files
 
             if (calibrationState == true)
             {
+                towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                /*
                 HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 //DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                */
             }
             else
             {
@@ -235,8 +237,10 @@ namespace OpenDACT.Class_Files
             float offsetY = EEPROM.offsetY;
             float offsetZ = EEPROM.offsetZ;
             float stepsPerMM = EEPROM.stepsPerMM;
-            
 
+
+
+            UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
 
             while (j < 100)
             {
@@ -279,14 +283,15 @@ namespace OpenDACT.Class_Files
                     UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
                     UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                 }
-                else
-                {
-                    j = 100;
-                    DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                }
 
                 if (offsetX < 50 || offsetY < 50 || offsetZ < 50)
                 {
+                    //set xyz to 500
+                    //changed all three delta radii - same value
+                    //average the final x, y, z height values
+                    
+                    //HERE
+
                     j = 100;
                 }
                 else

@@ -67,7 +67,7 @@ namespace OpenDACT.Class_Files
                 UserInterface.logConsole("No ports available");
             }
 
-            accuracyTime.Series["Accuracy"].Points.AddXY(0, 1);
+            //accuracyTime.Series["Accuracy"].Points.AddXY(0, 0);
             UserVariables.isInitiated = true;
         }
 
@@ -260,8 +260,6 @@ namespace OpenDACT.Class_Files
 
         private void sendEEPROMButton_Click(object sender, EventArgs e)
         {
-            EEPROMFunctions.sendEEPROM();
-            
             EEPROM.stepsPerMM = Convert.ToInt32(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.stepsPerMMText.Text, out value); return value; }));
             EEPROM.zMaxLength = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zMaxLengthText.Text, out value); return value; }));
             EEPROM.zProbeHeight = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zProbeText.Text, out value); return value; }));
@@ -278,6 +276,7 @@ namespace OpenDACT.Class_Files
             EEPROM.DB = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.DBText.Text, out value); return value; }));
             EEPROM.DC = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.DCText.Text, out value); return value; }));
 
+            EEPROMFunctions.sendEEPROM();
         }
 
         private void readEEPROM_Click(object sender, EventArgs e)

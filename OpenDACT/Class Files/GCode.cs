@@ -366,7 +366,7 @@ namespace OpenDACT.Class_Files
                 UserInterface.logConsole("Alpha offset percentage: " + UserVariables.alphaRotationPercentage);
 
                 UserVariables.advancedCalibration = false;
-                Program.set
+                //Program.mainFormTest.setUserVariables
                 UserVariables.advancedCalCount = 0;
 
                 //check heights

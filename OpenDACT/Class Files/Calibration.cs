@@ -15,6 +15,7 @@ namespace OpenDACT.Class_Files
         public static int iterationNum = 0;
         private static float tempAccuracy;
         private static int iterativeStep = 0;
+        private static bool xyzOffset = true;
 
         private static bool HRadRequired = false;
         private static bool DRadRequired = false;
@@ -60,13 +61,17 @@ namespace OpenDACT.Class_Files
 
             if (calibrationState == true)
             {
-                towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                /*
-                HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                //DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                */
+                if (xyzOffset)
+                {
+                    towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                }
+                else
+                {
+                    alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                    stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                    HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                    //DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                }
             }
             else
             {
@@ -180,13 +185,6 @@ namespace OpenDACT.Class_Files
             YOpp -= HRadSA;
             ZOpp -= HRadSA;
 
-            X = Validation.checkZero(X);
-            Y = Validation.checkZero(Y);
-            Z = Validation.checkZero(Z);
-            XOpp = Validation.checkZero(XOpp);
-            YOpp = Validation.checkZero(YOpp);
-            ZOpp = Validation.checkZero(ZOpp);
-
             UserInterface.logConsole("HRad:" + EEPROM.HRadius.ToString());
         }
 
@@ -217,13 +215,6 @@ namespace OpenDACT.Class_Files
             ZOpp += Z * (0.225F / 0.5F);
             Z += Z / 0.5F;
 
-            X = Validation.checkZero(X);
-            Y = Validation.checkZero(Y);
-            Z = Validation.checkZero(Z);
-            XOpp = Validation.checkZero(XOpp);
-            YOpp = Validation.checkZero(YOpp);
-            ZOpp = Validation.checkZero(ZOpp);
-
             UserInterface.logConsole("DRad: " + EEPROM.DA.ToString() + ", " + EEPROM.DB.ToString() + ", " + EEPROM.DC.ToString());
         }
 
@@ -251,44 +242,36 @@ namespace OpenDACT.Class_Files
             float offsetY = EEPROM.offsetY;
             float offsetZ = EEPROM.offsetZ;
             float stepsPerMM = EEPROM.stepsPerMM;
-
-            float main = UserVariables.offsetCorrection;//-0.6
-            float mainOpp = UserVariables.mainOppPerc;//0.5
-            float secTow = UserVariables.towPerc;//0.3
-            float secOpp = UserVariables.oppPerc;//-0.25
-
-
-            UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
-
+            
             while (j < 100)
             {
-                if (offsetX >= 50 && offsetY >= 50 && offsetZ >= 50)
+                if (Math.Abs(tempX2) > UserVariables.accuracy / 2 || Math.Abs(tempY2) > UserVariables.accuracy / 2 || Math.Abs(tempZ2) > UserVariables.accuracy / 2)
                 {
-                    offsetX += tempX2 * stepsPerMM * (1 / -main);
+                    offsetX += tempX2 * stepsPerMM * (1 / 0.60F);
 
-                    tempXOpp2 += tempX2 * (mainOpp / -main);
-                    tempY2 += tempX2 * (secTow / -main);
-                    tempYOpp2 += tempX2 * (secOpp / -main);
-                    tempZ2 += tempX2 * (secTow / -main);
-                    tempZOpp2 += tempX2 * (secOpp / -main);
+                    tempXOpp2 += tempX2 * (0.5F / 0.60F);
+                    tempY2 += tempX2 * (0.3F / 0.60F);
+                    tempYOpp2 += tempX2 * (-0.25F / 0.60F);
+                    tempZ2 += tempX2 * (0.3F / 0.60F);
+                    tempZOpp2 += tempX2 * (-0.25F / 0.60F);
                     tempX2 += tempX2 / -1;
 
-                    offsetY += tempY2 * stepsPerMM * (1 / -main);
+                    offsetY += tempY2 * stepsPerMM * (1 / 0.60F);
 
-                    tempYOpp2 += tempY2 * (mainOpp / -main);
-                    tempX2 += tempY2 * (secTow / -main);
-                    tempXOpp2 += tempY2 * (secOpp / -main);
-                    tempZ2 += tempY2 * (secTow / -main);
-                    tempZOpp2 += tempY2 * (secOpp / -main);
+                    tempYOpp2 += tempY2 * (0.5F / 0.60F);
+                    tempX2 += tempY2 * (0.3F / 0.60F);
+                    tempXOpp2 += tempY2 * (-0.25F / 0.60F);
+                    tempZ2 += tempY2 * (0.3F / 0.60F);
+                    tempZOpp2 += tempY2 * (-0.25F / 0.60F);
                     tempY2 += tempY2 / -1;
 
-                    offsetZ += tempZ2 * stepsPerMM * (1 / -main);
+                    offsetZ += tempZ2 * stepsPerMM * (1 / 0.60F);
 
-                    tempZOpp2 += tempZ2 * (mainOpp / -main);
-                    tempX2 += tempZ2 * (secTow / -main);
-                    tempXOpp2 += tempZ2 * (secOpp / -main);
-                    tempY2 += tempZ2 * (secTow / -main);
-                    tempYOpp2 += tempZ2 * (-secOpp / -main);
+                    tempZOpp2 += tempZ2 * (0.5F / 0.60F);
+                    tempX2 += tempZ2 * (0.3F / 0.60F);
+                    tempXOpp2 += tempZ2 * (-0.25F / 0.60F);
+                    tempY2 += tempZ2 * (0.3F / 0.60F);
+                    tempYOpp2 += tempZ2 * (-0.25F / 0.60F);
                     tempZ2 += tempZ2 / -1;
 
                     tempX2 = Validation.checkZero(tempX2);
@@ -297,48 +280,79 @@ namespace OpenDACT.Class_Files
                     tempXOpp2 = Validation.checkZero(tempXOpp2);
                     tempYOpp2 = Validation.checkZero(tempYOpp2);
                     tempZOpp2 = Validation.checkZero(tempZOpp2);
-                }
 
-                if (offsetX < 50 || offsetY < 50 || offsetZ < 50)
-                {
-                    //set xyz to 500
-                    //changed all three delta radii - same value
-                    //average the final x, y, z height values
-                    
-                    //HERE
+                    float tempComb = tempX2 + tempY2 + tempZ2;
+                    float tempCombAbs = Math.Abs(tempX2) + Math.Abs(tempY2) + Math.Abs(tempZ2);
 
-                    j = 100;
+                    if (Math.Abs(tempX2) <= UserVariables.accuracy && Math.Abs(tempY2) <= UserVariables.accuracy && Math.Abs(tempZ2) <= UserVariables.accuracy)
+                    {
+                        UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
+                        UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
+                        UserInterface.logConsole("No Drad correction");
+
+                        float smallest = Math.Min(offsetX, Math.Min(offsetY, offsetZ));
+
+                        offsetX -= smallest;
+                        offsetY -= smallest;
+                        offsetZ -= smallest;
+
+                        UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
+
+                        X = tempX2;
+                        XOpp = tempXOpp2;
+                        Y = tempY2;
+                        YOpp = tempYOpp2;
+                        Z = tempZ2;
+                        ZOpp = tempZOpp2;
+
+                        //round to the nearest whole number
+                        EEPROM.offsetX = Convert.ToInt32(offsetX);
+                        EEPROM.offsetY = Convert.ToInt32(offsetY);
+                        EEPROM.offsetZ = Convert.ToInt32(offsetZ);
+
+                        j = 100;
+                    }
+                    else if (j == 99)
+                    {
+                        UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
+                        UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
+                        float dradCorr = tempComb * -0.85F;
+
+                        EEPROM.DA += dradCorr;
+                        EEPROM.DB += dradCorr;
+                        EEPROM.DC += dradCorr;
+
+                        EEPROM.offsetX = 200;
+                        EEPROM.offsetY = 200;
+                        EEPROM.offsetZ = 200;
+
+                        UserInterface.logConsole("Drad correction: " + dradCorr);
+                        UserInterface.logConsole("DRad: " + EEPROM.DA.ToString() + ", " + EEPROM.DB.ToString() + ", " + EEPROM.DC.ToString());
+
+                        j = 100;
+                    }
+                    else
+                    {
+                        j++;
+                    }
+
+                    //UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
+                    //UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                 }
                 else
                 {
-                    j++;
+                    xyzOffset = false;
+                    j = 100;
                 }
             }
 
-            if (offsetX > 1000 || offsetY > 1000 || offsetZ > 1000)
+            if (EEPROM.offsetX > 1000 || EEPROM.offsetY > 1000 || EEPROM.offsetZ > 1000)
             {
                 UserInterface.logConsole("XYZ offset calibration error, setting default values.");
                 UserInterface.logConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ);
                 offsetX = 0;
                 offsetY = 0;
                 offsetZ = 0;
-            }
-            else
-            {
-                X = tempX2;
-                XOpp = tempXOpp2;
-                Y = tempY2;
-                YOpp = tempYOpp2;
-                Z = tempZ2;
-                ZOpp = tempZOpp2;
-                
-                //UserInterface.logConsole("heights :" + X + " " + XOpp + " " + Y + " " + YOpp + " " + Z + " " + ZOpp);
-                UserInterface.logConsole("XYZ:" + offsetX + " " + offsetY + " " + offsetZ);
-
-                //round to the nearest whole number
-                EEPROM.offsetX = Convert.ToInt32(offsetX);
-                EEPROM.offsetY = Convert.ToInt32(offsetY);
-                EEPROM.offsetZ = Convert.ToInt32(offsetZ);
             }
         }
 
@@ -414,13 +428,6 @@ namespace OpenDACT.Class_Files
                 {
                     k = 100;
 
-                    X = Validation.checkZero(X);
-                    Y = Validation.checkZero(Y);
-                    Z = Validation.checkZero(Z);
-                    XOpp = Validation.checkZero(XOpp);
-                    YOpp = Validation.checkZero(YOpp);
-                    ZOpp = Validation.checkZero(ZOpp);
-
                     //log
                     UserInterface.logConsole("ABC:" + EEPROM.A + " " + EEPROM.B + " " + EEPROM.C);
                 }
@@ -447,13 +454,6 @@ namespace OpenDACT.Class_Files
             XOpp += (XYZ - XYZOpp) * diagChange;
             YOpp += (XYZ - XYZOpp) * diagChange;
             ZOpp += (XYZ - XYZOpp) * diagChange;
-
-            X = Validation.checkZero(X);
-            Y = Validation.checkZero(Y);
-            Z = Validation.checkZero(Z);
-            XOpp = Validation.checkZero(XOpp);
-            YOpp = Validation.checkZero(YOpp);
-            ZOpp = Validation.checkZero(ZOpp);
 
             UserInterface.logConsole("Steps per Millimeter: " + EEPROM.stepsPerMM.ToString());
         }

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("deltaKinematicsCalibration")]
+[assembly: AssemblyTitle("OpenDACT")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("deltaKinematicsCalibration")]
+[assembly: AssemblyProduct("OpenDACT")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8e226cff-2745-473d-b6ef-9587b661f08c")]
+[assembly: Guid("bde7b842-a9b6-4f39-9620-01b6d4e7957e")]
 
 // Version information for an assembly consists of the following four values:
 //

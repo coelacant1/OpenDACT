@@ -4,19 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace deltaKinematics
+namespace OpenDACT.Class_Files
 {
     static class Program
     {
+        public static mainForm mainFormTest;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        public static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            createMainForm();
+            Application.Run(mainFormTest);
+        }
+
+        public static void createMainForm()
+        {
+            mainFormTest = new mainForm();
         }
     }
 }

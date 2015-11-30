@@ -107,9 +107,10 @@ namespace OpenDACT.Class_Files
             float valueZ = 0.482F * plateDiameter;
             float valueXYLarge = 0.417F * plateDiameter;
             float valueXYSmall = 0.241F * plateDiameter;
-            /*
+
             if (UserVariables.probeChoice == "Z-Probe" && wasSet == false)
             {
+                EEPROM.zProbeHeight = 0;
                 homeAxes();
                 pauseTime();
                 Connection._serialPort.WriteLine("G1 Z" + Math.Round(EEPROM.zMaxLength / 6).ToString() + " X0 Y0");
@@ -122,10 +123,11 @@ namespace OpenDACT.Class_Files
                 Thread.Sleep(timeWait);
 
                 wasSet = true;
+                Program.mainFormTest.setEEPROMGUIList();
+                EEPROMFunctions.sendEEPROM();
             }
             else
             {
-            */
                 switch (currentPosition)
                 {
                     case 0:
@@ -199,7 +201,7 @@ namespace OpenDACT.Class_Files
                         checkHeights = false;
                         break;
                 }//end switch
-            //}//end else
+            }//end else
         }
 
 

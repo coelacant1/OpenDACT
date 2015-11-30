@@ -187,37 +187,7 @@ namespace OpenDACT.Class_Files
 
             UserInterface.logConsole("HRad:" + EEPROM.HRadius.ToString());
         }
-
-        private static void DRad(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
-        {
-            float DASA = ((X + XOpp) / 2);
-            float DBSA = ((Y + YOpp) / 2);
-            float DCSA = ((Z + ZOpp) / 2);
-
-            float DRadRatio = UserVariables.DRadRatio;
-
-            EEPROM.DA -= X / 0.5F;
-            EEPROM.DB -= Y / 0.5F;
-            EEPROM.DC -= Z / 0.5F;
-
-            XOpp += X * (0.225F / 0.5F);
-            YOpp += X * (0.1375F / 0.5F);
-            ZOpp += X * (0.1375F / 0.5F);
-            X += X / 0.5F;
-
-            XOpp += Y * (0.1375F / 0.5F);
-            YOpp += Y * (0.225F / 0.5F);
-            ZOpp += Y * (0.1375F / 0.5F);
-            Y += Y / 0.5F;
-
-            XOpp += Z * (0.1375F / 0.5F);
-            YOpp += Z * (0.1375F / 0.5F);
-            ZOpp += Z * (0.225F / 0.5F);
-            Z += Z / 0.5F;
-
-            UserInterface.logConsole("DRad: " + EEPROM.DA.ToString() + ", " + EEPROM.DB.ToString() + ", " + EEPROM.DC.ToString());
-        }
-
+        
         /*
         public void analyzeGeometry(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
         {
@@ -242,37 +212,42 @@ namespace OpenDACT.Class_Files
             float offsetY = EEPROM.offsetY;
             float offsetZ = EEPROM.offsetZ;
             float stepsPerMM = EEPROM.stepsPerMM;
+
+            float towMain = UserVariables.offsetCorrection;//0.6
+            float oppMain = UserVariables.mainOppPerc;//0.5
+            float towSub = UserVariables.towPerc;//0.3
+            float oppSub = UserVariables.oppPerc;//-0.25
             
             while (j < 100)
             {
-                if (Math.Abs(tempX2) > UserVariables.accuracy / 2 || Math.Abs(tempY2) > UserVariables.accuracy / 2 || Math.Abs(tempZ2) > UserVariables.accuracy / 2)
+                if (Math.Abs(tempX2) > UserVariables.accuracy || Math.Abs(tempY2) > UserVariables.accuracy || Math.Abs(tempZ2) > UserVariables.accuracy)
                 {
-                    offsetX += tempX2 * stepsPerMM * (1 / 0.60F);
+                    offsetX -= tempX2 * stepsPerMM * (1 / towMain);
 
-                    tempXOpp2 += tempX2 * (0.5F / 0.60F);
-                    tempY2 += tempX2 * (0.3F / 0.60F);
-                    tempYOpp2 += tempX2 * (-0.25F / 0.60F);
-                    tempZ2 += tempX2 * (0.3F / 0.60F);
-                    tempZOpp2 += tempX2 * (-0.25F / 0.60F);
-                    tempX2 += tempX2 / -1;
+                    tempXOpp2 -= tempX2 * (oppMain / towMain);
+                    tempY2 -= tempX2 * (towSub / towMain);
+                    tempYOpp2 -= tempX2 * (-oppSub / towMain);
+                    tempZ2 -= tempX2 * (towSub / towMain);
+                    tempZOpp2 -= tempX2 * (-oppSub / towMain);
+                    tempX2 -= tempX2 / 1;
 
-                    offsetY += tempY2 * stepsPerMM * (1 / 0.60F);
+                    offsetY -= tempY2 * stepsPerMM * (1 / towMain);
 
-                    tempYOpp2 += tempY2 * (0.5F / 0.60F);
-                    tempX2 += tempY2 * (0.3F / 0.60F);
-                    tempXOpp2 += tempY2 * (-0.25F / 0.60F);
-                    tempZ2 += tempY2 * (0.3F / 0.60F);
-                    tempZOpp2 += tempY2 * (-0.25F / 0.60F);
-                    tempY2 += tempY2 / -1;
+                    tempYOpp2 -= tempY2 * (oppMain / towMain);
+                    tempX2 -= tempY2 * (towSub / towMain);
+                    tempXOpp2 -= tempY2 * (-oppSub / towMain);
+                    tempZ2 -= tempY2 * (towSub / towMain);
+                    tempZOpp2 -= tempY2 * (-oppSub / towMain);
+                    tempY2 -= tempY2 / 1;
 
-                    offsetZ += tempZ2 * stepsPerMM * (1 / 0.60F);
+                    offsetZ -= tempZ2 * stepsPerMM * (1 / towMain);
 
-                    tempZOpp2 += tempZ2 * (0.5F / 0.60F);
-                    tempX2 += tempZ2 * (0.3F / 0.60F);
-                    tempXOpp2 += tempZ2 * (-0.25F / 0.60F);
-                    tempY2 += tempZ2 * (0.3F / 0.60F);
-                    tempYOpp2 += tempZ2 * (-0.25F / 0.60F);
-                    tempZ2 += tempZ2 / -1;
+                    tempZOpp2 -= tempZ2 * (oppMain / towMain);
+                    tempX2 -= tempZ2 * (towSub / towMain);
+                    tempXOpp2 += tempZ2 * (-oppSub / towMain);
+                    tempY2 -= tempZ2 * (towSub / towMain);
+                    tempYOpp2 -= tempZ2 * (-oppSub / towMain);
+                    tempZ2 -= tempZ2 / 1;
 
                     tempX2 = Validation.checkZero(tempX2);
                     tempY2 = Validation.checkZero(tempY2);
@@ -281,10 +256,7 @@ namespace OpenDACT.Class_Files
                     tempYOpp2 = Validation.checkZero(tempYOpp2);
                     tempZOpp2 = Validation.checkZero(tempZOpp2);
 
-                    float tempComb = tempX2 + tempY2 + tempZ2;
-                    float tempCombAbs = Math.Abs(tempX2) + Math.Abs(tempY2) + Math.Abs(tempZ2);
-
-                    if (Math.Abs(tempX2) <= UserVariables.accuracy / 2 && Math.Abs(tempY2) <= UserVariables.accuracy / 2 && Math.Abs(tempZ2) <= UserVariables.accuracy / 2)
+                    if (Math.Abs(tempX2) <= UserVariables.accuracy && Math.Abs(tempY2) <= UserVariables.accuracy && Math.Abs(tempZ2) <= UserVariables.accuracy)
                     {
                         UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                         UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
@@ -318,7 +290,7 @@ namespace OpenDACT.Class_Files
                     {
                         UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                         UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
-                        float dradCorr = tempComb * -0.85F;
+                        float dradCorr = tempX2 * -1.25F;
 
                         EEPROM.DA += dradCorr;
                         EEPROM.DB += dradCorr;

@@ -11,6 +11,8 @@ namespace OpenDACT.Class_Files
     {
         public static int currentPosition = 0;
         public static bool checkHeights = false;
+        public static bool wasSet = false;
+        public static bool wasZProbeHeightSet = false;
 
         public static void sendToPosition(float X, float Y, float Z)
         {
@@ -105,80 +107,99 @@ namespace OpenDACT.Class_Files
             float valueZ = 0.482F * plateDiameter;
             float valueXYLarge = 0.417F * plateDiameter;
             float valueXYSmall = 0.241F * plateDiameter;
-
-            switch (currentPosition)
+            /*
+            if (UserVariables.probeChoice == "Z-Probe" && wasSet == false)
             {
-                case 0:
-                    homeAxes();
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    pauseTime();
-                    probe();
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
-                    currentPosition++;
-                    break;
-                case 1:
-                    probe();
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
-                    pauseTime();
-                    currentPosition++;
-                    break;
-                case 2:
-                    probe();
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
-                    pauseTime();
-                    currentPosition++;
-                    break;
-                case 3:
-                    probe();
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
-                    pauseTime();
-                    currentPosition++;
-                    break;
-                case 4:
-                    probe();
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y" + valueZ.ToString());
-                    pauseTime();
-                    currentPosition++;
-                    break;
-                case 5:
-                    probe();
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y" + valueZ.ToString());
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y-" + valueZ.ToString());
-                    pauseTime();
-                    currentPosition++;
-                    break;
-                case 6:
-                    probe();
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y-" + valueZ.ToString());
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
-                    pauseTime();
-                    Connection._serialPort.WriteLine("G1 Z100 X0 Y0");
-                    pauseTime();
-                    currentPosition = 0;
-                    checkHeights = false;
-                    break;
+                homeAxes();
+                pauseTime();
+                Connection._serialPort.WriteLine("G1 Z" + Math.Round(EEPROM.zMaxLength / 6).ToString() + " X0 Y0");
+                pauseTime();
+                pauseTime();
+                probe();
+
+                int timeWait = Convert.ToInt32(Math.Round(EEPROM.zMaxLength / 6) / UserVariables.probingSpeed);
+
+                Thread.Sleep(timeWait);
+
+                wasSet = true;
             }
+            else
+            {
+            */
+                switch (currentPosition)
+                {
+                    case 0:
+                        homeAxes();
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                        pauseTime();
+                        probe();
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
+                        currentPosition++;
+                        break;
+                    case 1:
+                        probe();
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                        pauseTime();
+                        currentPosition++;
+                        break;
+                    case 2:
+                        probe();
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
+                        pauseTime();
+                        currentPosition++;
+                        break;
+                    case 3:
+                        probe();
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                        pauseTime();
+                        currentPosition++;
+                        break;
+                    case 4:
+                        probe();
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y" + valueZ.ToString());
+                        pauseTime();
+                        currentPosition++;
+                        break;
+                    case 5:
+                        probe();
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y" + valueZ.ToString());
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y-" + valueZ.ToString());
+                        pauseTime();
+                        currentPosition++;
+                        break;
+                    case 6:
+                        probe();
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y-" + valueZ.ToString());
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                        pauseTime();
+                        Connection._serialPort.WriteLine("G1 Z100 X0 Y0");
+                        pauseTime();
+                        currentPosition = 0;
+                        checkHeights = false;
+                        break;
+                }//end switch
+            //}//end else
         }
 
 

@@ -26,7 +26,24 @@ namespace OpenDACT.Class_Files
             }
             else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
             {
-                GCode.positionFlow();
+                /*
+                if (UserVariables.probeChoice == "Z-Probe" && GCode.wasZProbeHeightSet == false && GCode.wasSet == true)
+                {
+                    if (HeightFunctions.parseZProbe(message) != 1000)
+                    {
+                        EEPROM.zMaxLength = Convert.ToSingle(HeightFunctions.parseZProbe(message) + Math.Round((EEPROM.zMaxLength * 5) / 6));
+                        
+                        GCode.wasZProbeHeightSet = true;
+                        Program.mainFormTest.setEEPROMGUIList();
+                        EEPROMFunctions.sendEEPROM();
+                    }
+
+                }
+                else
+                {
+                */
+                    GCode.positionFlow();
+                //}
             }
             else if (Calibration.calibrationState == true && Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
             {
@@ -73,7 +90,7 @@ namespace OpenDACT.Class_Files
                             Program.mainFormTest.setEEPROMGUIList();
                             EEPROMFunctions.sendEEPROM();
                         }
-                        
+
 
                         Calibration.calibrateInProgress = false;
                     }

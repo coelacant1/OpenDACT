@@ -284,7 +284,7 @@ namespace OpenDACT.Class_Files
                     float tempComb = tempX2 + tempY2 + tempZ2;
                     float tempCombAbs = Math.Abs(tempX2) + Math.Abs(tempY2) + Math.Abs(tempZ2);
 
-                    if (Math.Abs(tempX2) <= UserVariables.accuracy && Math.Abs(tempY2) <= UserVariables.accuracy && Math.Abs(tempZ2) <= UserVariables.accuracy)
+                    if (Math.Abs(tempX2) <= UserVariables.accuracy / 2 && Math.Abs(tempY2) <= UserVariables.accuracy / 2 && Math.Abs(tempZ2) <= UserVariables.accuracy / 2)
                     {
                         UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                         UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
@@ -311,6 +311,8 @@ namespace OpenDACT.Class_Files
                         EEPROM.offsetZ = Convert.ToInt32(offsetZ);
 
                         j = 100;
+                        
+                        xyzOffset = false;
                     }
                     else if (j == 99)
                     {
@@ -322,9 +324,9 @@ namespace OpenDACT.Class_Files
                         EEPROM.DB += dradCorr;
                         EEPROM.DC += dradCorr;
 
-                        EEPROM.offsetX = 200;
-                        EEPROM.offsetY = 200;
-                        EEPROM.offsetZ = 200;
+                        EEPROM.offsetX = 0;
+                        EEPROM.offsetY = 0;
+                        EEPROM.offsetZ = 0;
 
                         UserInterface.logConsole("Drad correction: " + dradCorr);
                         UserInterface.logConsole("DRad: " + EEPROM.DA.ToString() + ", " + EEPROM.DB.ToString() + ", " + EEPROM.DC.ToString());
@@ -343,13 +345,15 @@ namespace OpenDACT.Class_Files
                 {
                     xyzOffset = false;
                     j = 100;
+
+                    UserInterface.logConsole("Tower Offsets  and Delta Radii Calibrated");
                 }
             }
 
             if (EEPROM.offsetX > 1000 || EEPROM.offsetY > 1000 || EEPROM.offsetZ > 1000)
             {
-                UserInterface.logConsole("XYZ offset calibration error, setting default values.");
-                UserInterface.logConsole("XYZ offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ);
+                UserInterface.logConsole("Tower offset calibration error, setting default values.");
+                UserInterface.logConsole("Tower offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ);
                 offsetX = 0;
                 offsetY = 0;
                 offsetZ = 0;

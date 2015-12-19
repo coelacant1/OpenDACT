@@ -79,6 +79,7 @@ namespace OpenDACT.Class_Files
         public static float diagonalRodLength;
         public static float FSROffset;
         public static float probingSpeed;
+        public static float xySpeed;//feedrate in gcode
 
         public static string probeChoice;
 

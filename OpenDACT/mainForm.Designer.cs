@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -48,6 +48,8 @@
             this.advancedPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.xySpeedTxt = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -123,7 +125,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -315,6 +316,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label24);
+            this.tabPage1.Controls.Add(this.xySpeedTxt);
             this.tabPage1.Controls.Add(this.label17);
             this.tabPage1.Controls.Add(this.label16);
             this.tabPage1.Controls.Add(this.label14);
@@ -390,7 +393,6 @@
             this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.label22);
             this.tabPage1.Controls.Add(this.label21);
-            this.tabPage1.Controls.Add(this.label19);
             this.tabPage1.Controls.Add(this.label18);
             this.tabPage1.Controls.Add(this.label15);
             this.tabPage1.Controls.Add(this.label12);
@@ -401,6 +403,23 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(9, 453);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(123, 13);
+            this.label24.TabIndex = 209;
+            this.label24.Text = "XY Travel Speed(mm/s):";
+            // 
+            // xySpeedTxt
+            // 
+            this.xySpeedTxt.Location = new System.Drawing.Point(217, 450);
+            this.xySpeedTxt.Name = "xySpeedTxt";
+            this.xySpeedTxt.Size = new System.Drawing.Size(100, 20);
+            this.xySpeedTxt.TabIndex = 208;
+            this.xySpeedTxt.Text = "150";
             // 
             // label17
             // 
@@ -637,11 +656,11 @@
             this.textAccuracy2.Name = "textAccuracy2";
             this.textAccuracy2.Size = new System.Drawing.Size(100, 20);
             this.textAccuracy2.TabIndex = 134;
-            this.textAccuracy2.Text = "0.025";
+            this.textAccuracy2.Text = "0.035";
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(7, 486);
+            this.textBox6.Location = new System.Drawing.Point(9, 561);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(99, 20);
             this.textBox6.TabIndex = 126;
@@ -657,7 +676,7 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(112, 486);
+            this.textBox5.Location = new System.Drawing.Point(114, 561);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(99, 20);
             this.textBox5.TabIndex = 95;
@@ -665,7 +684,7 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(217, 486);
+            this.textBox4.Location = new System.Drawing.Point(219, 561);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(99, 20);
             this.textBox4.TabIndex = 96;
@@ -681,7 +700,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(322, 486);
+            this.textBox3.Location = new System.Drawing.Point(324, 561);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(99, 20);
             this.textBox3.TabIndex = 97;
@@ -697,7 +716,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(427, 486);
+            this.textBox2.Location = new System.Drawing.Point(429, 561);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(99, 20);
             this.textBox2.TabIndex = 98;
@@ -713,7 +732,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(532, 486);
+            this.textBox1.Location = new System.Drawing.Point(534, 561);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(99, 20);
             this.textBox1.TabIndex = 99;
@@ -762,7 +781,7 @@
             // label52
             // 
             this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(12, 470);
+            this.label52.Location = new System.Drawing.Point(14, 545);
             this.label52.Name = "label52";
             this.label52.Size = new System.Drawing.Size(171, 13);
             this.label52.TabIndex = 198;
@@ -943,7 +962,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(396, 490);
+            this.label23.Location = new System.Drawing.Point(398, 565);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(22, 13);
             this.label23.TabIndex = 124;
@@ -1015,7 +1034,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(88, 490);
+            this.label22.Location = new System.Drawing.Point(90, 565);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(14, 13);
             this.label22.TabIndex = 129;
@@ -1024,25 +1043,16 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(186, 489);
+            this.label21.Location = new System.Drawing.Point(188, 564);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(22, 13);
             this.label21.TabIndex = 116;
             this.label21.Text = "XO";
             // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(608, 489);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(22, 13);
-            this.label19.TabIndex = 115;
-            this.label19.Text = "ZO";
-            // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(509, 489);
+            this.label18.Location = new System.Drawing.Point(511, 564);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(14, 13);
             this.label18.TabIndex = 114;
@@ -1051,7 +1061,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(300, 490);
+            this.label15.Location = new System.Drawing.Point(302, 565);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(14, 13);
             this.label15.TabIndex = 112;
@@ -1301,22 +1311,22 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea2.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend2);
+            chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea1.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend1);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series2.BackImageTransparentColor = System.Drawing.Color.White;
-            series2.BorderColor = System.Drawing.Color.Transparent;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.IsXValueIndexed = true;
-            series2.Legend = "Legend1";
-            series2.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series2);
+            series1.BackImageTransparentColor = System.Drawing.Color.White;
+            series1.BorderColor = System.Drawing.Color.Transparent;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series1);
             this.accuracyTime.Size = new System.Drawing.Size(317, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
@@ -1622,7 +1632,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label12;
@@ -1650,5 +1659,7 @@
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.DataVisualization.Charting.Chart accuracyTime;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox xySpeedTxt;
     }
 }

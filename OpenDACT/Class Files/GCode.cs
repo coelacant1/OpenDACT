@@ -77,11 +77,11 @@ namespace OpenDACT.Class_Files
             {
                 if (type == 1)
                 {
-                    Connection._serialPort.WriteLine("M206 T1 P" + position + " S" + value);
+                    Connection._serialPort.WriteLine("M206 T1 P" + position + " S" + value.ToString("F3"));
                 }
                 else if (type == 3)
                 {
-                    Connection._serialPort.WriteLine("M206 T3 P" + position + " X" + value);
+                    Connection._serialPort.WriteLine("M206 T3 P" + position + " X" + value.ToString("F3"));
                 }
                 else
                 {
@@ -96,7 +96,7 @@ namespace OpenDACT.Class_Files
 
         public static void pauseTimeRadius()
         {
-            Thread.Sleep(Convert.ToInt32(((UserVariables.plateDiameter / 2) / UserVariables.xySpeed) * 1125));//1000 s to ms x 1.25 for multiplier
+            Thread.Sleep(Convert.ToInt32(((UserVariables.plateDiameter / 2) / UserVariables.xySpeed) * 1000));//1000 s to ms x 1.25 for multiplier
         }
 
         public static void pauseTimeProbe()
@@ -106,12 +106,12 @@ namespace OpenDACT.Class_Files
 
         public static void pauseTimeZMax()
         {
-            Thread.Sleep(Convert.ToInt32((EEPROM.zMaxLength / UserVariables.xySpeed) * 1125));
+            Thread.Sleep(Convert.ToInt32((EEPROM.zMaxLength / UserVariables.xySpeed) * 1025));
         }
 
         public static void pauseTimeZMaxThird()
         {
-            Thread.Sleep(Convert.ToInt32(((EEPROM.zMaxLength / 3) / UserVariables.xySpeed) * 1125));
+            Thread.Sleep(Convert.ToInt32(((EEPROM.zMaxLength / 3) / UserVariables.xySpeed) * 1000));
         }
 
         public static void positionFlow()
@@ -145,7 +145,8 @@ namespace OpenDACT.Class_Files
                 {
                     case 0:
                         homeAxes();
-                        pauseTimeZMax();
+                        pauseTimeZMaxThird();
+                        pauseTimeZMaxThird();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
                         pauseTimeZMax();
                         probe();
@@ -159,6 +160,8 @@ namespace OpenDACT.Class_Files
                         pauseTimeProbe();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
                         pauseTimeRadius();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                        pauseTimeRadius();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
                         pauseTimeRadius();
                         currentPosition++;
@@ -167,6 +170,8 @@ namespace OpenDACT.Class_Files
                         probe();
                         pauseTimeProbe();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                        pauseTimeRadius();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
                         pauseTimeRadius();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
                         pauseTimeRadius();
@@ -177,6 +182,8 @@ namespace OpenDACT.Class_Files
                         pauseTimeProbe();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
                         pauseTimeRadius();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                        pauseTimeRadius();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
                         pauseTimeRadius();
                         currentPosition++;
@@ -185,6 +192,8 @@ namespace OpenDACT.Class_Files
                         probe();
                         pauseTimeProbe();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                        pauseTimeRadius();
+                        Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
                         pauseTimeRadius();
                         Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y" + valueZ.ToString());
                         pauseTimeRadius();

@@ -419,7 +419,7 @@
             this.xySpeedTxt.Name = "xySpeedTxt";
             this.xySpeedTxt.Size = new System.Drawing.Size(100, 20);
             this.xySpeedTxt.TabIndex = 208;
-            this.xySpeedTxt.Text = "150";
+            this.xySpeedTxt.Text = "100";
             // 
             // label17
             // 
@@ -632,7 +632,7 @@
             this.textFSRPO.Name = "textFSRPO";
             this.textFSRPO.Size = new System.Drawing.Size(100, 20);
             this.textFSRPO.TabIndex = 145;
-            this.textFSRPO.Text = "0.25";
+            this.textFSRPO.Text = "0.4";
             // 
             // textHRadRatio
             // 
@@ -856,18 +856,18 @@
             this.label44.AutoSize = true;
             this.label44.Location = new System.Drawing.Point(323, 371);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(116, 13);
+            this.label44.Size = new System.Drawing.Size(112, 13);
             this.label44.TabIndex = 188;
-            this.label44.Text = "Diagonal Rod Offset C:";
+            this.label44.Text = "Delta Radius Offset C:";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(323, 345);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(116, 13);
+            this.label20.Size = new System.Drawing.Size(112, 13);
             this.label20.TabIndex = 187;
-            this.label20.Text = "Diagonal Rod Offset B:";
+            this.label20.Text = "Delta Radius Offset B:";
             // 
             // label43
             // 
@@ -946,9 +946,9 @@
             this.label30.AutoSize = true;
             this.label30.Location = new System.Drawing.Point(324, 319);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(116, 13);
+            this.label30.Size = new System.Drawing.Size(112, 13);
             this.label30.TabIndex = 179;
-            this.label30.Text = "Diagonal Rod Offset A:";
+            this.label30.Text = "Delta Radius Offset A:";
             // 
             // label13
             // 

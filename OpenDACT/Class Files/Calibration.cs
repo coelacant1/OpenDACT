@@ -15,7 +15,6 @@ namespace OpenDACT.Class_Files
         public static int iterationNum = 0;
         private static float tempAccuracy;
         private static int iterativeStep = 0;
-        private static bool xyzOffset = true;
 
         private static bool HRadRequired = false;
         private static bool DRadRequired = false;
@@ -61,17 +60,77 @@ namespace OpenDACT.Class_Files
 
             if (calibrationState == true)
             {
-                if (xyzOffset)
+                alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                //HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+
+                bool test =
+                        Math.Abs(Heights.X) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.Y - UserVariables.accuracy &&
+                        Math.Abs(Heights.X) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.Z - UserVariables.accuracy &&
+                        Math.Abs(Heights.X) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.YOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.X) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.ZOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.X) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.XOpp - UserVariables.accuracy &&
+
+                        Math.Abs(Heights.XOpp) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.X - UserVariables.accuracy &&
+                        Math.Abs(Heights.XOpp) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.Y - UserVariables.accuracy &&
+                        Math.Abs(Heights.XOpp) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.Z - UserVariables.accuracy &&
+                        Math.Abs(Heights.XOpp) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.YOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.XOpp) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.ZOpp - UserVariables.accuracy &&
+
+                        Math.Abs(Heights.Y) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.X - UserVariables.accuracy &&
+                        Math.Abs(Heights.Y) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.Z - UserVariables.accuracy &&
+                        Math.Abs(Heights.Y) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.XOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.Y) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.YOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.Y) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.ZOpp - UserVariables.accuracy &&
+
+                        Math.Abs(Heights.YOpp) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.X - UserVariables.accuracy &&
+                        Math.Abs(Heights.YOpp) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.Y - UserVariables.accuracy &&
+                        Math.Abs(Heights.YOpp) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.Z - UserVariables.accuracy &&
+                        Math.Abs(Heights.YOpp) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.XOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.YOpp) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.ZOpp - UserVariables.accuracy &&
+
+                        Math.Abs(Heights.Z) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.X - UserVariables.accuracy &&
+                        Math.Abs(Heights.Z) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.Y - UserVariables.accuracy &&
+                        Math.Abs(Heights.Z) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.XOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.Z) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.YOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.Z) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.ZOpp - UserVariables.accuracy &&
+
+                        Math.Abs(Heights.ZOpp) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.X - UserVariables.accuracy &&
+                        Math.Abs(Heights.ZOpp) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.Y - UserVariables.accuracy &&
+                        Math.Abs(Heights.ZOpp) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.Z - UserVariables.accuracy &&
+                        Math.Abs(Heights.ZOpp) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.XOpp - UserVariables.accuracy &&
+                        Math.Abs(Heights.ZOpp) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.YOpp - UserVariables.accuracy;
+
+                UserInterface.logConsole(test.ToString());
+
+                if (
+                    Math.Abs(Heights.X) > Heights.Y + UserVariables.accuracy || Math.Abs(Heights.X) < Heights.Y - UserVariables.accuracy ||
+                    Math.Abs(Heights.X) > Heights.Z + UserVariables.accuracy || Math.Abs(Heights.X) < Heights.Z - UserVariables.accuracy ||
+
+                    Math.Abs(Heights.Y) > Heights.X + UserVariables.accuracy || Math.Abs(Heights.Y) < Heights.X - UserVariables.accuracy ||
+                    Math.Abs(Heights.Y) > Heights.Z + UserVariables.accuracy || Math.Abs(Heights.Y) < Heights.Z - UserVariables.accuracy ||
+
+                    Math.Abs(Heights.Z) > Heights.Y + UserVariables.accuracy || Math.Abs(Heights.Z) < Heights.Y - UserVariables.accuracy ||
+                    Math.Abs(Heights.Z) > Heights.X + UserVariables.accuracy || Math.Abs(Heights.Z) < Heights.X - UserVariables.accuracy
+                    )
                 {
                     towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 }
+                else if (test)
+                {
+                    HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                }
+
+                /*
                 else
                 {
+                    //towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                     alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                     stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                     HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                     //DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 }
+                */
             }
             else
             {
@@ -187,7 +246,7 @@ namespace OpenDACT.Class_Files
 
             UserInterface.logConsole("HRad:" + EEPROM.HRadius.ToString());
         }
-        
+
         /*
         public void analyzeGeometry(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
         {
@@ -217,7 +276,7 @@ namespace OpenDACT.Class_Files
             float oppMain = UserVariables.mainOppPerc;//0.5
             float towSub = UserVariables.towPerc;//0.3
             float oppSub = UserVariables.oppPerc;//-0.25
-            
+
             while (j < 100)
             {
                 if (Math.Abs(tempX2) > UserVariables.accuracy || Math.Abs(tempY2) > UserVariables.accuracy || Math.Abs(tempZ2) > UserVariables.accuracy)
@@ -283,27 +342,35 @@ namespace OpenDACT.Class_Files
                         EEPROM.offsetZ = Convert.ToInt32(offsetZ);
 
                         j = 100;
-                        
-                        xyzOffset = false;
                     }
                     else if (j == 99)
                     {
                         UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                         UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
                         float dradCorr = tempX2 * -1.25F;
+                        float HRadRatio = UserVariables.HRadRatio;
 
-                        EEPROM.DA += dradCorr;
-                        EEPROM.DB += dradCorr;
-                        EEPROM.DC += dradCorr;
+                        EEPROM.HRadius += dradCorr;
 
                         EEPROM.offsetX = 0;
                         EEPROM.offsetY = 0;
                         EEPROM.offsetZ = 0;
 
-                        UserInterface.logConsole("Drad correction: " + dradCorr);
-                        UserInterface.logConsole("DRad: " + EEPROM.DA.ToString() + ", " + EEPROM.DB.ToString() + ", " + EEPROM.DC.ToString());
+                        //hradsa = dradcorr
+                        //solve inversely from previous method
+                        float HRadOffset = HRadRatio * dradCorr;
 
-                        j = 100;
+                        tempX2 -= HRadOffset;
+                        tempY2 -= HRadOffset;
+                        tempZ2 -= HRadOffset;
+                        tempXOpp2 -= HRadOffset;
+                        tempYOpp2 -= HRadOffset;
+                        tempZOpp2 -= HRadOffset;
+
+                        UserInterface.logConsole("Hrad correction: " + dradCorr);
+                        UserInterface.logConsole("HRad: " + EEPROM.HRadius.ToString());
+
+                        j = 0;
                     }
                     else
                     {
@@ -315,10 +382,9 @@ namespace OpenDACT.Class_Files
                 }
                 else
                 {
-                    xyzOffset = false;
                     j = 100;
 
-                    UserInterface.logConsole("Tower Offsets  and Delta Radii Calibrated");
+                    UserInterface.logConsole("Tower Offsets and Delta Radii Calibrated");
                 }
             }
 

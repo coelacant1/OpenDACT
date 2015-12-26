@@ -91,6 +91,16 @@ namespace OpenDACT.Class_Files
 
                         Calibration.calibrateInProgress = false;
                     }
+                    else
+                    {
+                        if (UserVariables.probeChoice == "FSR")
+                        {
+                            EEPROM.zMaxLength -= UserVariables.FSROffset;
+                            UserInterface.logConsole("Setting Z Max Length with adjustment for FSR\nHeights checked");
+                        }
+
+                        GCode.homeAxes();
+                    }
 
                     HeightFunctions.heightsSet = false;
                 }

@@ -65,53 +65,53 @@ namespace OpenDACT.Class_Files
                 //HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
 
                 bool test =
-                        Math.Abs(Heights.X) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.Y - UserVariables.accuracy &&
-                        Math.Abs(Heights.X) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.Z - UserVariables.accuracy &&
-                        Math.Abs(Heights.X) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.YOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.X) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.ZOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.X) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.X) > Heights.XOpp - UserVariables.accuracy &&
+                        Heights.X < Heights.Y + UserVariables.accuracy && Heights.X > Heights.Y - UserVariables.accuracy &&
+                        Heights.X < Heights.Z + UserVariables.accuracy && Heights.X > Heights.Z - UserVariables.accuracy &&
+                        Heights.X < Heights.YOpp + UserVariables.accuracy && Heights.X > Heights.YOpp - UserVariables.accuracy &&
+                        Heights.X < Heights.ZOpp + UserVariables.accuracy && Heights.X > Heights.ZOpp - UserVariables.accuracy &&
+                        Heights.X < Heights.XOpp + UserVariables.accuracy && Heights.X > Heights.XOpp - UserVariables.accuracy &&
 
-                        Math.Abs(Heights.XOpp) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.X - UserVariables.accuracy &&
-                        Math.Abs(Heights.XOpp) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.Y - UserVariables.accuracy &&
-                        Math.Abs(Heights.XOpp) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.Z - UserVariables.accuracy &&
-                        Math.Abs(Heights.XOpp) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.YOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.XOpp) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.XOpp) > Heights.ZOpp - UserVariables.accuracy &&
+                        Heights.XOpp < Heights.X + UserVariables.accuracy && Heights.XOpp > Heights.X - UserVariables.accuracy &&
+                        Heights.XOpp < Heights.Y + UserVariables.accuracy && Heights.XOpp > Heights.Y - UserVariables.accuracy &&
+                        Heights.XOpp < Heights.Z + UserVariables.accuracy && Heights.XOpp > Heights.Z - UserVariables.accuracy &&
+                        Heights.XOpp < Heights.YOpp + UserVariables.accuracy && Heights.XOpp > Heights.YOpp - UserVariables.accuracy &&
+                        Heights.XOpp < Heights.ZOpp + UserVariables.accuracy && Heights.XOpp > Heights.ZOpp - UserVariables.accuracy &&
 
-                        Math.Abs(Heights.Y) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.X - UserVariables.accuracy &&
-                        Math.Abs(Heights.Y) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.Z - UserVariables.accuracy &&
-                        Math.Abs(Heights.Y) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.XOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.Y) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.YOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.Y) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.Y) > Heights.ZOpp - UserVariables.accuracy &&
+                        Heights.Y < Heights.X + UserVariables.accuracy && Heights.Y > Heights.X - UserVariables.accuracy &&
+                        Heights.Y < Heights.Z + UserVariables.accuracy && Heights.Y > Heights.Z - UserVariables.accuracy &&
+                        Heights.Y < Heights.XOpp + UserVariables.accuracy && Heights.Y > Heights.XOpp - UserVariables.accuracy &&
+                        Heights.Y < Heights.YOpp + UserVariables.accuracy && Heights.Y > Heights.YOpp - UserVariables.accuracy &&
+                        Heights.Y < Heights.ZOpp + UserVariables.accuracy && Heights.Y > Heights.ZOpp - UserVariables.accuracy &&
 
-                        Math.Abs(Heights.YOpp) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.X - UserVariables.accuracy &&
-                        Math.Abs(Heights.YOpp) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.Y - UserVariables.accuracy &&
-                        Math.Abs(Heights.YOpp) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.Z - UserVariables.accuracy &&
-                        Math.Abs(Heights.YOpp) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.XOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.YOpp) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.YOpp) > Heights.ZOpp - UserVariables.accuracy &&
+                        Heights.YOpp < Heights.X + UserVariables.accuracy && Heights.YOpp > Heights.X - UserVariables.accuracy &&
+                        Heights.YOpp < Heights.Y + UserVariables.accuracy && Heights.YOpp > Heights.Y - UserVariables.accuracy &&
+                        Heights.YOpp < Heights.Z + UserVariables.accuracy && Heights.YOpp > Heights.Z - UserVariables.accuracy &&
+                        Heights.YOpp < Heights.XOpp + UserVariables.accuracy && Heights.YOpp > Heights.XOpp - UserVariables.accuracy &&
+                        Heights.YOpp < Heights.ZOpp + UserVariables.accuracy && Heights.YOpp > Heights.ZOpp - UserVariables.accuracy &&
 
-                        Math.Abs(Heights.Z) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.X - UserVariables.accuracy &&
-                        Math.Abs(Heights.Z) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.Y - UserVariables.accuracy &&
-                        Math.Abs(Heights.Z) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.XOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.Z) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.YOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.Z) < Heights.ZOpp + UserVariables.accuracy && Math.Abs(Heights.Z) > Heights.ZOpp - UserVariables.accuracy &&
+                        Heights.Z < Heights.X + UserVariables.accuracy && Heights.Z > Heights.X - UserVariables.accuracy &&
+                        Heights.Z < Heights.Y + UserVariables.accuracy && Heights.Z > Heights.Y - UserVariables.accuracy &&
+                        Heights.Z < Heights.XOpp + UserVariables.accuracy && Heights.Z > Heights.XOpp - UserVariables.accuracy &&
+                        Heights.Z < Heights.YOpp + UserVariables.accuracy && Heights.Z > Heights.YOpp - UserVariables.accuracy &&
+                        Heights.Z < Heights.ZOpp + UserVariables.accuracy && Heights.Z > Heights.ZOpp - UserVariables.accuracy &&
 
-                        Math.Abs(Heights.ZOpp) < Heights.X + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.X - UserVariables.accuracy &&
-                        Math.Abs(Heights.ZOpp) < Heights.Y + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.Y - UserVariables.accuracy &&
-                        Math.Abs(Heights.ZOpp) < Heights.Z + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.Z - UserVariables.accuracy &&
-                        Math.Abs(Heights.ZOpp) < Heights.XOpp + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.XOpp - UserVariables.accuracy &&
-                        Math.Abs(Heights.ZOpp) < Heights.YOpp + UserVariables.accuracy && Math.Abs(Heights.ZOpp) > Heights.YOpp - UserVariables.accuracy;
+                        Heights.ZOpp < Heights.X + UserVariables.accuracy && Heights.ZOpp > Heights.X - UserVariables.accuracy &&
+                        Heights.ZOpp < Heights.Y + UserVariables.accuracy && Heights.ZOpp > Heights.Y - UserVariables.accuracy &&
+                        Heights.ZOpp < Heights.Z + UserVariables.accuracy && Heights.ZOpp > Heights.Z - UserVariables.accuracy &&
+                        Heights.ZOpp < Heights.XOpp + UserVariables.accuracy && Heights.ZOpp > Heights.XOpp - UserVariables.accuracy &&
+                        Heights.ZOpp < Heights.YOpp + UserVariables.accuracy && Heights.ZOpp > Heights.YOpp - UserVariables.accuracy;
 
                 UserInterface.logConsole(test.ToString());
 
                 if (
-                    Math.Abs(Heights.X) > Heights.Y + UserVariables.accuracy || Math.Abs(Heights.X) < Heights.Y - UserVariables.accuracy ||
-                    Math.Abs(Heights.X) > Heights.Z + UserVariables.accuracy || Math.Abs(Heights.X) < Heights.Z - UserVariables.accuracy ||
+                    Heights.X > Heights.Y + UserVariables.accuracy || Heights.X < Heights.Y - UserVariables.accuracy ||
+                    Heights.X > Heights.Z + UserVariables.accuracy || Heights.X < Heights.Z - UserVariables.accuracy ||
 
-                    Math.Abs(Heights.Y) > Heights.X + UserVariables.accuracy || Math.Abs(Heights.Y) < Heights.X - UserVariables.accuracy ||
-                    Math.Abs(Heights.Y) > Heights.Z + UserVariables.accuracy || Math.Abs(Heights.Y) < Heights.Z - UserVariables.accuracy ||
+                    Heights.Y > Heights.X + UserVariables.accuracy || Heights.Y < Heights.X - UserVariables.accuracy ||
+                    Heights.Y > Heights.Z + UserVariables.accuracy || Heights.Y < Heights.Z - UserVariables.accuracy ||
 
-                    Math.Abs(Heights.Z) > Heights.Y + UserVariables.accuracy || Math.Abs(Heights.Z) < Heights.Y - UserVariables.accuracy ||
-                    Math.Abs(Heights.Z) > Heights.X + UserVariables.accuracy || Math.Abs(Heights.Z) < Heights.X - UserVariables.accuracy
+                    Heights.Z > Heights.Y + UserVariables.accuracy || Heights.Z < Heights.Y - UserVariables.accuracy ||
+                    Heights.Z > Heights.X + UserVariables.accuracy || Heights.Z < Heights.X - UserVariables.accuracy
                     )
                 {
                     towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);

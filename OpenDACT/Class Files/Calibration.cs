@@ -60,10 +60,6 @@ namespace OpenDACT.Class_Files
 
             if (calibrationState == true)
             {
-                alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                //HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-
                 bool test =
                         Heights.X < Heights.Y + UserVariables.accuracy && Heights.X > Heights.Y - UserVariables.accuracy &&
                         Heights.X < Heights.Z + UserVariables.accuracy && Heights.X > Heights.Z - UserVariables.accuracy &&
@@ -114,11 +110,19 @@ namespace OpenDACT.Class_Files
                     Heights.Z > Heights.X + UserVariables.accuracy || Heights.Z < Heights.X - UserVariables.accuracy
                     )
                 {
+                    alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                    stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+
                     towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 }
                 else if (test)
                 {
                     HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                }
+                else
+                {
+                    alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                    stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 }
 
                 /*

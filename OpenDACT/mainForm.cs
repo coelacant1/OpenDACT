@@ -91,30 +91,12 @@ namespace OpenDACT.Class_Files
                 Calibration.calibrationState = true;
                 Calibration.calibrationSelection = 0;
                 HeightFunctions.checkHeightsOnly = false;
+                ConsoleRead.isCalibrating = true;
             }
             else
             {
                 UserInterface.logConsole("Not connected");
             }
-        }
-        
-        private void iterativeCalibrate_Click(object sender, EventArgs e)
-        {
-            /*
-            if (Connection._serialPort.IsOpen)
-            {
-                GCode.checkHeights = true;
-                EEPROMFunctions.readEEPROM();
-                EEPROMFunctions.EEPROMReadOnly = false;
-                Calibration.calibrationState = true;
-                Calibration.calibrationSelection = 1;
-                HeightFunctions.checkHeightsOnly = false;
-            }
-            else
-            {
-                UserInterface.logConsole("Not connected");
-            }
-            */
         }
 
         private void resetPrinter_Click(object sender, EventArgs e)
@@ -313,7 +295,7 @@ namespace OpenDACT.Class_Files
                 this.textHRadRatio.Text = UserVariables.HRadRatio.ToString();
                 this.textDRadRatio.Text = UserVariables.DRadRatio.ToString();
 
-                this.heuristicComboBox.Text = "False";
+                this.heuristicComboBox.Text = UserVariables.advancedCalibration.ToString();
 
                 this.textPauseTimeSet.Text = UserVariables.pauseTimeSet.ToString();
                 this.textMaxIterations.Text = UserVariables.maxIterations.ToString();
@@ -400,6 +382,23 @@ namespace OpenDACT.Class_Files
             Calibration.calibrationSelection = 0;
             HeightFunctions.checkHeightsOnly = true;
             HeightFunctions.heightsSet = false;
+        }
+
+        private void stopBut_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Connection._serialPort.DiscardOutBuffer();
+                GCode.emergencyReset();
+                Connection.disconnect();
+                ConsoleRead.isCalibrating = false;
+                Connection.connect();
+            }
+            catch
+            {
+
+            }
+
         }
     }
 }

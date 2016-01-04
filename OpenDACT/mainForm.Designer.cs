@@ -161,12 +161,12 @@
             this.aboutButton = new System.Windows.Forms.Button();
             this.contactButton = new System.Windows.Forms.Button();
             this.donateButton = new System.Windows.Forms.Button();
-            this.iterativeCalibrate = new System.Windows.Forms.Button();
             this.diagonalRodLengthText = new System.Windows.Forms.TextBox();
             this.textPlateDiameter = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.checkHeights = new System.Windows.Forms.Button();
             this.comboBoxZMin = new System.Windows.Forms.ComboBox();
+            this.stopBut = new System.Windows.Forms.Button();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -218,9 +218,9 @@
             // 
             this.calibrateButton.Location = new System.Drawing.Point(4, 157);
             this.calibrateButton.Name = "calibrateButton";
-            this.calibrateButton.Size = new System.Drawing.Size(119, 43);
+            this.calibrateButton.Size = new System.Drawing.Size(120, 43);
             this.calibrateButton.TabIndex = 4;
-            this.calibrateButton.Text = "Basic Calibration";
+            this.calibrateButton.Text = "Calibrate";
             this.calibrateButton.UseVisualStyleBackColor = true;
             this.calibrateButton.Click += new System.EventHandler(this.calibrateButton_Click);
             // 
@@ -600,7 +600,7 @@
             this.alphaText.Name = "alphaText";
             this.alphaText.Size = new System.Drawing.Size(100, 20);
             this.alphaText.TabIndex = 159;
-            this.alphaText.Text = "1.725";
+            this.alphaText.Text = "2.5";
             // 
             // textProbingSpeed
             // 
@@ -1415,16 +1415,6 @@
             this.donateButton.UseVisualStyleBackColor = true;
             this.donateButton.Click += new System.EventHandler(this.donateButton_Click_1);
             // 
-            // iterativeCalibrate
-            // 
-            this.iterativeCalibrate.Location = new System.Drawing.Point(130, 157);
-            this.iterativeCalibrate.Name = "iterativeCalibrate";
-            this.iterativeCalibrate.Size = new System.Drawing.Size(119, 43);
-            this.iterativeCalibrate.TabIndex = 24;
-            this.iterativeCalibrate.Text = "Iterative Calibration";
-            this.iterativeCalibrate.UseVisualStyleBackColor = true;
-            this.iterativeCalibrate.Click += new System.EventHandler(this.iterativeCalibrate_Click);
-            // 
             // diagonalRodLengthText
             // 
             this.diagonalRodLengthText.Location = new System.Drawing.Point(343, 58);
@@ -1472,19 +1462,29 @@
             this.comboBoxZMin.TabIndex = 203;
             this.comboBoxZMin.Text = "FSR";
             // 
+            // stopBut
+            // 
+            this.stopBut.Location = new System.Drawing.Point(128, 157);
+            this.stopBut.Name = "stopBut";
+            this.stopBut.Size = new System.Drawing.Size(120, 43);
+            this.stopBut.TabIndex = 204;
+            this.stopBut.Text = "Stop";
+            this.stopBut.UseVisualStyleBackColor = true;
+            this.stopBut.Click += new System.EventHandler(this.stopBut_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1287, 633);
+            this.Controls.Add(this.stopBut);
             this.Controls.Add(this.comboBoxZMin);
             this.Controls.Add(this.checkHeights);
             this.Controls.Add(this.label36);
             this.Controls.Add(this.textPlateDiameter);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.diagonalRodLengthText);
-            this.Controls.Add(this.iterativeCalibrate);
             this.Controls.Add(this.donateButton);
             this.Controls.Add(this.contactButton);
             this.Controls.Add(this.aboutButton);
@@ -1549,7 +1549,6 @@
         private System.Windows.Forms.Button aboutButton;
         private System.Windows.Forms.Button contactButton;
         private System.Windows.Forms.Button donateButton;
-        private System.Windows.Forms.Button iterativeCalibrate;
         public System.Windows.Forms.TextBox diagonalRodLengthText;
         private System.Windows.Forms.TextBox textPlateDiameter;
         private System.Windows.Forms.Label label36;
@@ -1661,5 +1660,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart accuracyTime;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox xySpeedTxt;
+        private System.Windows.Forms.Button stopBut;
     }
 }

@@ -13,6 +13,7 @@ namespace OpenDACT.Class_Files
         public static bool checkHeights = false;
         public static bool wasSet = false;
         public static bool wasZProbeHeightSet = false;
+        public static bool isHeuristicComplete = false;
 
         public static void sendToPosition(float X, float Y, float Z)
         {
@@ -412,10 +413,10 @@ namespace OpenDACT.Class_Files
                 UserVariables.advancedCalibration = false;
                 Program.mainFormTest.setButtonValues();
                 UserVariables.advancedCalCount = 0;
+                isHeuristicComplete = true;
 
                 //check heights
 
-                UserInterface.setAdvancedCalVars();
             }
 
             GCode.checkHeights = true;

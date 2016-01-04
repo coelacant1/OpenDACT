@@ -14,13 +14,6 @@ namespace OpenDACT.Class_Files
         public static int calibrationSelection = 0;
         public static int iterationNum = 0;
         private static float tempAccuracy;
-        private static int iterativeStep = 0;
-
-        private static bool HRadRequired = false;
-        private static bool DRadRequired = false;
-        private static bool towerOffsetsRequired = false;
-        private static bool alphaRotationRequired = false;
-        private static bool stepsPMMRequired = false;
 
         public static void calibrate()
         {
@@ -28,18 +21,10 @@ namespace OpenDACT.Class_Files
             {
                 basicCalibration();
             }
-            else
-            {
-                iterativeCalibration();
-            }
 
             iterationNum++;
         }
-
-        public static void learnPrinter()
-        {
-            GCode.heuristicLearning();
-        }
+        
 
         public static void basicCalibration()
         {
@@ -60,158 +45,75 @@ namespace OpenDACT.Class_Files
 
             if (calibrationState == true)
             {
-                bool test =
-                        Heights.X < Heights.Y + UserVariables.accuracy && Heights.X > Heights.Y - UserVariables.accuracy &&
-                        Heights.X < Heights.Z + UserVariables.accuracy && Heights.X > Heights.Z - UserVariables.accuracy &&
-                        Heights.X < Heights.YOpp + UserVariables.accuracy && Heights.X > Heights.YOpp - UserVariables.accuracy &&
-                        Heights.X < Heights.ZOpp + UserVariables.accuracy && Heights.X > Heights.ZOpp - UserVariables.accuracy &&
-                        Heights.X < Heights.XOpp + UserVariables.accuracy && Heights.X > Heights.XOpp - UserVariables.accuracy &&
+                //UserInterface.logConsole(test.ToString());
 
-                        Heights.XOpp < Heights.X + UserVariables.accuracy && Heights.XOpp > Heights.X - UserVariables.accuracy &&
-                        Heights.XOpp < Heights.Y + UserVariables.accuracy && Heights.XOpp > Heights.Y - UserVariables.accuracy &&
-                        Heights.XOpp < Heights.Z + UserVariables.accuracy && Heights.XOpp > Heights.Z - UserVariables.accuracy &&
-                        Heights.XOpp < Heights.YOpp + UserVariables.accuracy && Heights.XOpp > Heights.YOpp - UserVariables.accuracy &&
-                        Heights.XOpp < Heights.ZOpp + UserVariables.accuracy && Heights.XOpp > Heights.ZOpp - UserVariables.accuracy &&
+                bool spm = (Heights.X + Heights.Y + Heights.Z) / 3 > (Heights.XOpp + Heights.YOpp + Heights.ZOpp) / 3 + UserVariables.accuracy || (Heights.X + Heights.Y + Heights.Z) / 3 < (Heights.XOpp + Heights.YOpp + Heights.ZOpp) / 3 - UserVariables.accuracy;//returns false if drad does not need corrected
 
-                        Heights.Y < Heights.X + UserVariables.accuracy && Heights.Y > Heights.X - UserVariables.accuracy &&
-                        Heights.Y < Heights.Z + UserVariables.accuracy && Heights.Y > Heights.Z - UserVariables.accuracy &&
-                        Heights.Y < Heights.XOpp + UserVariables.accuracy && Heights.Y > Heights.XOpp - UserVariables.accuracy &&
-                        Heights.Y < Heights.YOpp + UserVariables.accuracy && Heights.Y > Heights.YOpp - UserVariables.accuracy &&
-                        Heights.Y < Heights.ZOpp + UserVariables.accuracy && Heights.Y > Heights.ZOpp - UserVariables.accuracy &&
+                bool tower = Heights.X > Heights.Y + UserVariables.accuracy || Heights.X < Heights.Y - UserVariables.accuracy || Heights.X > Heights.Z + UserVariables.accuracy || Heights.X < Heights.Z - UserVariables.accuracy ||
+                             Heights.Y > Heights.X + UserVariables.accuracy || Heights.Y < Heights.X - UserVariables.accuracy || Heights.Y > Heights.Z + UserVariables.accuracy || Heights.Y < Heights.Z - UserVariables.accuracy ||
+                             Heights.Z > Heights.Y + UserVariables.accuracy || Heights.Z < Heights.Y - UserVariables.accuracy || Heights.Z > Heights.X + UserVariables.accuracy || Heights.Z < Heights.X - UserVariables.accuracy;//returns false if tower offsets do not need corrected
 
-                        Heights.YOpp < Heights.X + UserVariables.accuracy && Heights.YOpp > Heights.X - UserVariables.accuracy &&
-                        Heights.YOpp < Heights.Y + UserVariables.accuracy && Heights.YOpp > Heights.Y - UserVariables.accuracy &&
-                        Heights.YOpp < Heights.Z + UserVariables.accuracy && Heights.YOpp > Heights.Z - UserVariables.accuracy &&
-                        Heights.YOpp < Heights.XOpp + UserVariables.accuracy && Heights.YOpp > Heights.XOpp - UserVariables.accuracy &&
-                        Heights.YOpp < Heights.ZOpp + UserVariables.accuracy && Heights.YOpp > Heights.ZOpp - UserVariables.accuracy &&
+                bool alpha = Heights.XOpp > Heights.YOpp + UserVariables.accuracy || Heights.XOpp < Heights.YOpp - UserVariables.accuracy || Heights.XOpp > Heights.ZOpp + UserVariables.accuracy || Heights.XOpp < Heights.ZOpp - UserVariables.accuracy ||
+                             Heights.YOpp > Heights.XOpp + UserVariables.accuracy || Heights.YOpp < Heights.XOpp - UserVariables.accuracy || Heights.YOpp > Heights.ZOpp + UserVariables.accuracy || Heights.YOpp < Heights.ZOpp - UserVariables.accuracy ||
+                             Heights.ZOpp > Heights.YOpp + UserVariables.accuracy || Heights.ZOpp < Heights.YOpp - UserVariables.accuracy || Heights.ZOpp > Heights.XOpp + UserVariables.accuracy || Heights.ZOpp < Heights.XOpp - UserVariables.accuracy;//returns false if tower offsets do not need corrected
 
-                        Heights.Z < Heights.X + UserVariables.accuracy && Heights.Z > Heights.X - UserVariables.accuracy &&
-                        Heights.Z < Heights.Y + UserVariables.accuracy && Heights.Z > Heights.Y - UserVariables.accuracy &&
-                        Heights.Z < Heights.XOpp + UserVariables.accuracy && Heights.Z > Heights.XOpp - UserVariables.accuracy &&
-                        Heights.Z < Heights.YOpp + UserVariables.accuracy && Heights.Z > Heights.YOpp - UserVariables.accuracy &&
-                        Heights.Z < Heights.ZOpp + UserVariables.accuracy && Heights.Z > Heights.ZOpp - UserVariables.accuracy &&
+                bool hrad =  Heights.X < Heights.Y + UserVariables.accuracy && Heights.X > Heights.Y - UserVariables.accuracy &&
+                             Heights.X < Heights.Z + UserVariables.accuracy && Heights.X > Heights.Z - UserVariables.accuracy &&
+                             Heights.X < Heights.YOpp + UserVariables.accuracy && Heights.X > Heights.YOpp - UserVariables.accuracy &&
+                             Heights.X < Heights.ZOpp + UserVariables.accuracy && Heights.X > Heights.ZOpp - UserVariables.accuracy &&
+                             Heights.X < Heights.XOpp + UserVariables.accuracy && Heights.X > Heights.XOpp - UserVariables.accuracy &&
+                             Heights.XOpp < Heights.X + UserVariables.accuracy && Heights.XOpp > Heights.X - UserVariables.accuracy &&
+                             Heights.XOpp < Heights.Y + UserVariables.accuracy && Heights.XOpp > Heights.Y - UserVariables.accuracy &&
+                             Heights.XOpp < Heights.Z + UserVariables.accuracy && Heights.XOpp > Heights.Z - UserVariables.accuracy &&
+                             Heights.XOpp < Heights.YOpp + UserVariables.accuracy && Heights.XOpp > Heights.YOpp - UserVariables.accuracy &&
+                             Heights.XOpp < Heights.ZOpp + UserVariables.accuracy && Heights.XOpp > Heights.ZOpp - UserVariables.accuracy &&
+                             Heights.Y < Heights.X + UserVariables.accuracy && Heights.Y > Heights.X - UserVariables.accuracy &&
+                             Heights.Y < Heights.Z + UserVariables.accuracy && Heights.Y > Heights.Z - UserVariables.accuracy &&
+                             Heights.Y < Heights.XOpp + UserVariables.accuracy && Heights.Y > Heights.XOpp - UserVariables.accuracy &&
+                             Heights.Y < Heights.YOpp + UserVariables.accuracy && Heights.Y > Heights.YOpp - UserVariables.accuracy &&
+                             Heights.Y < Heights.ZOpp + UserVariables.accuracy && Heights.Y > Heights.ZOpp - UserVariables.accuracy &&
+                             Heights.YOpp < Heights.X + UserVariables.accuracy && Heights.YOpp > Heights.X - UserVariables.accuracy &&
+                             Heights.YOpp < Heights.Y + UserVariables.accuracy && Heights.YOpp > Heights.Y - UserVariables.accuracy &&
+                             Heights.YOpp < Heights.Z + UserVariables.accuracy && Heights.YOpp > Heights.Z - UserVariables.accuracy &&
+                             Heights.YOpp < Heights.XOpp + UserVariables.accuracy && Heights.YOpp > Heights.XOpp - UserVariables.accuracy &&
+                             Heights.YOpp < Heights.ZOpp + UserVariables.accuracy && Heights.YOpp > Heights.ZOpp - UserVariables.accuracy &&
+                             Heights.Z < Heights.X + UserVariables.accuracy && Heights.Z > Heights.X - UserVariables.accuracy &&
+                             Heights.Z < Heights.Y + UserVariables.accuracy && Heights.Z > Heights.Y - UserVariables.accuracy &&
+                             Heights.Z < Heights.XOpp + UserVariables.accuracy && Heights.Z > Heights.XOpp - UserVariables.accuracy &&
+                             Heights.Z < Heights.YOpp + UserVariables.accuracy && Heights.Z > Heights.YOpp - UserVariables.accuracy &&
+                             Heights.Z < Heights.ZOpp + UserVariables.accuracy && Heights.Z > Heights.ZOpp - UserVariables.accuracy &&
+                             Heights.ZOpp < Heights.X + UserVariables.accuracy && Heights.ZOpp > Heights.X - UserVariables.accuracy &&
+                             Heights.ZOpp < Heights.Y + UserVariables.accuracy && Heights.ZOpp > Heights.Y - UserVariables.accuracy &&
+                             Heights.ZOpp < Heights.Z + UserVariables.accuracy && Heights.ZOpp > Heights.Z - UserVariables.accuracy &&
+                             Heights.ZOpp < Heights.XOpp + UserVariables.accuracy && Heights.ZOpp > Heights.XOpp - UserVariables.accuracy &&
+                             Heights.ZOpp < Heights.YOpp + UserVariables.accuracy && Heights.ZOpp > Heights.YOpp - UserVariables.accuracy;
 
-                        Heights.ZOpp < Heights.X + UserVariables.accuracy && Heights.ZOpp > Heights.X - UserVariables.accuracy &&
-                        Heights.ZOpp < Heights.Y + UserVariables.accuracy && Heights.ZOpp > Heights.Y - UserVariables.accuracy &&
-                        Heights.ZOpp < Heights.Z + UserVariables.accuracy && Heights.ZOpp > Heights.Z - UserVariables.accuracy &&
-                        Heights.ZOpp < Heights.XOpp + UserVariables.accuracy && Heights.ZOpp > Heights.XOpp - UserVariables.accuracy &&
-                        Heights.ZOpp < Heights.YOpp + UserVariables.accuracy && Heights.ZOpp > Heights.YOpp - UserVariables.accuracy;
+                UserInterface.logConsole("Tower:" + tower + " SPM:" + spm + " Alpha:" + alpha + " HRad:" + hrad);
 
-                UserInterface.logConsole(test.ToString());
-
-                if (
-                    Heights.X > Heights.Y + UserVariables.accuracy || Heights.X < Heights.Y - UserVariables.accuracy ||
-                    Heights.X > Heights.Z + UserVariables.accuracy || Heights.X < Heights.Z - UserVariables.accuracy ||
-
-                    Heights.Y > Heights.X + UserVariables.accuracy || Heights.Y < Heights.X - UserVariables.accuracy ||
-                    Heights.Y > Heights.Z + UserVariables.accuracy || Heights.Y < Heights.Z - UserVariables.accuracy ||
-
-                    Heights.Z > Heights.Y + UserVariables.accuracy || Heights.Z < Heights.Y - UserVariables.accuracy ||
-                    Heights.Z > Heights.X + UserVariables.accuracy || Heights.Z < Heights.X - UserVariables.accuracy
-                    )
+                if (tower)
                 {
-                    alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                    stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-
                     towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 }
-                else if (test)
+                else if (alpha)
+                {
+                    alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                }
+                else if (spm)
+                {
+                    stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                }
+                else if (hrad)
                 {
                     HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
                 }
-                else
-                {
-                    alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                    stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                }
-
-                /*
-                else
-                {
-                    //towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                    alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                    stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                    HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                    //DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-                }
-                */
+                
             }
             else
             {
                 //analyzeGeometry(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
             }
         }
-
-        public static void iterativeCalibration()
-        {
-            /*
-            if (iterationNum == 0)
-            {
-                if (UserVariables.diagonalRodLength == Convert.ToSingle(""))
-                {
-                    UserVariables.diagonalRodLength = EEPROM.diagonalRod;
-                    UserInterface.logConsole("Using default diagonal rod length from EEPROM");
-                }
-            }
-
-            tempAccuracy = (Math.Abs(Heights.X) + Math.Abs(Heights.XOpp) + Math.Abs(Heights.Y) + Math.Abs(Heights.YOpp) + Math.Abs(Heights.Z) + Math.Abs(Heights.ZOpp)) / 6;
-            Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
-
-            //check accuracy of hrad, then drad, then tOffs, then aRot, then SPM
-
-            if (calibrationState == true)
-            {
-                switch (iterativeStep)
-                {
-                    case 0:
-                        checkHRad();
-
-                        if (HRadRequired) { HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
-                        else { iterativeStep++; goto case 1; }
-                        break;
-                    case 1:
-                        checkDRad();
-
-                        if (DRadRequired) { DRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
-                        else { iterativeStep++; goto case 2; }
-                        break;
-                    case 2:
-                        checkTOffsets();
-
-                        if (towerOffsetsRequired) { towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
-                        else { iterativeStep++; goto case 3; }
-                        break;
-                    case 3:
-                        checkARot();
-
-                        if (alphaRotationRequired) { alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
-                        else { iterativeStep++; goto case 4; }
-                        break;
-                    case 4:
-                        checkStepsPMM();
-
-                        if (stepsPMMRequired) { stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp); }
-                        else { iterativeStep++; }
-                        break;
-                }
-            }
-            else
-            {
-                //analyzeGeometry(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
-            }
-            */
-        }
-
-        private static void checkHRad()
-        { }
-        private static void checkDRad()
-        { }
-        private static void checkTOffsets()
-        { }
-        private static void checkARot()
-        { }
-        private static void checkStepsPMM()
-        { }
+        
 
         private static void checkAccuracy(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
@@ -250,6 +152,8 @@ namespace OpenDACT.Class_Files
 
             UserInterface.logConsole("HRad:" + EEPROM.HRadius.ToString());
         }
+
+        
 
         /*
         public void analyzeGeometry(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
@@ -323,7 +227,7 @@ namespace OpenDACT.Class_Files
                     {
                         UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
                         UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
-                        UserInterface.logConsole("No Drad correction");
+                        UserInterface.logConsole("No Hrad correction");
 
                         float smallest = Math.Min(offsetX, Math.Min(offsetY, offsetZ));
 
@@ -505,7 +409,7 @@ namespace OpenDACT.Class_Files
         }
 
         /*
-        private static void LinearRegression(float[] xVals, float[] yVals, int inclusiveStart, int exclusiveEnd, out float rsquared, out float yintercept, out float slope)
+        private static void linearRegression(float[] xVals, float[] yVals, int inclusiveStart, int exclusiveEnd, out float rsquared, out float yintercept, out float slope)
         {
             float sumOfX = 0;
             float sumOfY = 0;

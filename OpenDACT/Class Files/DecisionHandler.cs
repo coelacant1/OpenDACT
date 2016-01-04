@@ -64,7 +64,7 @@ namespace OpenDACT.Class_Files
                         }
                         */
 
-                        if (UserVariables.advancedCalibration == false)
+                        if (UserVariables.advancedCalibration == false || GCode.isHeuristicComplete == true)
                         {
                             UserInterface.logConsole("Calibration Iteration Number: " + Calibration.iterationNum);
                             Calibration.calibrate();

@@ -42,7 +42,9 @@ namespace OpenDACT.Class_Files
                     // Open the serial port and start reading on a reader thread.
                     // _continue is a flag used to terminate the app.
 
-                    if (_serialPort.BaudRate != double.NaN && _serialPort.PortName != null)
+                    UserInterface.logConsole(Program.mainFormTest.portsCombo.Text);
+
+                    if (Program.mainFormTest.portsCombo.Text != "" && Program.mainFormTest.baudRateCombo.Text != "")
                     {
                         _serialPort.Open();
                         ConsoleRead._continue = true;

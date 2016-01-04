@@ -11,11 +11,13 @@ namespace OpenDACT.Class_Files
     static class ConsoleRead
     {
         public static bool _continue = true;
+        public static bool isCalibrating = true;
         public static void Read()
         {
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
             while (_continue)
             {
+                while (isCalibrating)
                 try
                 {
                     UserVariables.isInitiated = true;

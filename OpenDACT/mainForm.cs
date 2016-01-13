@@ -39,7 +39,8 @@ namespace OpenDACT.Class_Files
             advancedPanel.Visible = false;
             printerLogPanel.Visible = false;
 
-            Connection.readThread = new Thread(ConsoleRead.Read);
+            Connection.readThread = new Thread(Threading.Read);
+            Connection.calcThread = new Thread(Threading.HandleRead);
             Connection._serialPort = new SerialPort();
 
 
@@ -91,7 +92,7 @@ namespace OpenDACT.Class_Files
                 Calibration.calibrationState = true;
                 Calibration.calibrationSelection = 0;
                 HeightFunctions.checkHeightsOnly = false;
-                ConsoleRead.isCalibrating = true;
+                Threading.isCalibrating = true;
             }
             else
             {
@@ -208,7 +209,7 @@ namespace OpenDACT.Class_Files
                 Invoke((MethodInvoker)delegate { this.iZOpptext.Text = Math.Round(ZOpp, 3).ToString(); });
 
                 Calibration.iterationNum++;
-                
+
                 Invoke((MethodInvoker)delegate { this.XText.Text = Math.Round(X, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.XOppText.Text = Math.Round(XOpp, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.YText.Text = Math.Round(Y, 3).ToString(); });
@@ -319,7 +320,7 @@ namespace OpenDACT.Class_Files
         {
             if (comboBoxZMin.InvokeRequired)
             {
-            return (string)comboBoxZMin.Invoke(new Func<string>(getZMin));
+                return (string)comboBoxZMin.Invoke(new Func<string>(getZMin));
             }
             else
             {
@@ -338,7 +339,7 @@ namespace OpenDACT.Class_Files
                 return heuristicComboBox.Text;
             }
         }
-        
+
         public void setUserVariables()
         {
             UserVariables.calculationAccuracy = Convert.ToSingle(this.textAccuracy.Text);
@@ -391,7 +392,7 @@ namespace OpenDACT.Class_Files
                 Connection._serialPort.DiscardOutBuffer();
                 GCode.emergencyReset();
                 Connection.disconnect();
-                ConsoleRead.isCalibrating = false;
+                Threading.isCalibrating = false;
                 Connection.connect();
             }
             catch
@@ -399,6 +400,74 @@ namespace OpenDACT.Class_Files
 
             }
 
+        }
+
+        private void manualCalibrateBut_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Calibration.calibrationState = true;
+
+                Program.mainFormTest.setUserVariables();
+
+                Heights.X = Convert.ToSingle(xManual.Text);
+                Heights.XOpp = Convert.ToSingle(xOppManual.Text);
+                Heights.Y = Convert.ToSingle(yManual.Text);
+                Heights.YOpp = Convert.ToSingle(yOppManual.Text);
+                Heights.Z = Convert.ToSingle(zManual.Text);
+                Heights.ZOpp = Convert.ToSingle(zOppManual.Text);
+
+                EEPROM.stepsPerMM = Convert.ToSingle(spmMan.Text);
+                EEPROM.tempSPM = Convert.ToSingle(spmMan.Text);
+                EEPROM.zMaxLength = Convert.ToSingle(zMaxMan.Text);
+                EEPROM.zProbeHeight = Convert.ToSingle(zProHeiMan.Text);
+                EEPROM.zProbeSpeed = Convert.ToSingle(zProSpeMan.Text);
+                EEPROM.HRadius = Convert.ToSingle(horRadMan.Text);
+                EEPROM.diagonalRod = Convert.ToSingle(diaRodMan.Text);
+                EEPROM.offsetX = Convert.ToSingle(towOffXMan.Text);
+                EEPROM.offsetY = Convert.ToSingle(towOffYMan.Text);
+                EEPROM.offsetZ = Convert.ToSingle(towOffZMan.Text);
+                EEPROM.A = Convert.ToSingle(alpRotAMan.Text);
+                EEPROM.B = Convert.ToSingle(alpRotBMan.Text);
+                EEPROM.C = Convert.ToSingle(alpRotCMan.Text);
+                EEPROM.DA = Convert.ToSingle(delRadAMan.Text);
+                EEPROM.DB = Convert.ToSingle(delRadBMan.Text);
+                EEPROM.DC = Convert.ToSingle(delRadCMan.Text);
+                
+                Calibration.basicCalibration();
+
+                //set eeprom vals in manual calibration
+                this.spmMan.Text = EEPROM.stepsPerMM.ToString();
+                this.zMaxMan.Text = EEPROM.zMaxLength.ToString();
+                this.zProHeiMan.Text = EEPROM.zProbeHeight.ToString();
+                this.zProSpeMan.Text = EEPROM.zProbeSpeed.ToString();
+                this.diaRodMan.Text = EEPROM.diagonalRod.ToString();
+                this.horRadMan.Text = EEPROM.HRadius.ToString();
+                this.towOffXMan.Text = EEPROM.offsetX.ToString();
+                this.towOffYMan.Text = EEPROM.offsetY.ToString();
+                this.towOffZMan.Text = EEPROM.offsetZ.ToString();
+                this.alpRotAMan.Text = EEPROM.A.ToString();
+                this.alpRotBMan.Text = EEPROM.B.ToString();
+                this.alpRotCMan.Text = EEPROM.C.ToString();
+                this.delRadAMan.Text = EEPROM.DA.ToString();
+                this.delRadBMan.Text = EEPROM.DB.ToString();
+                this.delRadCMan.Text = EEPROM.DC.ToString();
+
+                //set expected height map
+                this.xExp.Text = Heights.X.ToString();
+                this.xOppExp.Text = Heights.XOpp.ToString();
+                this.yExp.Text = Heights.Y.ToString();
+                this.yOppExp.Text = Heights.YOpp.ToString();
+                this.zExp.Text = Heights.Z.ToString();
+                this.zOppExp.Text = Heights.ZOpp.ToString();
+
+
+                Calibration.calibrationState = false;
+            }
+            catch (Exception ex)
+            {
+                UserInterface.logConsole(ex.ToString());
+            }
         }
     }
 }

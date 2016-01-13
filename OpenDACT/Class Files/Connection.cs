@@ -13,7 +13,7 @@ namespace OpenDACT.Class_Files
     {
         public static SerialPort _serialPort;
         public static Thread readThread;
-
+        public static Thread calcThread;
 
         public static void connect()
         {
@@ -28,7 +28,8 @@ namespace OpenDACT.Class_Files
                     // Opens a new thread if there has been a previous thread that has closed.
                     if (readThread.IsAlive == false)
                     {
-                        readThread = new Thread(ConsoleRead.Read);
+                        readThread = new Thread(Threading.Read);
+                        calcThread = new Thread(Threading.HandleRead);
                         _serialPort = new SerialPort();
                     }
                     
@@ -47,9 +48,10 @@ namespace OpenDACT.Class_Files
                     if (Program.mainFormTest.portsCombo.Text != "" && Program.mainFormTest.baudRateCombo.Text != "")
                     {
                         _serialPort.Open();
-                        ConsoleRead._continue = true;
+                        Threading._continue = true;
 
                         readThread.Start();
+                        calcThread.Start();
                         UserInterface.logConsole("Connected");
                     }
                     else
@@ -60,12 +62,17 @@ namespace OpenDACT.Class_Files
                 catch (Exception e1)
                 {
                     UserInterface.logConsole(e1.Message);
-                    ConsoleRead._continue = false;
+                    Threading._continue = false;
 
                     //check if connection is open
                     if (readThread.IsAlive)
                     {
                         readThread.Join();
+                    }
+
+                    if (calcThread.IsAlive)
+                    {
+                        calcThread.Join();
                     }
 
                     _serialPort.Close();
@@ -79,8 +86,9 @@ namespace OpenDACT.Class_Files
             {
                 try
                 {
-                    ConsoleRead._continue = false;
+                    Threading._continue = false;
                     readThread.Join();
+                    calcThread.Join();
                     _serialPort.Close();
                     UserInterface.logConsole("Disconnected");
                 }

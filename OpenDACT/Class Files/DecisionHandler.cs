@@ -8,7 +8,7 @@ namespace OpenDACT.Class_Files
 {
     static class DecisionHandler
     {
-        public static void handleInput(string message)
+        public static void handleInput(string message, bool canMove)
         {
             Program.mainFormTest.setUserVariables();
 
@@ -24,7 +24,7 @@ namespace OpenDACT.Class_Files
             {
                 //rm
             }
-            else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
+            else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false && canMove == true)
             {
                 if (UserVariables.probeChoice == "Z-Probe" && GCode.wasZProbeHeightSet == false && GCode.wasSet == true)
                 {

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -152,6 +152,60 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.accuracyTime = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label83 = new System.Windows.Forms.Label();
+            this.label73 = new System.Windows.Forms.Label();
+            this.zExp = new System.Windows.Forms.Label();
+            this.yExp = new System.Windows.Forms.Label();
+            this.xExp = new System.Windows.Forms.Label();
+            this.zOppExp = new System.Windows.Forms.Label();
+            this.xOppExp = new System.Windows.Forms.Label();
+            this.yOppExp = new System.Windows.Forms.Label();
+            this.label80 = new System.Windows.Forms.Label();
+            this.label81 = new System.Windows.Forms.Label();
+            this.label82 = new System.Windows.Forms.Label();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.diaRodMan = new System.Windows.Forms.TextBox();
+            this.delRadBMan = new System.Windows.Forms.TextBox();
+            this.delRadAMan = new System.Windows.Forms.TextBox();
+            this.alpRotCMan = new System.Windows.Forms.TextBox();
+            this.alpRotBMan = new System.Windows.Forms.TextBox();
+            this.delRadCMan = new System.Windows.Forms.TextBox();
+            this.towOffXMan = new System.Windows.Forms.TextBox();
+            this.horRadMan = new System.Windows.Forms.TextBox();
+            this.zProSpeMan = new System.Windows.Forms.TextBox();
+            this.zProHeiMan = new System.Windows.Forms.TextBox();
+            this.zMaxMan = new System.Windows.Forms.TextBox();
+            this.spmMan = new System.Windows.Forms.TextBox();
+            this.alpRotAMan = new System.Windows.Forms.TextBox();
+            this.towOffZMan = new System.Windows.Forms.TextBox();
+            this.towOffYMan = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label50 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
+            this.label63 = new System.Windows.Forms.Label();
+            this.label64 = new System.Windows.Forms.Label();
+            this.label68 = new System.Windows.Forms.Label();
+            this.label69 = new System.Windows.Forms.Label();
+            this.label70 = new System.Windows.Forms.Label();
+            this.label71 = new System.Windows.Forms.Label();
+            this.label72 = new System.Windows.Forms.Label();
+            this.manualCalibrateBut = new System.Windows.Forms.Button();
+            this.xOppManual = new System.Windows.Forms.TextBox();
+            this.zManual = new System.Windows.Forms.TextBox();
+            this.yOppManual = new System.Windows.Forms.TextBox();
+            this.yManual = new System.Windows.Forms.TextBox();
+            this.zOppManual = new System.Windows.Forms.TextBox();
+            this.xManual = new System.Windows.Forms.TextBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label61 = new System.Windows.Forms.Label();
+            this.label62 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -175,6 +229,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accuracyTime)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -308,6 +365,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -1311,25 +1369,547 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea1.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend1);
+            chartArea2.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea2.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea2);
+            legend2.Enabled = false;
+            legend2.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend2);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series1.BackImageTransparentColor = System.Drawing.Color.White;
-            series1.BorderColor = System.Drawing.Color.Transparent;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.IsXValueIndexed = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series1);
+            series2.BackImageTransparentColor = System.Drawing.Color.White;
+            series2.BorderColor = System.Drawing.Color.Transparent;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.IsXValueIndexed = true;
+            series2.Legend = "Legend1";
+            series2.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series2);
             this.accuracyTime.Size = new System.Drawing.Size(317, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.label83);
+            this.tabPage2.Controls.Add(this.label73);
+            this.tabPage2.Controls.Add(this.zExp);
+            this.tabPage2.Controls.Add(this.yExp);
+            this.tabPage2.Controls.Add(this.xExp);
+            this.tabPage2.Controls.Add(this.zOppExp);
+            this.tabPage2.Controls.Add(this.xOppExp);
+            this.tabPage2.Controls.Add(this.yOppExp);
+            this.tabPage2.Controls.Add(this.label80);
+            this.tabPage2.Controls.Add(this.label81);
+            this.tabPage2.Controls.Add(this.label82);
+            this.tabPage2.Controls.Add(this.pictureBox5);
+            this.tabPage2.Controls.Add(this.label19);
+            this.tabPage2.Controls.Add(this.diaRodMan);
+            this.tabPage2.Controls.Add(this.delRadBMan);
+            this.tabPage2.Controls.Add(this.delRadAMan);
+            this.tabPage2.Controls.Add(this.alpRotCMan);
+            this.tabPage2.Controls.Add(this.alpRotBMan);
+            this.tabPage2.Controls.Add(this.delRadCMan);
+            this.tabPage2.Controls.Add(this.towOffXMan);
+            this.tabPage2.Controls.Add(this.horRadMan);
+            this.tabPage2.Controls.Add(this.zProSpeMan);
+            this.tabPage2.Controls.Add(this.zProHeiMan);
+            this.tabPage2.Controls.Add(this.zMaxMan);
+            this.tabPage2.Controls.Add(this.spmMan);
+            this.tabPage2.Controls.Add(this.alpRotAMan);
+            this.tabPage2.Controls.Add(this.towOffZMan);
+            this.tabPage2.Controls.Add(this.towOffYMan);
+            this.tabPage2.Controls.Add(this.label25);
+            this.tabPage2.Controls.Add(this.label26);
+            this.tabPage2.Controls.Add(this.label27);
+            this.tabPage2.Controls.Add(this.label28);
+            this.tabPage2.Controls.Add(this.label29);
+            this.tabPage2.Controls.Add(this.label50);
+            this.tabPage2.Controls.Add(this.label51);
+            this.tabPage2.Controls.Add(this.label63);
+            this.tabPage2.Controls.Add(this.label64);
+            this.tabPage2.Controls.Add(this.label68);
+            this.tabPage2.Controls.Add(this.label69);
+            this.tabPage2.Controls.Add(this.label70);
+            this.tabPage2.Controls.Add(this.label71);
+            this.tabPage2.Controls.Add(this.label72);
+            this.tabPage2.Controls.Add(this.manualCalibrateBut);
+            this.tabPage2.Controls.Add(this.xOppManual);
+            this.tabPage2.Controls.Add(this.zManual);
+            this.tabPage2.Controls.Add(this.yOppManual);
+            this.tabPage2.Controls.Add(this.yManual);
+            this.tabPage2.Controls.Add(this.zOppManual);
+            this.tabPage2.Controls.Add(this.xManual);
+            this.tabPage2.Controls.Add(this.label53);
+            this.tabPage2.Controls.Add(this.label61);
+            this.tabPage2.Controls.Add(this.label62);
+            this.tabPage2.Controls.Add(this.pictureBox3);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(638, 587);
+            this.tabPage2.TabIndex = 3;
+            this.tabPage2.Text = "Manual Calibration";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(7, 307);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(55, 13);
+            this.label83.TabIndex = 247;
+            this.label83.Text = "Expected:";
+            // 
+            // label73
+            // 
+            this.label73.AutoSize = true;
+            this.label73.Location = new System.Drawing.Point(7, 18);
+            this.label73.Name = "label73";
+            this.label73.Size = new System.Drawing.Size(34, 13);
+            this.label73.TabIndex = 246;
+            this.label73.Text = "Input:";
+            // 
+            // zExp
+            // 
+            this.zExp.AutoSize = true;
+            this.zExp.Location = new System.Drawing.Point(136, 342);
+            this.zExp.Name = "zExp";
+            this.zExp.Size = new System.Drawing.Size(28, 13);
+            this.zExp.TabIndex = 245;
+            this.zExp.Text = "0.00";
+            // 
+            // yExp
+            // 
+            this.yExp.AutoSize = true;
+            this.yExp.Location = new System.Drawing.Point(227, 493);
+            this.yExp.Name = "yExp";
+            this.yExp.Size = new System.Drawing.Size(28, 13);
+            this.yExp.TabIndex = 244;
+            this.yExp.Text = "0.00";
+            // 
+            // xExp
+            // 
+            this.xExp.AutoSize = true;
+            this.xExp.Location = new System.Drawing.Point(49, 493);
+            this.xExp.Name = "xExp";
+            this.xExp.Size = new System.Drawing.Size(28, 13);
+            this.xExp.TabIndex = 243;
+            this.xExp.Text = "0.00";
+            // 
+            // zOppExp
+            // 
+            this.zOppExp.AutoSize = true;
+            this.zOppExp.Location = new System.Drawing.Point(136, 556);
+            this.zOppExp.Name = "zOppExp";
+            this.zOppExp.Size = new System.Drawing.Size(28, 13);
+            this.zOppExp.TabIndex = 242;
+            this.zOppExp.Text = "0.00";
+            // 
+            // xOppExp
+            // 
+            this.xOppExp.AutoSize = true;
+            this.xOppExp.Location = new System.Drawing.Point(237, 374);
+            this.xOppExp.Name = "xOppExp";
+            this.xOppExp.Size = new System.Drawing.Size(28, 13);
+            this.xOppExp.TabIndex = 241;
+            this.xOppExp.Text = "0.00";
+            // 
+            // yOppExp
+            // 
+            this.yOppExp.AutoSize = true;
+            this.yOppExp.Location = new System.Drawing.Point(39, 374);
+            this.yOppExp.Name = "yOppExp";
+            this.yOppExp.Size = new System.Drawing.Size(28, 13);
+            this.yOppExp.TabIndex = 240;
+            this.yOppExp.Text = "0.00";
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Location = new System.Drawing.Point(273, 510);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(14, 13);
+            this.label80.TabIndex = 239;
+            this.label80.Text = "Y";
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(18, 510);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(14, 13);
+            this.label81.TabIndex = 238;
+            this.label81.Text = "X";
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Location = new System.Drawing.Point(145, 295);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(14, 13);
+            this.label82.TabIndex = 237;
+            this.label82.Text = "Z";
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
+            this.pictureBox5.Location = new System.Drawing.Point(16, 307);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(271, 274);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox5.TabIndex = 236;
+            this.pictureBox5.TabStop = false;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(348, 145);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(75, 13);
+            this.label19.TabIndex = 235;
+            this.label19.Text = "Diagonal Rod:";
+            // 
+            // diaRodMan
+            // 
+            this.diaRodMan.Location = new System.Drawing.Point(523, 142);
+            this.diaRodMan.Name = "diaRodMan";
+            this.diaRodMan.Size = new System.Drawing.Size(100, 20);
+            this.diaRodMan.TabIndex = 234;
+            this.diaRodMan.Text = "269.00";
+            // 
+            // delRadBMan
+            // 
+            this.delRadBMan.Location = new System.Drawing.Point(523, 349);
+            this.delRadBMan.Name = "delRadBMan";
+            this.delRadBMan.Size = new System.Drawing.Size(100, 20);
+            this.delRadBMan.TabIndex = 220;
+            this.delRadBMan.Text = "0.00";
+            // 
+            // delRadAMan
+            // 
+            this.delRadAMan.Location = new System.Drawing.Point(523, 323);
+            this.delRadAMan.Name = "delRadAMan";
+            this.delRadAMan.Size = new System.Drawing.Size(100, 20);
+            this.delRadAMan.TabIndex = 219;
+            this.delRadAMan.Text = "0.00";
+            // 
+            // alpRotCMan
+            // 
+            this.alpRotCMan.Location = new System.Drawing.Point(523, 297);
+            this.alpRotCMan.Name = "alpRotCMan";
+            this.alpRotCMan.Size = new System.Drawing.Size(100, 20);
+            this.alpRotCMan.TabIndex = 218;
+            this.alpRotCMan.Text = "90.00";
+            // 
+            // alpRotBMan
+            // 
+            this.alpRotBMan.Location = new System.Drawing.Point(523, 271);
+            this.alpRotBMan.Name = "alpRotBMan";
+            this.alpRotBMan.Size = new System.Drawing.Size(100, 20);
+            this.alpRotBMan.TabIndex = 217;
+            this.alpRotBMan.Text = "330.00";
+            // 
+            // delRadCMan
+            // 
+            this.delRadCMan.Location = new System.Drawing.Point(523, 375);
+            this.delRadCMan.Name = "delRadCMan";
+            this.delRadCMan.Size = new System.Drawing.Size(100, 20);
+            this.delRadCMan.TabIndex = 216;
+            this.delRadCMan.Text = "0.00";
+            // 
+            // towOffXMan
+            // 
+            this.towOffXMan.Location = new System.Drawing.Point(523, 167);
+            this.towOffXMan.Name = "towOffXMan";
+            this.towOffXMan.Size = new System.Drawing.Size(100, 20);
+            this.towOffXMan.TabIndex = 215;
+            this.towOffXMan.Text = "0";
+            // 
+            // horRadMan
+            // 
+            this.horRadMan.Location = new System.Drawing.Point(523, 116);
+            this.horRadMan.Name = "horRadMan";
+            this.horRadMan.Size = new System.Drawing.Size(100, 20);
+            this.horRadMan.TabIndex = 214;
+            this.horRadMan.Text = "130.00";
+            // 
+            // zProSpeMan
+            // 
+            this.zProSpeMan.Location = new System.Drawing.Point(523, 90);
+            this.zProSpeMan.Name = "zProSpeMan";
+            this.zProSpeMan.Size = new System.Drawing.Size(100, 20);
+            this.zProSpeMan.TabIndex = 213;
+            this.zProSpeMan.Text = "10.00";
+            // 
+            // zProHeiMan
+            // 
+            this.zProHeiMan.Location = new System.Drawing.Point(523, 64);
+            this.zProHeiMan.Name = "zProHeiMan";
+            this.zProHeiMan.Size = new System.Drawing.Size(100, 20);
+            this.zProHeiMan.TabIndex = 212;
+            this.zProHeiMan.Text = "10.00";
+            // 
+            // zMaxMan
+            // 
+            this.zMaxMan.Location = new System.Drawing.Point(523, 38);
+            this.zMaxMan.Name = "zMaxMan";
+            this.zMaxMan.Size = new System.Drawing.Size(100, 20);
+            this.zMaxMan.TabIndex = 211;
+            this.zMaxMan.Text = "300.00";
+            // 
+            // spmMan
+            // 
+            this.spmMan.Location = new System.Drawing.Point(523, 12);
+            this.spmMan.Name = "spmMan";
+            this.spmMan.Size = new System.Drawing.Size(101, 20);
+            this.spmMan.TabIndex = 210;
+            this.spmMan.Text = "80.00";
+            // 
+            // alpRotAMan
+            // 
+            this.alpRotAMan.Location = new System.Drawing.Point(523, 245);
+            this.alpRotAMan.Name = "alpRotAMan";
+            this.alpRotAMan.Size = new System.Drawing.Size(100, 20);
+            this.alpRotAMan.TabIndex = 209;
+            this.alpRotAMan.Text = "210.00";
+            // 
+            // towOffZMan
+            // 
+            this.towOffZMan.Location = new System.Drawing.Point(523, 219);
+            this.towOffZMan.Name = "towOffZMan";
+            this.towOffZMan.Size = new System.Drawing.Size(100, 20);
+            this.towOffZMan.TabIndex = 208;
+            this.towOffZMan.Text = "0";
+            // 
+            // towOffYMan
+            // 
+            this.towOffYMan.Location = new System.Drawing.Point(523, 193);
+            this.towOffYMan.Name = "towOffYMan";
+            this.towOffYMan.Size = new System.Drawing.Size(100, 20);
+            this.towOffYMan.TabIndex = 207;
+            this.towOffYMan.Text = "0";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(349, 222);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(81, 13);
+            this.label25.TabIndex = 233;
+            this.label25.Text = "Tower Offset Z:";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(349, 196);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(81, 13);
+            this.label26.TabIndex = 232;
+            this.label26.Text = "Tower Offset Y:";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(348, 170);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(81, 13);
+            this.label27.TabIndex = 231;
+            this.label27.Text = "Tower Offset X:";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(348, 378);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(112, 13);
+            this.label28.TabIndex = 230;
+            this.label28.Text = "Delta Radius Offset C:";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(348, 352);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(112, 13);
+            this.label29.TabIndex = 229;
+            this.label29.Text = "Delta Radius Offset B:";
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(349, 93);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(82, 13);
+            this.label50.TabIndex = 228;
+            this.label50.Text = "Z Probe Speed:";
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(349, 41);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(76, 13);
+            this.label51.TabIndex = 227;
+            this.label51.Text = "Z Max Length:";
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.Location = new System.Drawing.Point(349, 67);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(82, 13);
+            this.label63.TabIndex = 226;
+            this.label63.Text = "Z Probe Height:";
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(349, 119);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(93, 13);
+            this.label64.TabIndex = 225;
+            this.label64.Text = "Horizontal Radius:";
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(348, 248);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(90, 13);
+            this.label68.TabIndex = 224;
+            this.label68.Text = "Alpha Rotation A:";
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(349, 274);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(90, 13);
+            this.label69.TabIndex = 223;
+            this.label69.Text = "Alpha Rotation B:";
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(349, 300);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(90, 13);
+            this.label70.TabIndex = 222;
+            this.label70.Text = "Alpha Rotation C:";
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Location = new System.Drawing.Point(349, 326);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(112, 13);
+            this.label71.TabIndex = 221;
+            this.label71.Text = "Delta Radius Offset A:";
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Location = new System.Drawing.Point(349, 15);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(102, 13);
+            this.label72.TabIndex = 206;
+            this.label72.Text = "Steps Per Millimeter:";
+            // 
+            // manualCalibrateBut
+            // 
+            this.manualCalibrateBut.Location = new System.Drawing.Point(351, 480);
+            this.manualCalibrateBut.Name = "manualCalibrateBut";
+            this.manualCalibrateBut.Size = new System.Drawing.Size(271, 89);
+            this.manualCalibrateBut.TabIndex = 205;
+            this.manualCalibrateBut.Text = "Manually Calibrate";
+            this.manualCalibrateBut.UseVisualStyleBackColor = true;
+            this.manualCalibrateBut.Click += new System.EventHandler(this.manualCalibrateBut_Click);
+            // 
+            // xOppManual
+            // 
+            this.xOppManual.Location = new System.Drawing.Point(207, 89);
+            this.xOppManual.Name = "xOppManual";
+            this.xOppManual.Size = new System.Drawing.Size(61, 20);
+            this.xOppManual.TabIndex = 38;
+            this.xOppManual.Text = "0.00";
+            // 
+            // zManual
+            // 
+            this.zManual.Location = new System.Drawing.Point(121, 77);
+            this.zManual.Name = "zManual";
+            this.zManual.Size = new System.Drawing.Size(61, 20);
+            this.zManual.TabIndex = 37;
+            this.zManual.Text = "0.00";
+            // 
+            // yOppManual
+            // 
+            this.yOppManual.Location = new System.Drawing.Point(35, 90);
+            this.yOppManual.Name = "yOppManual";
+            this.yOppManual.Size = new System.Drawing.Size(61, 20);
+            this.yOppManual.TabIndex = 36;
+            this.yOppManual.Text = "0.00";
+            // 
+            // yManual
+            // 
+            this.yManual.Location = new System.Drawing.Point(192, 197);
+            this.yManual.Name = "yManual";
+            this.yManual.Size = new System.Drawing.Size(61, 20);
+            this.yManual.TabIndex = 35;
+            this.yManual.Text = "0.00";
+            // 
+            // zOppManual
+            // 
+            this.zOppManual.Location = new System.Drawing.Point(121, 261);
+            this.zOppManual.Name = "zOppManual";
+            this.zOppManual.Size = new System.Drawing.Size(61, 20);
+            this.zOppManual.TabIndex = 34;
+            this.zOppManual.Text = "0.00";
+            // 
+            // xManual
+            // 
+            this.xManual.Location = new System.Drawing.Point(50, 197);
+            this.xManual.Name = "xManual";
+            this.xManual.Size = new System.Drawing.Size(61, 20);
+            this.xManual.TabIndex = 33;
+            this.xManual.Text = "0.00";
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(273, 219);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(14, 13);
+            this.label53.TabIndex = 25;
+            this.label53.Text = "Y";
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(18, 219);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(14, 13);
+            this.label61.TabIndex = 24;
+            this.label61.Text = "X";
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(145, 4);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(14, 13);
+            this.label62.TabIndex = 23;
+            this.label62.Text = "Z";
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(16, 16);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(271, 274);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 22;
+            this.pictureBox3.TabStop = false;
             // 
             // label11
             // 
@@ -1519,6 +2099,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accuracyTime)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1661,5 +2245,59 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox xySpeedTxt;
         private System.Windows.Forms.Button stopBut;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button manualCalibrateBut;
+        private System.Windows.Forms.TextBox xOppManual;
+        private System.Windows.Forms.TextBox zManual;
+        private System.Windows.Forms.TextBox yOppManual;
+        private System.Windows.Forms.TextBox yManual;
+        private System.Windows.Forms.TextBox zOppManual;
+        private System.Windows.Forms.TextBox xManual;
+        private System.Windows.Forms.Label label53;
+        private System.Windows.Forms.Label label61;
+        private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox diaRodMan;
+        private System.Windows.Forms.TextBox delRadBMan;
+        private System.Windows.Forms.TextBox delRadAMan;
+        private System.Windows.Forms.TextBox alpRotCMan;
+        private System.Windows.Forms.TextBox alpRotBMan;
+        private System.Windows.Forms.TextBox delRadCMan;
+        private System.Windows.Forms.TextBox towOffXMan;
+        private System.Windows.Forms.TextBox horRadMan;
+        private System.Windows.Forms.TextBox zProSpeMan;
+        private System.Windows.Forms.TextBox zProHeiMan;
+        private System.Windows.Forms.TextBox zMaxMan;
+        private System.Windows.Forms.TextBox spmMan;
+        private System.Windows.Forms.TextBox alpRotAMan;
+        private System.Windows.Forms.TextBox towOffZMan;
+        private System.Windows.Forms.TextBox towOffYMan;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.Label label64;
+        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.Label label83;
+        private System.Windows.Forms.Label label73;
+        private System.Windows.Forms.Label zExp;
+        private System.Windows.Forms.Label yExp;
+        private System.Windows.Forms.Label xExp;
+        private System.Windows.Forms.Label zOppExp;
+        private System.Windows.Forms.Label xOppExp;
+        private System.Windows.Forms.Label yOppExp;
+        private System.Windows.Forms.Label label80;
+        private System.Windows.Forms.Label label81;
+        private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.PictureBox pictureBox5;
     }
 }

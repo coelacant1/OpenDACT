@@ -96,7 +96,7 @@
   <ItemGroup>
     <Compile Include="Class Files\Calibration.cs" />
     <Compile Include="Class Files\Connection.cs" />
-    <Compile Include="Class Files\ConsoleRead.cs" />
+    <Compile Include="Class Files\Threading.cs" />
     <Compile Include="Class Files\DecisionHandler.cs" />
     <Compile Include="Class Files\EEPROM.cs" />
     <Compile Include="Class Files\GCode.cs" />

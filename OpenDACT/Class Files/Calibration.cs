@@ -32,7 +32,7 @@ namespace OpenDACT.Class_Files
 
             if (iterationNum == 0)
             {
-                if (UserVariables.diagonalRodLength == Convert.ToSingle(""))
+                if (UserVariables.diagonalRodLength.ToString() == "")
                 {
                     UserVariables.diagonalRodLength = EEPROM.diagonalRod;
                     UserInterface.logConsole("Using default diagonal rod length from EEPROM");

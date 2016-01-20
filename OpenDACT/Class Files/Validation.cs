@@ -11,7 +11,6 @@ namespace OpenDACT.Class_Files
     {
         public static float checkZero(float value)
         {
-
             if (value > 0 && value < 0.001F)
             {
                 return 0;

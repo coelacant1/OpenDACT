@@ -10,6 +10,7 @@ namespace OpenDACT.Class_Files
     static class GCode
     {
         public static int currentPosition = 0;
+        public static int iteration = 0;
         public static bool checkHeights = false;
         public static bool wasSet = false;
         public static bool wasZProbeHeightSet = false;
@@ -115,6 +116,7 @@ namespace OpenDACT.Class_Files
             Thread.Sleep(Convert.ToInt32(((EEPROM.zMaxLength / 3) / UserVariables.xySpeed) * 1000));
         }
 
+
         public static void positionFlow()
         {
             float probingHeight = UserVariables.probingHeight;
@@ -123,7 +125,6 @@ namespace OpenDACT.Class_Files
             float valueZ = 0.482F * plateDiameter;
             float valueXYLarge = 0.417F * plateDiameter;
             float valueXYSmall = 0.241F * plateDiameter;
-            int iteration = 0;
 
             if (UserVariables.probeChoice == "Z-Probe" && wasSet == false)
             {
@@ -342,9 +343,13 @@ namespace OpenDACT.Class_Files
                             case 2:
                                 Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
                                 iteration++;
+                                if (Calibration.calibrateInProgress == false){ iteration++; }
                                 break;
                             case 3:
                                 Connection._serialPort.WriteLine("G1 Z" + Convert.ToInt32(EEPROM.zMaxLength / 3) + " X0 Y0");
+                                iteration++;
+                                break;
+                            case 4:
                                 currentPosition = 0;
                                 checkHeights = false;
                                 iteration = 0;

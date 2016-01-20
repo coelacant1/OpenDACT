@@ -24,7 +24,7 @@ namespace OpenDACT.Class_Files
             {
                 //rm
             }
-            else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false && canMove == true)
+            else if (GCode.checkHeights == true && EEPROMFunctions.tempEEPROMSet == true && Calibration.calibrateInProgress == false && EEPROMFunctions.EEPROMReadOnly == false)
             {
                 if (UserVariables.probeChoice == "Z-Probe" && GCode.wasZProbeHeightSet == false && GCode.wasSet == true)
                 {
@@ -37,73 +37,74 @@ namespace OpenDACT.Class_Files
                         EEPROMFunctions.sendEEPROM();
                     }
                 }
-                else
+                else if (canMove == true)
                 {
+                    //UserInterface.logConsole("position flow");
                     GCode.positionFlow();
                 }
-            }
-            else if (Calibration.calibrationState == true && Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false)
-            {
-                if (HeightFunctions.parseZProbe(message) != 1000 && HeightFunctions.heightsSet == false)
+                else if (HeightFunctions.parseZProbe(message) != 1000 && HeightFunctions.heightsSet == false)
                 {
                     HeightFunctions.setHeights(HeightFunctions.parseZProbe(message));
                 }
-                else if (HeightFunctions.heightsSet == true)
+            }
+            else if (Calibration.calibrationState == true && Calibration.calibrateInProgress == false && GCode.checkHeights == false && EEPROMFunctions.tempEEPROMSet == true && EEPROMFunctions.EEPROMReadOnly == false && HeightFunctions.heightsSet == true)
+            {
+                Program.mainFormTest.setHeightsInvoke();
+
+                if (Calibration.calibrationState == true && HeightFunctions.checkHeightsOnly == false)
                 {
-                    Program.mainFormTest.setHeightsInvoke();
+                    Calibration.calibrateInProgress = true;
 
-                    if (Calibration.calibrationState == true && HeightFunctions.checkHeightsOnly == false)
+                    /*
+                    if (EEPROMFunctions.EEPROMRequestSent == false)
                     {
-                        Calibration.calibrateInProgress = true;
+                        EEPROMFunctions.readEEPROM();
+                        EEPROMFunctions.EEPROMRequestSent = true;
+                    }
+                    */
 
-                        /*
-                        if (EEPROMFunctions.EEPROMRequestSent == false)
+                    if (UserVariables.advancedCalibration == false || GCode.isHeuristicComplete == true)
+                    {
+                        UserInterface.logConsole("Calibration Iteration Number: " + Calibration.iterationNum);
+                        Calibration.calibrate();
+
+                        Program.mainFormTest.setEEPROMGUIList();
+                        EEPROMFunctions.sendEEPROM();
+
+                        if (Calibration.calibrationState == false)
                         {
-                            EEPROMFunctions.readEEPROM();
-                            EEPROMFunctions.EEPROMRequestSent = true;
+                            GCode.homeAxes();
+                            Calibration.calibrationComplete = true;
+                            UserInterface.logConsole("Calibration Complete");
+                            //end calibration
                         }
-                        */
-
-                        if (UserVariables.advancedCalibration == false || GCode.isHeuristicComplete == true)
-                        {
-                            UserInterface.logConsole("Calibration Iteration Number: " + Calibration.iterationNum);
-                            Calibration.calibrate();
-
-                            Program.mainFormTest.setEEPROMGUIList();
-                            EEPROMFunctions.sendEEPROM();
-
-                            if (Calibration.calibrationState == false)
-                            {
-                                GCode.homeAxes();
-                                UserInterface.logConsole("Calibration Complete");
-                                //end calibration
-                            }
-                        }
-                        else
-                        {
-                            UserInterface.logConsole("Heuristic Step: " + UserVariables.advancedCalCount);
-                            GCode.heuristicLearning();
-
-                            Program.mainFormTest.setEEPROMGUIList();
-                            EEPROMFunctions.sendEEPROM();
-                        }
-
-
-                        Calibration.calibrateInProgress = false;
                     }
                     else
                     {
-                        if (UserVariables.probeChoice == "FSR")
-                        {
-                            EEPROM.zMaxLength -= UserVariables.FSROffset;
-                            UserInterface.logConsole("Setting Z Max Length with adjustment for FSR\nHeights checked");
-                        }
+                        UserInterface.logConsole("Heuristic Step: " + UserVariables.advancedCalCount);
+                        GCode.heuristicLearning();
 
-                        GCode.homeAxes();
+                        Program.mainFormTest.setEEPROMGUIList();
+                        EEPROMFunctions.sendEEPROM();
                     }
 
-                    HeightFunctions.heightsSet = false;
+
+                    Calibration.calibrateInProgress = false;
                 }
+                else
+                {
+                    if (UserVariables.probeChoice == "FSR")
+                    {
+                        EEPROM.zMaxLength -= UserVariables.FSROffset;
+                        UserInterface.logConsole("Setting Z Max Length with adjustment for FSR");
+                    }
+
+                    GCode.homeAxes();
+
+                    UserInterface.logConsole("Heights checked");
+                }
+
+                HeightFunctions.heightsSet = false;
             }
             /*
             else

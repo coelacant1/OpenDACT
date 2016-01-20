@@ -11,6 +11,7 @@ namespace OpenDACT.Class_Files
     {
         public static bool calibrateInProgress = false;
         public static bool calibrationState = false;
+        public static bool calibrationComplete = false;
         public static int calibrationSelection = 0;
         public static int iterationNum = 0;
         private static float tempAccuracy;

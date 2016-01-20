@@ -40,15 +40,21 @@ namespace OpenDACT.Class_Files
 
             while (_continue)
             {
-                while (isCalibrating && !readLineData.Any())
+                try
                 {
-                    try
+                    bool hasData;
+                    lock (readLineData)
+                    {
+                        hasData = readLineData.Any();
+                    }
+
+                    while (isCalibrating && hasData)
                     {
                         //wait for ok to perform calculation?
                         UserVariables.isInitiated = true;
                         bool canMove;
 
-                        if (readLineData.First().Contains("ok"))
+                        if (readLineData.First().Contains("wait"))
                         {
                             canMove = true;
                         }
@@ -58,10 +64,10 @@ namespace OpenDACT.Class_Files
                         }
 
                         DecisionHandler.handleInput(readLineData.First(), canMove);
-                        readLineData.Remove(readLineData.First());
-                    }
-                    catch (Exception) { }
-                }//end while
+                        readLineData.RemoveAt(0);
+                    }//end while
+                }
+                catch (Exception) { }
             }//end while continue
         }
 

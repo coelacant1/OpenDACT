@@ -89,6 +89,7 @@ namespace OpenDACT.Class_Files
                 GCode.checkHeights = true;
                 EEPROMFunctions.readEEPROM();
                 EEPROMFunctions.EEPROMReadOnly = false;
+                Calibration.calibrationComplete = false;
                 Calibration.calibrationState = true;
                 Calibration.calibrationSelection = 0;
                 HeightFunctions.checkHeightsOnly = false;
@@ -383,6 +384,7 @@ namespace OpenDACT.Class_Files
             Calibration.calibrationSelection = 0;
             HeightFunctions.checkHeightsOnly = true;
             HeightFunctions.heightsSet = false;
+            Calibration.calibrationComplete = false;
         }
 
         private void stopBut_Click(object sender, EventArgs e)
@@ -433,7 +435,7 @@ namespace OpenDACT.Class_Files
                 EEPROM.DA = Convert.ToSingle(delRadAMan.Text);
                 EEPROM.DB = Convert.ToSingle(delRadBMan.Text);
                 EEPROM.DC = Convert.ToSingle(delRadCMan.Text);
-                
+
                 Calibration.basicCalibration();
 
                 //set eeprom vals in manual calibration

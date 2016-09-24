@@ -5,4 +5,4 @@ I will not be responsible for any damage to your printer, especially if you are 
 
 If you would like to contribute to the main project, then send me an email at steventrowland (at) gmail.com or message me on the SeeMeCNC forum.
 
-Forum post - http://forum.seemecnc.com/viewtopic.php?f=36&amp;t=8698
+Forum post - http://forum.seemecnc.com/viewtopic.php?f=36&t=8698

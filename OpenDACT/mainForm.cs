@@ -100,6 +100,25 @@ namespace OpenDACT.Class_Files
                 UserInterface.logConsole("Not connected");
             }
         }
+        
+        private void quickCalibrate_Click(object sender, EventArgs e)
+        {
+            if (Connection._serialPort.IsOpen)
+            {
+                GCode.checkHeights = true;
+                EEPROMFunctions.readEEPROM();
+                EEPROMFunctions.EEPROMReadOnly = false;
+                Calibration.calibrationComplete = false;
+                Calibration.calibrationState = true;
+                Calibration.calibrationSelection = 1;
+                HeightFunctions.checkHeightsOnly = false;
+                Threading.isCalibrating = true;
+            }
+            else
+            {
+                UserInterface.logConsole("Not connected");
+            }
+        }
 
         private void resetPrinter_Click(object sender, EventArgs e)
         {
@@ -117,6 +136,7 @@ namespace OpenDACT.Class_Files
             Invoke((MethodInvoker)delegate { consoleMain.AppendText(value + "\n"); });
             Invoke((MethodInvoker)delegate { consoleMain.ScrollToCaret(); });
         }
+
         public void appendPrinterConsole(string value)
         {
             Invoke((MethodInvoker)delegate { consolePrinter.AppendText(value + "\n"); });
@@ -161,7 +181,7 @@ namespace OpenDACT.Class_Files
 
         private void aboutButton_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.MessageBox.Show("Version: 3.0.0\n\nCreated by Coela Can't\n\nWith help from Gene Buckle and Michael Hackney\n");
+            System.Windows.Forms.MessageBox.Show("Version: 3.1.0A\n\nCreated by Coela Can't\n\nWith help from Gene Buckle and Michael Hackney\n");
         }
         private void contactButton_Click_1(object sender, EventArgs e)
         {
@@ -471,5 +491,6 @@ namespace OpenDACT.Class_Files
                 UserInterface.logConsole(ex.ToString());
             }
         }
+
     }
 }

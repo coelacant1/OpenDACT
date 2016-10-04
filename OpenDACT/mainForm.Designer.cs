@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -221,6 +221,7 @@
             this.checkHeights = new System.Windows.Forms.Button();
             this.comboBoxZMin = new System.Windows.Forms.ComboBox();
             this.stopBut = new System.Windows.Forms.Button();
+            this.quickCalibrate = new System.Windows.Forms.Button();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -690,7 +691,7 @@
             this.textFSRPO.Name = "textFSRPO";
             this.textFSRPO.Size = new System.Drawing.Size(100, 20);
             this.textFSRPO.TabIndex = 145;
-            this.textFSRPO.Text = "0.4";
+            this.textFSRPO.Text = "0.3";
             // 
             // textHRadRatio
             // 
@@ -714,7 +715,7 @@
             this.textAccuracy2.Name = "textAccuracy2";
             this.textAccuracy2.Size = new System.Drawing.Size(100, 20);
             this.textAccuracy2.TabIndex = 134;
-            this.textAccuracy2.Text = "0.035";
+            this.textAccuracy2.Text = "0.05";
             // 
             // textBox6
             // 
@@ -1369,22 +1370,22 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea2.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend2);
+            chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea1.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend1);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series2.BackImageTransparentColor = System.Drawing.Color.White;
-            series2.BorderColor = System.Drawing.Color.Transparent;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.IsXValueIndexed = true;
-            series2.Legend = "Legend1";
-            series2.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series2);
+            series1.BackImageTransparentColor = System.Drawing.Color.White;
+            series1.BorderColor = System.Drawing.Color.Transparent;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series1);
             this.accuracyTime.Size = new System.Drawing.Size(317, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
@@ -2009,7 +2010,7 @@
             this.textPlateDiameter.Name = "textPlateDiameter";
             this.textPlateDiameter.Size = new System.Drawing.Size(100, 20);
             this.textPlateDiameter.TabIndex = 200;
-            this.textPlateDiameter.Text = "200";
+            this.textPlateDiameter.Text = "260";
             // 
             // label36
             // 
@@ -2022,9 +2023,9 @@
             // 
             // checkHeights
             // 
-            this.checkHeights.Location = new System.Drawing.Point(4, 206);
+            this.checkHeights.Location = new System.Drawing.Point(128, 206);
             this.checkHeights.Name = "checkHeights";
-            this.checkHeights.Size = new System.Drawing.Size(245, 46);
+            this.checkHeights.Size = new System.Drawing.Size(120, 46);
             this.checkHeights.TabIndex = 202;
             this.checkHeights.Text = "Check Current Heights";
             this.checkHeights.UseVisualStyleBackColor = true;
@@ -2052,12 +2053,23 @@
             this.stopBut.UseVisualStyleBackColor = true;
             this.stopBut.Click += new System.EventHandler(this.stopBut_Click);
             // 
+            // quickCalibrate
+            // 
+            this.quickCalibrate.Location = new System.Drawing.Point(4, 206);
+            this.quickCalibrate.Name = "quickCalibrate";
+            this.quickCalibrate.Size = new System.Drawing.Size(120, 46);
+            this.quickCalibrate.TabIndex = 205;
+            this.quickCalibrate.Text = "Quick Calibrate";
+            this.quickCalibrate.UseVisualStyleBackColor = true;
+            this.quickCalibrate.Click += new System.EventHandler(this.quickCalibrate_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1287, 633);
+            this.Controls.Add(this.quickCalibrate);
             this.Controls.Add(this.stopBut);
             this.Controls.Add(this.comboBoxZMin);
             this.Controls.Add(this.checkHeights);
@@ -2299,5 +2311,6 @@
         private System.Windows.Forms.Label label81;
         private System.Windows.Forms.Label label82;
         private System.Windows.Forms.PictureBox pictureBox5;
+        private System.Windows.Forms.Button quickCalibrate;
     }
 }

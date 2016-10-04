@@ -22,12 +22,15 @@ namespace OpenDACT.Class_Files
             {
                 basicCalibration();
             }
+            else if (calibrationSelection == 1)
+            {
+                fastCalibration();
+            }
 
             iterationNum++;
         }
         
-
-        public static void basicCalibration()
+        public static void fastCalibration()
         {
             //check if eeprom object remains after this function is called for the second time
 
@@ -46,13 +49,38 @@ namespace OpenDACT.Class_Files
 
             if (calibrationState == true)
             {
-                //UserInterface.logConsole(test.ToString());
+                towerOffsets(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                alphaRotation(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                stepsPMM(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+                HRad(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            }
+            else
+            {
+                //analyzeGeometry(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+            }
+        }
 
+        public static void basicCalibration()
+        {
+            //check if eeprom object remains after this function is called for the second time
+            if (iterationNum == 0)
+            {
+                if (UserVariables.diagonalRodLength.ToString() == "")
+                {
+                    UserVariables.diagonalRodLength = EEPROM.diagonalRod;
+                    UserInterface.logConsole("Using default diagonal rod length from EEPROM");
+                }
+            }
+
+            tempAccuracy = (Math.Abs(Heights.X) + Math.Abs(Heights.XOpp) + Math.Abs(Heights.Y) + Math.Abs(Heights.YOpp) + Math.Abs(Heights.Z) + Math.Abs(Heights.ZOpp)) / 6;
+            Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
+            checkAccuracy(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
+
+            if (calibrationState == true)
+            {
                 bool spm = (Heights.X + Heights.Y + Heights.Z) / 3 > (Heights.XOpp + Heights.YOpp + Heights.ZOpp) / 3 + UserVariables.accuracy || (Heights.X + Heights.Y + Heights.Z) / 3 < (Heights.XOpp + Heights.YOpp + Heights.ZOpp) / 3 - UserVariables.accuracy;//returns false if drad does not need corrected
-
-                bool tower = Heights.X > Heights.Y + UserVariables.accuracy || Heights.X < Heights.Y - UserVariables.accuracy || Heights.X > Heights.Z + UserVariables.accuracy || Heights.X < Heights.Z - UserVariables.accuracy ||
-                             Heights.Y > Heights.X + UserVariables.accuracy || Heights.Y < Heights.X - UserVariables.accuracy || Heights.Y > Heights.Z + UserVariables.accuracy || Heights.Y < Heights.Z - UserVariables.accuracy ||
-                             Heights.Z > Heights.Y + UserVariables.accuracy || Heights.Z < Heights.Y - UserVariables.accuracy || Heights.Z > Heights.X + UserVariables.accuracy || Heights.Z < Heights.X - UserVariables.accuracy;//returns false if tower offsets do not need corrected
+                
+                bool tower = Math.Abs(Math.Max(Heights.X, Math.Max(Heights.Y, Heights.Z)) - Math.Min(Heights.X, Math.Min(Heights.Y, Heights.Z))) > UserVariables.accuracy;
 
                 bool alpha = Heights.XOpp > Heights.YOpp + UserVariables.accuracy || Heights.XOpp < Heights.YOpp - UserVariables.accuracy || Heights.XOpp > Heights.ZOpp + UserVariables.accuracy || Heights.XOpp < Heights.ZOpp - UserVariables.accuracy ||
                              Heights.YOpp > Heights.XOpp + UserVariables.accuracy || Heights.YOpp < Heights.XOpp - UserVariables.accuracy || Heights.YOpp > Heights.ZOpp + UserVariables.accuracy || Heights.YOpp < Heights.ZOpp - UserVariables.accuracy ||
@@ -388,9 +416,22 @@ namespace OpenDACT.Class_Files
                 }
             }
         }
-
+/// <summary>
+/// /////////////////////////
+/// </summary>
+/// <param name="X"></param>
+/// <param name="XOpp"></param>
+/// <param name="Y"></param>
+/// <param name="YOpp"></param>
+/// <param name="Z"></param>
+/// <param name="ZOpp"></param>
         private static void stepsPMM(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
+            /*
+            float diagChange = 1 / UserVariables.deltaOpp;
+            float towChange = 1 / UserVariables.deltaTower;
+            */
+
             float diagChange = 1 / UserVariables.deltaOpp;
             float towChange = 1 / UserVariables.deltaTower;
 
@@ -399,12 +440,15 @@ namespace OpenDACT.Class_Files
 
             EEPROM.stepsPerMM -= (XYZ - XYZOpp) * ((diagChange + towChange) / 2);
 
-            X += (XYZ - XYZOpp) * towChange;
-            Y += (XYZ - XYZOpp) * towChange;
-            Z += (XYZ - XYZOpp) * towChange;
-            XOpp += (XYZ - XYZOpp) * diagChange;
-            YOpp += (XYZ - XYZOpp) * diagChange;
-            ZOpp += (XYZ - XYZOpp) * diagChange;
+            //XYZ is increased by the offset
+
+            X += (XYZ - XYZOpp) * diagChange * 1;
+            Y += (XYZ - XYZOpp) * diagChange * 1;
+            Z += (XYZ - XYZOpp) * diagChange * 1;
+            XOpp += (XYZ - XYZOpp) * towChange * 0.75f;
+            YOpp += (XYZ - XYZOpp) * towChange * 0.75f;
+            ZOpp += (XYZ - XYZOpp) * towChange * 0.75f;
+            
 
             UserInterface.logConsole("Steps per Millimeter: " + EEPROM.stepsPerMM.ToString());
         }

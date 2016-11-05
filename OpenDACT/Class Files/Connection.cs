@@ -34,7 +34,7 @@ namespace OpenDACT.Class_Files
                     }
                     
                     _serialPort.PortName = Program.mainFormTest.portsCombo.Text;
-                    _serialPort.BaudRate = int.Parse(Program.mainFormTest.baudRateCombo.Text);
+                    _serialPort.BaudRate = int.Parse(Program.mainFormTest.baudRateCombo.Text, , CultureInfo.InvariantCulture);
 
                     // Set the read/write timeouts.
                     _serialPort.ReadTimeout = 500;

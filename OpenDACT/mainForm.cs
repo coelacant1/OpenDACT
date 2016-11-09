@@ -17,6 +17,9 @@ namespace OpenDACT.Class_Files
     {
         public mainForm()
         {
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
 
             InitializeComponent();

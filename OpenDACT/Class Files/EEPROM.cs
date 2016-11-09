@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Globalization;
 
 namespace OpenDACT.Class_Files
 {
@@ -60,8 +61,8 @@ namespace OpenDACT.Class_Files
                 if (parseEPRSpace[0] == ":")
                 {
                     //Space
-                    intParse = int.Parse(parseEPRSpace[2]);
-                    floatParse2 = float.Parse(parseEPRSpace[3]);
+                    intParse = int.Parse(parseEPRSpace[2], CultureInfo.InvariantCulture);
+                    floatParse2 = float.Parse(parseEPRSpace[3], CultureInfo.InvariantCulture);
                 }
                 else if (value.Contains("EEPROM") || value.Contains("updated"))
                 {
@@ -71,8 +72,8 @@ namespace OpenDACT.Class_Files
                 else
                 {
                     //No space
-                    intParse = int.Parse(parseEPRSpace[1]);
-                    floatParse2 = float.Parse(parseEPRSpace[2]);
+                    intParse = int.Parse(parseEPRSpace[1], CultureInfo.InvariantCulture);
+                    floatParse2 = float.Parse(parseEPRSpace[2], CultureInfo.InvariantCulture);
                 }
             }//end EEProm capture
             else

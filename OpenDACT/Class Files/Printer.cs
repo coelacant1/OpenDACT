@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Globalization;
 
 namespace OpenDACT.Class_Files
 {
@@ -130,15 +131,15 @@ namespace OpenDACT.Class_Files
                 if (parseZProbeSpace[0] == ":")
                 {
                     //Space
-                    zProbeParse = float.Parse(parseZProbeSpace[1]);
+                    zProbeParse = float.Parse(parseZProbeSpace[1], CultureInfo.InvariantCulture);
                 }
                 else
                 {
                     //No space
-                    zProbeParse = float.Parse(parseZProbeSpace[0].Substring(1));
+                    zProbeParse = float.Parse(parseZProbeSpace[0].Substring(1), CultureInfo.InvariantCulture);
                 }
 
-                return float.Parse(parseFirstLine[1]);
+                return float.Parse(parseFirstLine[1], CultureInfo.InvariantCulture);
             }
             else
             {

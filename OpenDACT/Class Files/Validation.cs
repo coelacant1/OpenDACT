@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Globalization;
 
 namespace OpenDACT.Class_Files
 {
@@ -50,7 +51,7 @@ namespace OpenDACT.Class_Files
             // fix missing decimal point:
             if (decimalParts.Length == 1) decimalParts = new string[] { exponentParts[0], "0" };
 
-            int exponentValue = int.Parse(exponentParts[1]);
+            int exponentValue = int.Parse(exponentParts[1], CultureInfo.InvariantCulture);
 
             string newNumber = decimalParts[0] + decimalParts[1];
 

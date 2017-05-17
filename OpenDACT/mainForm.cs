@@ -162,13 +162,21 @@ namespace OpenDACT.Class_Files
 
         private void sendGCode_Click(object sender, EventArgs e)
         {
-            if (Connection._serialPort.IsOpen)
+            sendGCodeText();
+        }
+
+        private void GCodeBox_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter)
+                sendGCodeText();
+        }
+
+        private void sendGCodeText() 
             {
+            if (Connection._serialPort.IsOpen) {
                 Connection._serialPort.WriteLine(GCodeBox.Text.ToString().ToUpper());
                 UserInterface.logConsole("Sent: " + GCodeBox.Text.ToString().ToUpper());
             }
-            else
-            {
+            else {
                 UserInterface.logConsole("Not Connected");
             }
         }
@@ -493,7 +501,6 @@ namespace OpenDACT.Class_Files
             {
                 UserInterface.logConsole(ex.ToString());
             }
-        }
-
+        }        
     }
 }

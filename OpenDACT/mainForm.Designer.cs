@@ -1945,6 +1945,7 @@
             this.GCodeBox.Name = "GCodeBox";
             this.GCodeBox.Size = new System.Drawing.Size(90, 20);
             this.GCodeBox.TabIndex = 18;
+            this.GCodeBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GCodeBox_KeyUp);
             // 
             // sendGCode
             // 

@@ -206,7 +206,6 @@
             this.label61 = new System.Windows.Forms.Label();
             this.label62 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.label11 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.GCodeBox = new System.Windows.Forms.TextBox();
@@ -215,13 +214,14 @@
             this.aboutButton = new System.Windows.Forms.Button();
             this.contactButton = new System.Windows.Forms.Button();
             this.donateButton = new System.Windows.Forms.Button();
-            this.diagonalRodLengthText = new System.Windows.Forms.TextBox();
             this.textPlateDiameter = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.checkHeights = new System.Windows.Forms.Button();
             this.comboBoxZMin = new System.Windows.Forms.ComboBox();
             this.stopBut = new System.Windows.Forms.Button();
             this.quickCalibrate = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.printerLogPanel.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -295,7 +295,7 @@
             this.portsCombo.FormattingEnabled = true;
             this.portsCombo.Location = new System.Drawing.Point(509, 32);
             this.portsCombo.Name = "portsCombo";
-            this.portsCombo.Size = new System.Drawing.Size(107, 21);
+            this.portsCombo.Size = new System.Drawing.Size(108, 21);
             this.portsCombo.TabIndex = 6;
             // 
             // resetPrinter
@@ -1912,19 +1912,10 @@
             this.pictureBox3.TabIndex = 22;
             this.pictureBox3.TabStop = false;
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(262, 61);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(75, 13);
-            this.label11.TabIndex = 141;
-            this.label11.Text = "Diagonal Rod:";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(262, 8);
+            this.label4.Location = new System.Drawing.Point(262, 35);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(65, 13);
             this.label4.TabIndex = 15;
@@ -1941,19 +1932,19 @@
             // 
             // GCodeBox
             // 
-            this.GCodeBox.Location = new System.Drawing.Point(526, 59);
+            this.GCodeBox.Location = new System.Drawing.Point(543, 61);
             this.GCodeBox.Name = "GCodeBox";
-            this.GCodeBox.Size = new System.Drawing.Size(90, 20);
+            this.GCodeBox.Size = new System.Drawing.Size(74, 20);
             this.GCodeBox.TabIndex = 18;
             this.GCodeBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GCodeBox_KeyUp);
             // 
             // sendGCode
             // 
-            this.sendGCode.Location = new System.Drawing.Point(449, 57);
+            this.sendGCode.Location = new System.Drawing.Point(452, 59);
             this.sendGCode.Name = "sendGCode";
-            this.sendGCode.Size = new System.Drawing.Size(71, 23);
+            this.sendGCode.Size = new System.Drawing.Size(85, 23);
             this.sendGCode.TabIndex = 19;
-            this.sendGCode.Text = "Send GC";
+            this.sendGCode.Text = "Send GCode";
             this.sendGCode.UseVisualStyleBackColor = true;
             this.sendGCode.Click += new System.EventHandler(this.sendGCode_Click);
             // 
@@ -1997,17 +1988,9 @@
             this.donateButton.UseVisualStyleBackColor = true;
             this.donateButton.Click += new System.EventHandler(this.donateButton_Click_1);
             // 
-            // diagonalRodLengthText
-            // 
-            this.diagonalRodLengthText.Location = new System.Drawing.Point(343, 58);
-            this.diagonalRodLengthText.Name = "diagonalRodLengthText";
-            this.diagonalRodLengthText.Size = new System.Drawing.Size(100, 20);
-            this.diagonalRodLengthText.TabIndex = 154;
-            this.diagonalRodLengthText.Text = "269";
-            // 
             // textPlateDiameter
             // 
-            this.textPlateDiameter.Location = new System.Drawing.Point(343, 32);
+            this.textPlateDiameter.Location = new System.Drawing.Point(343, 61);
             this.textPlateDiameter.Name = "textPlateDiameter";
             this.textPlateDiameter.Size = new System.Drawing.Size(100, 20);
             this.textPlateDiameter.TabIndex = 200;
@@ -2016,7 +1999,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(262, 35);
+            this.label36.Location = new System.Drawing.Point(262, 64);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(79, 13);
             this.label36.TabIndex = 201;
@@ -2038,7 +2021,7 @@
             this.comboBoxZMin.Items.AddRange(new object[] {
             "FSR",
             "Z-Probe"});
-            this.comboBoxZMin.Location = new System.Drawing.Point(343, 5);
+            this.comboBoxZMin.Location = new System.Drawing.Point(343, 32);
             this.comboBoxZMin.Name = "comboBoxZMin";
             this.comboBoxZMin.Size = new System.Drawing.Size(100, 21);
             this.comboBoxZMin.TabIndex = 203;
@@ -2064,25 +2047,46 @@
             this.quickCalibrate.UseVisualStyleBackColor = true;
             this.quickCalibrate.Click += new System.EventHandler(this.quickCalibrate_Click);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(262, 8);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(52, 13);
+            this.label11.TabIndex = 206;
+            this.label11.Text = "Firmware:";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Smoothieware",
+            "Repetier",
+            "Marlin"});
+            this.comboBox1.Location = new System.Drawing.Point(343, 5);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(98, 21);
+            this.comboBox1.TabIndex = 207;
+            // 
             // mainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1287, 633);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.quickCalibrate);
+            this.Controls.Add(this.GCodeBox);
             this.Controls.Add(this.stopBut);
             this.Controls.Add(this.comboBoxZMin);
             this.Controls.Add(this.checkHeights);
             this.Controls.Add(this.label36);
             this.Controls.Add(this.textPlateDiameter);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.diagonalRodLengthText);
             this.Controls.Add(this.donateButton);
             this.Controls.Add(this.contactButton);
             this.Controls.Add(this.aboutButton);
             this.Controls.Add(this.sendGCode);
-            this.Controls.Add(this.GCodeBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -2141,12 +2145,10 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox GCodeBox;
         private System.Windows.Forms.Button sendGCode;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button aboutButton;
         private System.Windows.Forms.Button contactButton;
         private System.Windows.Forms.Button donateButton;
-        public System.Windows.Forms.TextBox diagonalRodLengthText;
         private System.Windows.Forms.TextBox textPlateDiameter;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.Button checkHeights;
@@ -2313,5 +2315,7 @@
         private System.Windows.Forms.Label label82;
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.Button quickCalibrate;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

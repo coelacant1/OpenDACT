@@ -28,7 +28,10 @@ namespace OpenDACT.Class_Files
                     UserInterface.logPrinter(message);
 
                     //DecisionHandler.handleInput(message);
-                    readLineData.Add(message);
+                    lock (readLineData)
+                    {
+                        readLineData.Add(message);
+                    }
                 }
                 catch (TimeoutException) { }
             }//end while
@@ -50,24 +53,29 @@ namespace OpenDACT.Class_Files
 
                     while (isCalibrating && hasData)
                     {
-                        //wait for ok to perform calculation?
-                        UserVariables.isInitiated = true;
-                        bool canMove;
+                        lock (readLineData)
+                        { 
+                            //wait for ok to perform calculation?
+                            UserVariables.isInitiated = true;
+                            bool canMove;
 
-                        if (readLineData.First().Contains("wait"))
-                        {
-                            canMove = true;
-                        }
-                        else
-                        {
-                            canMove = false;
-                        }
+                            if (readLineData.First().Contains("wait"))
+                            {
+                                canMove = true;
+                            }
+                            else
+                            {
+                                canMove = false;
+                            }
 
-                        DecisionHandler.handleInput(readLineData.First(), canMove);
-                        readLineData.RemoveAt(0);
+                            DecisionHandler.handleInput(readLineData.First(), canMove);
+                            readLineData.RemoveAt(0);
+                            hasData = readLineData.Any();
+                        }
+                    //    Thread.Sleep(200);
                     }//end while
                 }
-                catch (Exception) { }
+                catch (TimeoutException  Exception) { }
             }//end while continue
         }
 

@@ -20,7 +20,7 @@ namespace OpenDACT.Class_Files
         {
             if (Connection._serialPort.IsOpen)
             {
-                Connection._serialPort.WriteLine("G1 Z" + Z.ToString() + " X" + X.ToString() + " Y" + Y.ToString());
+                Connection._serialPort.WriteLine("G1 Z" + Z.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X" + X.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y" + Y.ToString("", System.Globalization.CultureInfo.InvariantCulture));
             }
             else
             {
@@ -79,11 +79,11 @@ namespace OpenDACT.Class_Files
             {
                 if (type == 1)
                 {
-                    Connection._serialPort.WriteLine("M206 T1 P" + position + " S" + value.ToString("F3"));
+                    Connection._serialPort.WriteLine("M206 T1 P" + position + " S" + value.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
                 }
                 else if (type == 3)
                 {
-                    Connection._serialPort.WriteLine("M206 T3 P" + position + " X" + value.ToString("F3"));
+                    Connection._serialPort.WriteLine("M206 T3 P" + position + " X" + value.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
                 }
                 else
                 {
@@ -136,7 +136,7 @@ namespace OpenDACT.Class_Files
                         iteration++;
                         break;
                     case 1:
-                        Connection._serialPort.WriteLine("G1 Z" + Math.Round(EEPROM.zMaxLength / 6).ToString() + " X0 Y0");
+                        Connection._serialPort.WriteLine("G1 Z" + Math.Round(EEPROM.zMaxLength / 6).ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y0");
                         iteration++;
                         break;
                     case 2:
@@ -156,7 +156,7 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                Connection._serialPort.WriteLine("G0 F" + UserVariables.xySpeed * 60);//converts mm/s to mm/min
+                Connection._serialPort.WriteLine("G0 F" + (UserVariables.xySpeed) * 60);//converts mm/s to mm/min
 
                 switch (currentPosition)
                 {
@@ -168,7 +168,7 @@ namespace OpenDACT.Class_Files
                                 iteration++;
                                 break;
                             case 1:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y0");
                                 iteration++;
                                 break;
                             case 2:
@@ -176,7 +176,7 @@ namespace OpenDACT.Class_Files
                                 iteration++;
                                 break;
                             case 3:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X-" + valueXYLarge.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y-" + valueXYSmall.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 currentPosition++;
                                 iteration = 0;
                                 break;
@@ -197,15 +197,15 @@ namespace OpenDACT.Class_Files
                                 iteration++;
                                 break;
                             case 1:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X-" + valueXYLarge.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y-" + valueXYSmall.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 iteration++;
                                 break;
                             case 2:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y0");
                                 iteration++;
                                 break;
                             case 3:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X" + valueXYLarge.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y" + valueXYSmall.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 currentPosition++;
                                 iteration = 0;
                                 break;
@@ -226,15 +226,15 @@ namespace OpenDACT.Class_Files
                                 iteration++;
                                 break;
                             case 1:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X" + valueXYLarge.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y" + valueXYSmall.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 iteration++;
                                 break;
                             case 2:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y0");
                                 iteration++;
                                 break;
                             case 3:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X" + valueXYLarge.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y-" + valueXYSmall.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 currentPosition++;
                                 iteration = 0;
                                 break;
@@ -255,15 +255,15 @@ namespace OpenDACT.Class_Files
                                 iteration++;
                                 break;
                             case 1:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X" + valueXYLarge.ToString() + " Y-" + valueXYSmall.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X" + valueXYLarge.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y-" + valueXYSmall.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 iteration++;
                                 break;
                             case 2:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y0");
                                 iteration++;
                                 break;
                             case 3:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X-" + valueXYLarge.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y" + valueXYSmall.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 currentPosition++;
                                 iteration = 0;
                                 break;
@@ -284,15 +284,15 @@ namespace OpenDACT.Class_Files
                                 iteration++;
                                 break;
                             case 1:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X-" + valueXYLarge.ToString() + " Y" + valueXYSmall.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X-" + valueXYLarge.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " Y" + valueXYSmall.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 iteration++;
                                 break;
                             case 2:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y0");
                                 iteration++;
                                 break;
                             case 3:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y" + valueZ.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y" + valueZ.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 currentPosition++;
                                 iteration = 0;
                                 break;
@@ -313,11 +313,11 @@ namespace OpenDACT.Class_Files
                                 iteration++;
                                 break;
                             case 1:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y" + valueZ.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y" + valueZ.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 iteration++;
                                 break;
                             case 2:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y-" + valueZ.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y-" + valueZ.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 currentPosition++;
                                 iteration = 0;
                                 break;
@@ -337,16 +337,16 @@ namespace OpenDACT.Class_Files
                                 iteration++;
                                 break;
                             case 1:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y-" + valueZ.ToString());
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y-" + valueZ.ToString("", System.Globalization.CultureInfo.InvariantCulture));
                                 iteration++;
                                 break;
                             case 2:
-                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString() + " X0 Y0");
+                                Connection._serialPort.WriteLine("G1 Z" + probingHeight.ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y0");
                                 iteration++;
                                 if (Calibration.calibrateInProgress == false){ iteration++; }
                                 break;
                             case 3:
-                                Connection._serialPort.WriteLine("G1 Z" + Convert.ToInt32(EEPROM.zMaxLength / 3) + " X0 Y0");
+                                Connection._serialPort.WriteLine("G1 Z" + Convert.ToInt32(EEPROM.zMaxLength / 3).ToString("", System.Globalization.CultureInfo.InvariantCulture) + " X0 Y0");
                                 iteration++;
                                 break;
                             case 4:

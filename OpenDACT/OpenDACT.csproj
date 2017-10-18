@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BDE7B842-A9B6-4F39-9620-01B6D4E7957E}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OpenDACT</RootNamespace>
     <AssemblyName>OpenDACT</AssemblyName>
@@ -70,6 +70,9 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
@@ -78,6 +81,9 @@
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="RJCP.SerialPortStream">
+      <HintPath>DLL\RJCP.SerialPortStream.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -95,13 +101,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class Files\Calibration.cs" />
-    <Compile Include="Class Files\Connection.cs" />
-    <Compile Include="Class Files\Threading.cs" />
-    <Compile Include="Class Files\DecisionHandler.cs" />
-    <Compile Include="Class Files\EEPROM.cs" />
-    <Compile Include="Class Files\GCode.cs" />
     <Compile Include="Class Files\Printer.cs" />
-    <Compile Include="Class Files\Test.cs" />
+    <Compile Include="Class Files\SerialPort.cs" />
     <Compile Include="Class Files\UserInterface.cs" />
     <Compile Include="Class Files\Validation.cs" />
     <Compile Include="mainForm.cs">
@@ -124,7 +125,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="OpenDACT_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">

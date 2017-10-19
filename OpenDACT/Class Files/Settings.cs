@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenDACT.Class_Files
 {
-    public class Settings
+    public class Settings : IParameters
     {
         public double CalculationAccuracy { get; set; }
         public double HeightmapAccuracy { get; set; }
@@ -26,23 +26,18 @@ namespace OpenDACT.Class_Files
         public double PlateDiameter { get; set; }
         public string Firmware { get; set; }
         public string COMPort { get; set; }
+        public bool ScrollToBottomPrinterLog { get; set; }
+        public bool ScrollToBottomSoftwareLog { get; set; }
         public int MaximumIterations { get; set; }
 
-
-        public enum Baudrate
+        public void SaveParameters(string location)
         {
-            [Description("250000 Bits Per Second")]
-            B250000 = 250000,
-            [Description("115200 Bits Per Second")]
-            B115200 = 115200,
-            [Description("57600 Bits Per Second")]
-            B57600 = 57600,
-            [Description("38400 Bits Per Second")]
-            B38400 = 38400,
-            [Description("19200 Bits Per Second")]
-            B19200 = 19200,
-            [Description("9600 Bits Per Second")]
-            B9600 = 9600
-        };
+            throw new NotImplementedException();
+        }
+        
+        public void LoadParameters(string location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

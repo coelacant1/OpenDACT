@@ -13,9 +13,12 @@ using System.Globalization;
 
 namespace OpenDACT.Class_Files
 {
-    public partial class mainForm : Form
+    public partial class MainForm : Form
     {
-        public mainForm()
+        SerialPort serialPort;
+        Printer printer;
+
+        public MainForm()
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
@@ -28,27 +31,17 @@ namespace OpenDACT.Class_Files
             consoleMain.ScrollBars = RichTextBoxScrollBars.Vertical;
             consolePrinter.Text = "";
             consolePrinter.ScrollBars = RichTextBoxScrollBars.Vertical;
-
-
-            // Basic set of standard baud rates.
-            baudRateCombo.Items.Add("250000");
-            baudRateCombo.Items.Add("115200");
-            baudRateCombo.Items.Add("57600");
-            baudRateCombo.Items.Add("38400");
-            baudRateCombo.Items.Add("19200");
-            baudRateCombo.Items.Add("9600");
-            baudRateCombo.Text = "250000";  // This is the default for most RAMBo controllers.
+            
+            baudRateCombo.Text = "250000";
 
             advancedPanel.Visible = false;
             printerLogPanel.Visible = false;
+        }
 
-            Connection.readThread = new Thread(Threading.Read);
-            Connection.calcThread = new Thread(Threading.HandleRead);
-            Connection._serialPort = new SerialPort();
-
-
+        private void InitializeCOMPorts()
+        {
             // Build the combobox of available ports.
-            string[] ports = SerialPort.GetPortNames();
+            string[] ports = serialPort.GetPortNames();
 
             if (ports.Length >= 1)
             {
@@ -68,85 +61,49 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                UserInterface.logConsole("No ports available");
+                UserInterface.LogConsole("No ports available");
             }
-
-            //accuracyTime.Series["Accuracy"].Points.AddXY(0, 0);
-            UserVariables.isInitiated = true;
         }
 
-        private void connectButton_Click(object sender, EventArgs e)
+        private void ConnectButton_Click(object sender, EventArgs e)
         {
-            Connection.connect();
+            printer = new Printer();
+            serialPort = new SerialPort();
+            serialPort.Open(portsCombo.Text, baudRateCombo.Text);
         }
 
-        private void disconnectButton_Click(object sender, EventArgs e)
+        private void DisconnectButton_Click(object sender, EventArgs e)
         {
-            Connection.disconnect();
+            serialPort.Close();
         }
 
-        private void calibrateButton_Click(object sender, EventArgs e)
+        private void CalibrateButton_Click(object sender, EventArgs e)
         {
-            if (Connection._serialPort.IsOpen)
+            if (serialPort.IsOpen())
             {
-                GCode.checkHeights = true;
-                EEPROMFunctions.readEEPROM();
-                EEPROMFunctions.EEPROMReadOnly = false;
-                Calibration.calibrationComplete = false;
-                Calibration.calibrationState = true;
-                Calibration.calibrationSelection = 0;
-                HeightFunctions.checkHeightsOnly = false;
-                Threading.isCalibrating = true;
+                //process software settings
+                //calibration routine
+                
             }
             else
             {
-                UserInterface.logConsole("Not connected");
+                UserInterface.LogConsole("Not connected");
             }
         }
         
-        private void quickCalibrate_Click(object sender, EventArgs e)
+        private void ResetPrinter_Click(object sender, EventArgs e)
         {
-            if (Connection._serialPort.IsOpen)
+            if (serialPort.IsOpen())
             {
-                GCode.checkHeights = true;
-                EEPROMFunctions.readEEPROM();
-                EEPROMFunctions.EEPROMReadOnly = false;
-                Calibration.calibrationComplete = false;
-                Calibration.calibrationState = true;
-                Calibration.calibrationSelection = 1;
-                HeightFunctions.checkHeightsOnly = false;
-                Threading.isCalibrating = true;
+                //emergency reset
             }
             else
             {
-                UserInterface.logConsole("Not connected");
+                UserInterface.LogConsole("Not connected");
             }
         }
 
-        private void resetPrinter_Click(object sender, EventArgs e)
-        {
-            if (Connection._serialPort.IsOpen)
-            {
-                GCode.emergencyReset();
-            }
-            else
-            {
-                UserInterface.logConsole("Not connected");
-            }
-        }
-        public void appendMainConsole(string value)
-        {
-            Invoke((MethodInvoker)delegate { consoleMain.AppendText(value + "\n"); });
-            Invoke((MethodInvoker)delegate { consoleMain.ScrollToCaret(); });
-        }
-
-        public void appendPrinterConsole(string value)
-        {
-            Invoke((MethodInvoker)delegate { consolePrinter.AppendText(value + "\n"); });
-            Invoke((MethodInvoker)delegate { consolePrinter.ScrollToCaret(); });
-        }
-
-        private void openAdvanced_Click(object sender, EventArgs e)
+        private void OpenAdvanced_Click(object sender, EventArgs e)
         {
             if (advancedPanel.Visible == false)
             {
@@ -160,48 +117,40 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        private void sendGCode_Click(object sender, EventArgs e)
+        private void SendGCode_Click(object sender, EventArgs e)
         {
-            sendGCodeText();
+            SendGCodeText();
         }
 
         private void GCodeBox_KeyUp(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Enter)
-                sendGCodeText();
+                SendGCodeText();
         }
 
-        private void sendGCodeText() 
+        private void SendGCodeText() 
             {
-            if (Connection._serialPort.IsOpen) {
-                Connection._serialPort.WriteLine(GCodeBox.Text.ToString().ToUpper());
-                UserInterface.logConsole("Sent: " + GCodeBox.Text.ToString().ToUpper());
+            if (serialPort.IsOpen()) {
+                serialPort.WriteLine(GCodeBox.Text.ToString().ToUpper());
+                UserInterface.LogConsole("Sent: " + GCodeBox.Text.ToString().ToUpper());
             }
             else {
-                UserInterface.logConsole("Not Connected");
+                UserInterface.LogConsole("Not Connected");
             }
         }
 
-        public void setAccuracyPoint(float x, float y)
+        private void AboutButton_Click(object sender, EventArgs e)
         {
-            Invoke((MethodInvoker)delegate
-            {
-                accuracyTime.Refresh();
-                accuracyTime.Series["Accuracy"].Points.AddXY(x, y);
-            });
+            System.Windows.Forms.MessageBox.Show("Version: 4.0.0\n\nCreated by Steven T. Rowland\n\nWith help from Gene Buckle and Michael Hackney\n");
         }
 
-        private void aboutButton_Click(object sender, EventArgs e)
-        {
-            System.Windows.Forms.MessageBox.Show("Version: 3.1.0A\n\nCreated by Steven T. Rowland\n\nWith help from Gene Buckle and Michael Hackney\n");
-        }
-        private void contactButton_Click_1(object sender, EventArgs e)
+        private void ContactButton_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process proc = new System.Diagnostics.Process();
             proc.StartInfo.FileName = "mailto:steventrowland@gmail.com";
             proc.Start();
         }
 
-        private void donateButton_Click_1(object sender, EventArgs e)
+        private void DonateButton_Click(object sender, EventArgs e)
         {
             string url = "";
 
@@ -221,68 +170,8 @@ namespace OpenDACT.Class_Files
             System.Diagnostics.Process.Start(url);
         }
 
-        public void setHeightsInvoke()
-        {
-            float X = Heights.X;
-            float XOpp = Heights.XOpp;
-            float Y = Heights.Y;
-            float YOpp = Heights.YOpp;
-            float Z = Heights.Z;
-            float ZOpp = Heights.ZOpp;
 
-            //set base heights for advanced calibration comparison
-            if (Calibration.iterationNum == 0)
-            {
-                Invoke((MethodInvoker)delegate { this.iXtext.Text = Math.Round(X, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.iXOpptext.Text = Math.Round(XOpp, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.iYtext.Text = Math.Round(Y, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.iYOpptext.Text = Math.Round(YOpp, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.iZtext.Text = Math.Round(Z, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.iZOpptext.Text = Math.Round(ZOpp, 3).ToString(); });
-
-                Calibration.iterationNum++;
-
-                Invoke((MethodInvoker)delegate { this.XText.Text = Math.Round(X, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.XOppText.Text = Math.Round(XOpp, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.YText.Text = Math.Round(Y, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.YOppText.Text = Math.Round(YOpp, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.ZText.Text = Math.Round(Z, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.ZOppText.Text = Math.Round(ZOpp, 3).ToString(); });
-            }
-            else
-            {
-                Invoke((MethodInvoker)delegate { this.XText.Text = Math.Round(X, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.XOppText.Text = Math.Round(XOpp, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.YText.Text = Math.Round(Y, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.YOppText.Text = Math.Round(YOpp, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.ZText.Text = Math.Round(Z, 3).ToString(); });
-                Invoke((MethodInvoker)delegate { this.ZOppText.Text = Math.Round(ZOpp, 3).ToString(); });
-            }
-        }
-
-        public void setEEPROMGUIList()
-        {
-            Invoke((MethodInvoker)delegate
-            {
-                this.stepsPerMMText.Text = EEPROM.stepsPerMM.ToString();
-                this.zMaxLengthText.Text = EEPROM.zMaxLength.ToString();
-                this.zProbeText.Text = EEPROM.zProbeHeight.ToString();
-                this.zProbeSpeedText.Text = EEPROM.zProbeSpeed.ToString();
-                this.diagonalRod.Text = EEPROM.diagonalRod.ToString();
-                this.HRadiusText.Text = EEPROM.HRadius.ToString();
-                this.offsetXText.Text = EEPROM.offsetX.ToString();
-                this.offsetYText.Text = EEPROM.offsetY.ToString();
-                this.offsetZText.Text = EEPROM.offsetZ.ToString();
-                this.AText.Text = EEPROM.A.ToString();
-                this.BText.Text = EEPROM.B.ToString();
-                this.CText.Text = EEPROM.C.ToString();
-                this.DAText.Text = EEPROM.DA.ToString();
-                this.DBText.Text = EEPROM.DB.ToString();
-                this.DCText.Text = EEPROM.DC.ToString();
-            });
-        }
-
-        private void sendEEPROMButton_Click(object sender, EventArgs e)
+        private void SendEEPROMButton_Click(object sender, EventArgs e)
         {
             EEPROM.stepsPerMM = Convert.ToInt32(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.stepsPerMMText.Text, out value); return value; }));
             EEPROM.zMaxLength = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zMaxLengthText.Text, out value); return value; }));
@@ -303,23 +192,19 @@ namespace OpenDACT.Class_Files
             EEPROMFunctions.sendEEPROM();
         }
 
-        private void readEEPROM_Click(object sender, EventArgs e)
+        private void ReadEEPROM_Click(object sender, EventArgs e)
         {
-            if (Connection._serialPort.IsOpen)
+            if (serialPort.IsOpen())
             {
-                EEPROMFunctions.tempEEPROMSet = false;
-                EEPROMFunctions.readEEPROM();
-                EEPROMFunctions.EEPROMReadOnly = true;
-                HeightFunctions.checkHeightsOnly = false;
-                EEPROMFunctions.EEPROMReadCount = 0;
+
             }
             else
             {
-                UserInterface.logConsole("Not Connected");
+                UserInterface.LogConsole("Not Connected");
             }
         }
 
-        public void setButtonValues()
+        public void SetButtonValues()
         {
             Invoke((MethodInvoker)delegate
             {
@@ -348,11 +233,11 @@ namespace OpenDACT.Class_Files
                 this.textOppPerc.Text = UserVariables.oppPerc.ToString();
             });
         }
-        private string getZMin()
+        private string GetZMin()
         {
             if (comboBoxZMin.InvokeRequired)
             {
-                return (string)comboBoxZMin.Invoke(new Func<string>(getZMin));
+                return (string)comboBoxZMin.Invoke(new Func<string>(GetZMin));
             }
             else
             {
@@ -360,11 +245,11 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        private string getHeuristic()
+        private string GetHeuristic()
         {
             if (heuristicComboBox.InvokeRequired)
             {
-                return (string)heuristicComboBox.Invoke(new Func<string>(getHeuristic));
+                return (string)heuristicComboBox.Invoke(new Func<string>(GetHeuristic));
             }
             else
             {
@@ -372,15 +257,15 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public void setUserVariables()
+        public void SetUserVariables()
         {
             UserVariables.calculationAccuracy = Convert.ToSingle(this.textAccuracy.Text);
             UserVariables.accuracy = Convert.ToSingle(this.textAccuracy2.Text);
             UserVariables.HRadRatio = Convert.ToSingle(this.textHRadRatio.Text);
             UserVariables.DRadRatio = Convert.ToSingle(this.textDRadRatio.Text);
 
-            UserVariables.probeChoice = getZMin();
-            UserVariables.advancedCalibration = Convert.ToBoolean(getHeuristic());
+            UserVariables.probeChoice = GetZMin();
+            UserVariables.advancedCalibration = Convert.ToBoolean(GetHeuristic());
 
             UserVariables.pauseTimeSet = Convert.ToInt32(this.textPauseTimeSet.Text);
             UserVariables.maxIterations = Convert.ToInt32(this.textMaxIterations.Text);
@@ -402,31 +287,16 @@ namespace OpenDACT.Class_Files
             UserVariables.xySpeed = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(xySpeedTxt.Text, out value); return value; }));
         }
 
-        private void checkHeights_Click(object sender, EventArgs e)
+        private void CheckHeights_Click(object sender, EventArgs e)
         {
-            if (EEPROMFunctions.tempEEPROMSet == false)
-            {
-                EEPROMFunctions.readEEPROM();
-            }
 
-            GCode.checkHeights = true;
-            EEPROMFunctions.EEPROMReadOnly = false;
-            Calibration.calibrationState = true;
-            Calibration.calibrationSelection = 0;
-            HeightFunctions.checkHeightsOnly = true;
-            HeightFunctions.heightsSet = false;
-            Calibration.calibrationComplete = false;
         }
 
-        private void stopBut_Click(object sender, EventArgs e)
+        private void StopBut_Click(object sender, EventArgs e)
         {
             try
             {
-                Connection._serialPort.DiscardOutBuffer();
-                GCode.emergencyReset();
-                Connection.disconnect();
-                Threading.isCalibrating = false;
-                Connection.connect();
+
             }
             catch
             {
@@ -435,13 +305,13 @@ namespace OpenDACT.Class_Files
 
         }
 
-        private void manualCalibrateBut_Click(object sender, EventArgs e)
+        private void ManualCalibrateBut_Click(object sender, EventArgs e)
         {
             try
             {
                 Calibration.calibrationState = true;
 
-                Program.mainFormTest.setUserVariables();
+                Program.MainFormTest.SetUserVariables();
 
                 Heights.X = Convert.ToSingle(xManual.Text);
                 Heights.XOpp = Convert.ToSingle(xOppManual.Text);
@@ -467,7 +337,7 @@ namespace OpenDACT.Class_Files
                 EEPROM.DB = Convert.ToSingle(delRadBMan.Text);
                 EEPROM.DC = Convert.ToSingle(delRadCMan.Text);
 
-                Calibration.basicCalibration();
+                Calibration.BasicCalibration();
 
                 //set eeprom vals in manual calibration
                 this.spmMan.Text = EEPROM.stepsPerMM.ToString();
@@ -499,7 +369,7 @@ namespace OpenDACT.Class_Files
             }
             catch (Exception ex)
             {
-                UserInterface.logConsole(ex.ToString());
+                UserInterface.LogConsole(ex.ToString());
             }
         }        
     }

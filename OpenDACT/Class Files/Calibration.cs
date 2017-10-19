@@ -9,28 +9,7 @@ namespace OpenDACT.Class_Files
 {
     static class Calibration
     {
-        public static bool calibrateInProgress = false;
-        public static bool calibrationState = false;
-        public static bool calibrationComplete = false;
-        public static int calibrationSelection = 0;
-        public static int iterationNum = 0;
-        private static float tempAccuracy;
-
-        public static void calibrate()
-        {
-            if (calibrationSelection == 0)
-            {
-                basicCalibration();
-            }
-            else if (calibrationSelection == 1)
-            {
-                fastCalibration();
-            }
-
-            iterationNum++;
-        }
-        
-        public static void fastCalibration()
+        public static void FastCalibration()
         {
             //check if eeprom object remains after this function is called for the second time
 
@@ -39,12 +18,12 @@ namespace OpenDACT.Class_Files
                 if (UserVariables.diagonalRodLength.ToString() == "")
                 {
                     UserVariables.diagonalRodLength = EEPROM.diagonalRod;
-                    UserInterface.logConsole("Using default diagonal rod length from EEPROM");
+                    UserInterface.LogConsole("Using default diagonal rod length from EEPROM");
                 }
             }
 
             tempAccuracy = (Math.Abs(Heights.X) + Math.Abs(Heights.XOpp) + Math.Abs(Heights.Y) + Math.Abs(Heights.YOpp) + Math.Abs(Heights.Z) + Math.Abs(Heights.ZOpp)) / 6;
-            Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
+            Program.MainFormTest.SetAccuracyPoint(iterationNum, tempAccuracy);
             checkAccuracy(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
 
             if (calibrationState == true)
@@ -60,7 +39,7 @@ namespace OpenDACT.Class_Files
             }
         }
 
-        public static void basicCalibration()
+        public static void BasicCalibration()
         {
             //check if eeprom object remains after this function is called for the second time
             if (iterationNum == 0)
@@ -68,12 +47,12 @@ namespace OpenDACT.Class_Files
                 if (UserVariables.diagonalRodLength.ToString() == "")
                 {
                     UserVariables.diagonalRodLength = EEPROM.diagonalRod;
-                    UserInterface.logConsole("Using default diagonal rod length from EEPROM");
+                    UserInterface.LogConsole("Using default diagonal rod length from EEPROM");
                 }
             }
 
             tempAccuracy = (Math.Abs(Heights.X) + Math.Abs(Heights.XOpp) + Math.Abs(Heights.Y) + Math.Abs(Heights.YOpp) + Math.Abs(Heights.Z) + Math.Abs(Heights.ZOpp)) / 6;
-            Program.mainFormTest.setAccuracyPoint(iterationNum, tempAccuracy);
+            Program.MainFormTest.SetAccuracyPoint(iterationNum, tempAccuracy);
             checkAccuracy(ref Heights.X, ref Heights.XOpp, ref Heights.Y, ref Heights.YOpp, ref Heights.Z, ref Heights.ZOpp);
 
             if (calibrationState == true)
@@ -117,7 +96,7 @@ namespace OpenDACT.Class_Files
                              Heights.ZOpp < Heights.XOpp + UserVariables.accuracy && Heights.ZOpp > Heights.XOpp - UserVariables.accuracy &&
                              Heights.ZOpp < Heights.YOpp + UserVariables.accuracy && Heights.ZOpp > Heights.YOpp - UserVariables.accuracy;
 
-                UserInterface.logConsole("Tower:" + tower + " SPM:" + spm + " Alpha:" + alpha + " HRad:" + hrad);
+                UserInterface.LogConsole("Tower:" + tower + " SPM:" + spm + " Alpha:" + alpha + " HRad:" + hrad);
 
                 if (tower)
                 {
@@ -144,7 +123,7 @@ namespace OpenDACT.Class_Files
         }
         
 
-        private static void checkAccuracy(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void CheckAccuracy(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float accuracy = UserVariables.accuracy;
 
@@ -153,7 +132,7 @@ namespace OpenDACT.Class_Files
                 if (UserVariables.probeChoice == "FSR")
                 {
                     EEPROM.zMaxLength -= UserVariables.FSROffset;
-                    UserInterface.logConsole("Setting Z Max Length with adjustment for FSR");
+                    UserInterface.LogConsole("Setting Z Max Length with adjustment for FSR");
                 }
 
                 calibrationState = false;
@@ -161,11 +140,11 @@ namespace OpenDACT.Class_Files
             else
             {
                 GCode.checkHeights = true;
-                UserInterface.logConsole("Continuing Calibration");
+                UserInterface.LogConsole("Continuing Calibration");
             }
         }
 
-        private static void HRad(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void HorizontalRadius(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float HRadSA = ((X + XOpp + Y + YOpp + Z + ZOpp) / 6);
             float HRadRatio = UserVariables.HRadRatio;
@@ -182,19 +161,9 @@ namespace OpenDACT.Class_Files
             UserInterface.logConsole("HRad:" + EEPROM.HRadius.ToString());
         }
 
-        
 
-        /*
-        public void analyzeGeometry(float X, float XOpp, float Y, float YOpp, float Z, float ZOpp)
-        {
-            int analyzeCount = 0;
-
-
-            UserInterface.logConsole("Expect a slight inaccuracy in the geometry analysis; basic calibration.");
-        }
-        */
-
-        private static void towerOffsets(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        //USE FOR DELTA RADII
+        private static void CarriageOffsets(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             int j = 0;
             float accuracy = UserVariables.calculationAccuracy;
@@ -254,9 +223,9 @@ namespace OpenDACT.Class_Files
 
                     if (Math.Abs(tempX2) <= UserVariables.accuracy && Math.Abs(tempY2) <= UserVariables.accuracy && Math.Abs(tempZ2) <= UserVariables.accuracy)
                     {
-                        UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
-                        UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
-                        UserInterface.logConsole("No Hrad correction");
+                        UserInterface.LogConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
+                        UserInterface.LogConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
+                        UserInterface.LogConsole("No Hrad correction");
 
                         float smallest = Math.Min(offsetX, Math.Min(offsetY, offsetZ));
 
@@ -264,7 +233,7 @@ namespace OpenDACT.Class_Files
                         offsetY -= smallest;
                         offsetZ -= smallest;
 
-                        UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
+                        UserInterface.LogConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
 
                         X = tempX2;
                         XOpp = tempXOpp2;
@@ -282,8 +251,8 @@ namespace OpenDACT.Class_Files
                     }
                     else if (j == 99)
                     {
-                        UserInterface.logConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
-                        UserInterface.logConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
+                        UserInterface.LogConsole("VHeights :" + tempX2 + " " + tempXOpp2 + " " + tempY2 + " " + tempYOpp2 + " " + tempZ2 + " " + tempZOpp2);
+                        UserInterface.LogConsole("Offs :" + offsetX + " " + offsetY + " " + offsetZ);
                         float dradCorr = tempX2 * -1.25F;
                         float HRadRatio = UserVariables.HRadRatio;
 
@@ -304,7 +273,7 @@ namespace OpenDACT.Class_Files
                         tempYOpp2 -= HRadOffset;
                         tempZOpp2 -= HRadOffset;
 
-                        UserInterface.logConsole("Hrad correction: " + dradCorr);
+                        UserInterface.LogConsole("Hrad correction: " + dradCorr);
                         UserInterface.logConsole("HRad: " + EEPROM.HRadius.ToString());
 
                         j = 0;
@@ -321,21 +290,21 @@ namespace OpenDACT.Class_Files
                 {
                     j = 100;
 
-                    UserInterface.logConsole("Tower Offsets and Delta Radii Calibrated");
+                    UserInterface.LogConsole("Tower Offsets and Delta Radii Calibrated");
                 }
             }
 
             if (EEPROM.offsetX > 1000 || EEPROM.offsetY > 1000 || EEPROM.offsetZ > 1000)
             {
-                UserInterface.logConsole("Tower offset calibration error, setting default values.");
-                UserInterface.logConsole("Tower offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ);
+                UserInterface.LogConsole("Tower offset calibration error, setting default values.");
+                UserInterface.LogConsole("Tower offsets before damage prevention: X" + offsetX + " Y" + offsetY + " Z" + offsetZ);
                 offsetX = 0;
                 offsetY = 0;
                 offsetZ = 0;
             }
         }
 
-        private static void alphaRotation(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void AlphaRotation(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             float offsetX = EEPROM.offsetX;
             float offsetY = EEPROM.offsetY;
@@ -425,7 +394,7 @@ namespace OpenDACT.Class_Files
 /// <param name="YOpp"></param>
 /// <param name="Z"></param>
 /// <param name="ZOpp"></param>
-        private static void stepsPMM(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
+        private static void StepsPerMillimeter(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
             /*
             float diagChange = 1 / UserVariables.deltaOpp;
@@ -450,47 +419,85 @@ namespace OpenDACT.Class_Files
             ZOpp += (XYZ - XYZOpp) * towChange * 0.75f;
             
 
-            UserInterface.logConsole("Steps per Millimeter: " + EEPROM.stepsPerMM.ToString());
+            UserInterface.LogConsole("Steps per Millimeter: " + EEPROM.stepsPerMM.ToString());
         }
+
 
         /*
-        private static void linearRegression(float[] xVals, float[] yVals, int inclusiveStart, int exclusiveEnd, out float rsquared, out float yintercept, out float slope)
-        {
-            float sumOfX = 0;
-            float sumOfY = 0;
-            float sumOfXSq = 0;
-            float sumOfYSq = 0;
-            float ssX = 0;
-            float ssY = 0;
-            float sumCodeviates = 0;
-            float sCo = 0;
-            float count = exclusiveEnd - inclusiveStart;
+         //Delta Radius Calibration******************************************************
+	    function linearRegression(y,x){
+		    var lr = {};
+		    var n = y.length;
+		    var sum_x = 0;
+		    var sum_y = 0;
+		    var sum_xy = 0;
+		    var sum_xx = 0;
+		    var sum_yy = 0;
+		
+		    for (var i = 0; i < y.length; i++) {
+			
+			    sum_x += x[i];
+			    sum_y += y[i];
+			    sum_xy += (x[i]*y[i]);
+			    sum_xx += (x[i]*x[i]);
+			    sum_yy += (y[i]*y[i]);
+		    } 
+		
+		    lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+		    lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
+		    lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+		
+		    return lr;
+	    }
+	    // lr.slope
+	    // lr.intercept
+	    // lr.r2
+	    //DA = X / -0.5 + DA;
+	    var known_yDA = [X, XTemp2];
+	    var known_xDA = [0, 1];
+	    var lrDA = linearRegression(known_yDA, known_xDA);
+	    var DATemp = DA;
+	    console.log(lrDA);
+	    DA = lrDA.intercept * -2 + DA;
+	    DA = checkZero(DA);
+	    XOpp = ((lrDA.intercept * DOpposingX) - XOpp) * -1;
+	    YOpp = ((lrDA.intercept * DOpposingXL) - YOpp) * -1;
+	    ZOpp = ((lrDA.intercept * DOpposingXR) - ZOpp) * -1;
+	    X = lrDA.intercept - X;
+	    X = checkZero(X);
+	    /////////////////////////////////////
+	    var known_yDB = [Y, YTemp3];
+	    var known_xDB = [0, 1];
+	    var lrDB = linearRegression(known_yDB, known_xDB);
+	    var DBTemp = DB;
+	    DB = lrDB.intercept * -2 + DB + (lrDB.intercept * 0.125);
+	    DB = checkZero(DB);
+	    XOpp = ((lrDB.intercept * DOpposingYR) - XOpp) * -1;
+	    YOpp = ((lrDB.intercept * DOpposingY) - YOpp) * -1;
+	    ZOpp = ((lrDB.intercept * DOpposingYL) - ZOpp) * -1;
+	    Y = lrDB.intercept - Y;
+	    Y = checkZero(Y);
+	    /////////////////////////////////////
+	    var known_yDC = [Z, ZTemp4];
+	    var known_xDC = [0, 1];
+	    var lrDC = linearRegression(known_yDC, known_xDC);
+	    var DCTemp = DC;
+	    console.log(lrDC);
+	    DC = lrDC.intercept * -2 + DC + (lrDC.intercept * 0.25);
+	    DC = checkZero(DC);
+	    XOpp = ((lrDC.intercept * DOpposingZL) - XOpp) * -1;
+	    YOpp = ((lrDC.intercept * DOpposingZR) - YOpp) * -1;
+	    ZOpp = ((lrDC.intercept * DOpposingZ) - ZOpp) * -1;
+	    Z = lrDC.intercept - Z;
+	    Z = checkZero(Z);
+	    console.log(DA, DB, DC);
+	    console.log("Tower heights after delta radius calibration: ", X, XOpp, Y, YOpp, Z, ZOpp);
 
-            for (int ctr = inclusiveStart; ctr < exclusiveEnd; ctr++)
-            {
-                float x = xVals[ctr];
-                float y = yVals[ctr];
-                sumCodeviates += x * y;
-                sumOfX += x;
-                sumOfY += y;
-                sumOfXSq += x * x;
-                sumOfYSq += y * y;
-            }
 
-            ssX = sumOfXSq - ((sumOfX * sumOfX) / count);
-            ssY = sumOfYSq - ((sumOfY * sumOfY) / count);
-            float RNumerator = (count * sumCodeviates) - (sumOfX * sumOfY);
-            float RDenom = (count * sumOfXSq - (sumOfX * sumOfX))
-             * (count * sumOfYSq - (sumOfY * sumOfY));
-            sCo = sumCodeviates - ((sumOfX * sumOfY) / count);
+         */
 
-            float meanX = sumOfX / count;
-            float meanY = sumOfY / count;
-            float dblR = RNumerator / Convert.ToSingle(Math.Sqrt(RDenom));
-            rsquared = dblR * dblR;
-            yintercept = meanY - ((sCo / ssX) * meanX);
-            slope = sCo / ssX;
-        }
-        */
+
+
+
     }
 }

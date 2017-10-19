@@ -8,7 +8,7 @@ namespace OpenDACT.Class_Files
 {
     static class Program
     {
-        public static mainForm mainFormTest;
+        public static MainForm MainForm;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -17,13 +17,8 @@ namespace OpenDACT.Class_Files
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            createMainForm();
-            Application.Run(mainFormTest);
-        }
-
-        public static void createMainForm()
-        {
-            mainFormTest = new mainForm();
+            MainForm = new MainForm();
+            Application.Run(MainForm);
         }
     }
 }

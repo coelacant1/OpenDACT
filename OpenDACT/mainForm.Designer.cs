@@ -1,6 +1,6 @@
 ﻿namespace OpenDACT.Class_Files
 {
-    partial class mainForm
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -219,7 +219,6 @@
             this.checkHeights = new System.Windows.Forms.Button();
             this.comboBoxZMin = new System.Windows.Forms.ComboBox();
             this.stopBut = new System.Windows.Forms.Button();
-            this.quickCalibrate = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.printerLogPanel.SuspendLayout();
@@ -260,7 +259,7 @@
             this.connectButton.TabIndex = 2;
             this.connectButton.Text = "Connect";
             this.connectButton.UseVisualStyleBackColor = true;
-            this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
+            this.connectButton.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
             // disconnectButton
             // 
@@ -270,7 +269,7 @@
             this.disconnectButton.TabIndex = 3;
             this.disconnectButton.Text = "Disconnect";
             this.disconnectButton.UseVisualStyleBackColor = true;
-            this.disconnectButton.Click += new System.EventHandler(this.disconnectButton_Click);
+            this.disconnectButton.Click += new System.EventHandler(this.DisconnectButton_Click);
             // 
             // calibrateButton
             // 
@@ -280,11 +279,18 @@
             this.calibrateButton.TabIndex = 4;
             this.calibrateButton.Text = "Calibrate";
             this.calibrateButton.UseVisualStyleBackColor = true;
-            this.calibrateButton.Click += new System.EventHandler(this.calibrateButton_Click);
+            this.calibrateButton.Click += new System.EventHandler(this.CalibrateButton_Click);
             // 
             // baudRateCombo
             // 
             this.baudRateCombo.FormattingEnabled = true;
+            this.baudRateCombo.Items.AddRange(new object[] {
+            "250000",
+            "115200",
+            "57600",
+            "38400",
+            "19200",
+            "9600"});
             this.baudRateCombo.Location = new System.Drawing.Point(509, 5);
             this.baudRateCombo.Name = "baudRateCombo";
             this.baudRateCombo.Size = new System.Drawing.Size(108, 21);
@@ -306,7 +312,7 @@
             this.resetPrinter.TabIndex = 9;
             this.resetPrinter.Text = "Reset";
             this.resetPrinter.UseVisualStyleBackColor = true;
-            this.resetPrinter.Click += new System.EventHandler(this.resetPrinter_Click);
+            this.resetPrinter.Click += new System.EventHandler(this.ResetPrinter_Click);
             // 
             // openAdvanced
             // 
@@ -316,7 +322,7 @@
             this.openAdvanced.TabIndex = 10;
             this.openAdvanced.Text = "Advanced";
             this.openAdvanced.UseVisualStyleBackColor = true;
-            this.openAdvanced.Click += new System.EventHandler(this.openAdvanced_Click);
+            this.openAdvanced.Click += new System.EventHandler(this.OpenAdvanced_Click);
             // 
             // printerLogPanel
             // 
@@ -835,7 +841,7 @@
             this.readEEPROM.TabIndex = 199;
             this.readEEPROM.Text = "Read EEPROM Values";
             this.readEEPROM.UseVisualStyleBackColor = true;
-            this.readEEPROM.Click += new System.EventHandler(this.readEEPROM_Click);
+            this.readEEPROM.Click += new System.EventHandler(this.ReadEEPROM_Click);
             // 
             // label52
             // 
@@ -881,7 +887,7 @@
             this.sendEEPROMButton.TabIndex = 192;
             this.sendEEPROMButton.Text = "Send EEPROM Values";
             this.sendEEPROMButton.UseVisualStyleBackColor = true;
-            this.sendEEPROMButton.Click += new System.EventHandler(this.sendEEPROMButton_Click);
+            this.sendEEPROMButton.Click += new System.EventHandler(this.SendEEPROMButton_Click);
             // 
             // label47
             // 
@@ -1370,22 +1376,22 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea1.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea1);
-            legend1.Enabled = false;
-            legend1.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend1);
+            chartArea4.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea4.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea4);
+            legend4.Enabled = false;
+            legend4.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend4);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series1.BackImageTransparentColor = System.Drawing.Color.White;
-            series1.BorderColor = System.Drawing.Color.Transparent;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.IsXValueIndexed = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series1);
+            series4.BackImageTransparentColor = System.Drawing.Color.White;
+            series4.BorderColor = System.Drawing.Color.Transparent;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.IsXValueIndexed = true;
+            series4.Legend = "Legend1";
+            series4.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series4);
             this.accuracyTime.Size = new System.Drawing.Size(317, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
@@ -1825,7 +1831,7 @@
             this.manualCalibrateBut.TabIndex = 205;
             this.manualCalibrateBut.Text = "Manually Calibrate";
             this.manualCalibrateBut.UseVisualStyleBackColor = true;
-            this.manualCalibrateBut.Click += new System.EventHandler(this.manualCalibrateBut_Click);
+            this.manualCalibrateBut.Click += new System.EventHandler(this.ManualCalibrateBut_Click);
             // 
             // xOppManual
             // 
@@ -1946,7 +1952,7 @@
             this.sendGCode.TabIndex = 19;
             this.sendGCode.Text = "Send GCode";
             this.sendGCode.UseVisualStyleBackColor = true;
-            this.sendGCode.Click += new System.EventHandler(this.sendGCode_Click);
+            this.sendGCode.Click += new System.EventHandler(this.SendGCode_Click);
             // 
             // pictureBox2
             // 
@@ -1966,7 +1972,7 @@
             this.aboutButton.TabIndex = 21;
             this.aboutButton.Text = "About";
             this.aboutButton.UseVisualStyleBackColor = true;
-            this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
+            this.aboutButton.Click += new System.EventHandler(this.AboutButton_Click);
             // 
             // contactButton
             // 
@@ -1976,7 +1982,7 @@
             this.contactButton.TabIndex = 22;
             this.contactButton.Text = "Contact";
             this.contactButton.UseVisualStyleBackColor = true;
-            this.contactButton.Click += new System.EventHandler(this.contactButton_Click_1);
+            this.contactButton.Click += new System.EventHandler(this.ContactButton_Click);
             // 
             // donateButton
             // 
@@ -1986,7 +1992,7 @@
             this.donateButton.TabIndex = 23;
             this.donateButton.Text = "Donate";
             this.donateButton.UseVisualStyleBackColor = true;
-            this.donateButton.Click += new System.EventHandler(this.donateButton_Click_1);
+            this.donateButton.Click += new System.EventHandler(this.DonateButton_Click);
             // 
             // textPlateDiameter
             // 
@@ -2013,7 +2019,7 @@
             this.checkHeights.TabIndex = 202;
             this.checkHeights.Text = "Check Current Heights";
             this.checkHeights.UseVisualStyleBackColor = true;
-            this.checkHeights.Click += new System.EventHandler(this.checkHeights_Click);
+            this.checkHeights.Click += new System.EventHandler(this.CheckHeights_Click);
             // 
             // comboBoxZMin
             // 
@@ -2035,17 +2041,7 @@
             this.stopBut.TabIndex = 204;
             this.stopBut.Text = "Stop";
             this.stopBut.UseVisualStyleBackColor = true;
-            this.stopBut.Click += new System.EventHandler(this.stopBut_Click);
-            // 
-            // quickCalibrate
-            // 
-            this.quickCalibrate.Location = new System.Drawing.Point(4, 206);
-            this.quickCalibrate.Name = "quickCalibrate";
-            this.quickCalibrate.Size = new System.Drawing.Size(120, 46);
-            this.quickCalibrate.TabIndex = 205;
-            this.quickCalibrate.Text = "Quick Calibrate";
-            this.quickCalibrate.UseVisualStyleBackColor = true;
-            this.quickCalibrate.Click += new System.EventHandler(this.quickCalibrate_Click);
+            this.stopBut.Click += new System.EventHandler(this.StopBut_Click);
             // 
             // label11
             // 
@@ -2068,7 +2064,7 @@
             this.comboBox1.Size = new System.Drawing.Size(98, 21);
             this.comboBox1.TabIndex = 207;
             // 
-            // mainForm
+            // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
@@ -2076,7 +2072,6 @@
             this.ClientSize = new System.Drawing.Size(1287, 633);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.quickCalibrate);
             this.Controls.Add(this.GCodeBox);
             this.Controls.Add(this.stopBut);
             this.Controls.Add(this.comboBoxZMin);
@@ -2103,7 +2098,7 @@
             this.Controls.Add(this.printerLogPanel);
             this.Controls.Add(this.pictureBox2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "mainForm";
+            this.Name = "MainForm";
             this.Text = "OpenDACT";
             this.printerLogPanel.ResumeLayout(false);
             this.printerLogPanel.PerformLayout();
@@ -2256,7 +2251,7 @@
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart accuracyTime;
+        public System.Windows.Forms.DataVisualization.Charting.Chart accuracyTime;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox xySpeedTxt;
         private System.Windows.Forms.Button stopBut;
@@ -2314,7 +2309,6 @@
         private System.Windows.Forms.Label label81;
         private System.Windows.Forms.Label label82;
         private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.Button quickCalibrate;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox comboBox1;
     }

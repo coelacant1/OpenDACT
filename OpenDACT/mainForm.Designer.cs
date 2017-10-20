@@ -28,10 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.consoleMain = new System.Windows.Forms.RichTextBox();
             this.consolePrinter = new System.Windows.Forms.RichTextBox();
             this.connectButton = new System.Windows.Forms.Button();
@@ -214,7 +213,7 @@
             this.aboutButton = new System.Windows.Forms.Button();
             this.contactButton = new System.Windows.Forms.Button();
             this.donateButton = new System.Windows.Forms.Button();
-            this.textPlateDiameter = new System.Windows.Forms.TextBox();
+            this.bedDiameter = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.checkHeights = new System.Windows.Forms.Button();
             this.comboBoxZMin = new System.Windows.Forms.ComboBox();
@@ -1355,7 +1354,6 @@
             // 
             // pictureBox4
             // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
             this.pictureBox4.Location = new System.Drawing.Point(341, 309);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(271, 274);
@@ -1365,7 +1363,6 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(341, 18);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(271, 274);
@@ -1376,22 +1373,22 @@
             // accuracyTime
             // 
             this.accuracyTime.BackColor = System.Drawing.Color.Transparent;
-            chartArea4.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
-            chartArea4.Name = "ChartArea1";
-            this.accuracyTime.ChartAreas.Add(chartArea4);
-            legend4.Enabled = false;
-            legend4.Name = "Legend1";
-            this.accuracyTime.Legends.Add(legend4);
+            chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Percent60;
+            chartArea1.Name = "ChartArea1";
+            this.accuracyTime.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.accuracyTime.Legends.Add(legend1);
             this.accuracyTime.Location = new System.Drawing.Point(3, 3);
             this.accuracyTime.Name = "accuracyTime";
-            series4.BackImageTransparentColor = System.Drawing.Color.White;
-            series4.BorderColor = System.Drawing.Color.Transparent;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series4.IsXValueIndexed = true;
-            series4.Legend = "Legend1";
-            series4.Name = "Accuracy";
-            this.accuracyTime.Series.Add(series4);
+            series1.BackImageTransparentColor = System.Drawing.Color.White;
+            series1.BorderColor = System.Drawing.Color.Transparent;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Accuracy";
+            this.accuracyTime.Series.Add(series1);
             this.accuracyTime.Size = new System.Drawing.Size(317, 580);
             this.accuracyTime.TabIndex = 0;
             this.accuracyTime.Text = "chart1";
@@ -1560,7 +1557,6 @@
             // 
             // pictureBox5
             // 
-            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
             this.pictureBox5.Location = new System.Drawing.Point(16, 307);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(271, 274);
@@ -1910,7 +1906,6 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
             this.pictureBox3.Location = new System.Drawing.Point(16, 16);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(271, 274);
@@ -1956,7 +1951,6 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
             this.pictureBox2.Location = new System.Drawing.Point(3, 2);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(245, 105);
@@ -1994,13 +1988,13 @@
             this.donateButton.UseVisualStyleBackColor = true;
             this.donateButton.Click += new System.EventHandler(this.DonateButton_Click);
             // 
-            // textPlateDiameter
+            // bedDiameter
             // 
-            this.textPlateDiameter.Location = new System.Drawing.Point(343, 61);
-            this.textPlateDiameter.Name = "textPlateDiameter";
-            this.textPlateDiameter.Size = new System.Drawing.Size(100, 20);
-            this.textPlateDiameter.TabIndex = 200;
-            this.textPlateDiameter.Text = "260";
+            this.bedDiameter.Location = new System.Drawing.Point(343, 61);
+            this.bedDiameter.Name = "bedDiameter";
+            this.bedDiameter.Size = new System.Drawing.Size(100, 20);
+            this.bedDiameter.TabIndex = 200;
+            this.bedDiameter.Text = "260";
             // 
             // label36
             // 
@@ -2077,7 +2071,7 @@
             this.Controls.Add(this.comboBoxZMin);
             this.Controls.Add(this.checkHeights);
             this.Controls.Add(this.label36);
-            this.Controls.Add(this.textPlateDiameter);
+            this.Controls.Add(this.bedDiameter);
             this.Controls.Add(this.donateButton);
             this.Controls.Add(this.contactButton);
             this.Controls.Add(this.aboutButton);
@@ -2097,7 +2091,6 @@
             this.Controls.Add(this.advancedPanel);
             this.Controls.Add(this.printerLogPanel);
             this.Controls.Add(this.pictureBox2);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "OpenDACT";
             this.printerLogPanel.ResumeLayout(false);
@@ -2144,7 +2137,7 @@
         private System.Windows.Forms.Button aboutButton;
         private System.Windows.Forms.Button contactButton;
         private System.Windows.Forms.Button donateButton;
-        private System.Windows.Forms.TextBox textPlateDiameter;
+        private System.Windows.Forms.TextBox bedDiameter;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.Button checkHeights;
         public System.Windows.Forms.ComboBox comboBoxZMin;

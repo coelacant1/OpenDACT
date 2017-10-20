@@ -77,14 +77,6 @@
     <Reference Include="MathNet.Numerics, Version=3.20.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="RJCP.SerialPortStream">
       <HintPath>DLL\RJCP.SerialPortStream.dll</HintPath>
     </Reference>
@@ -104,14 +96,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class Files\IParameters.cs" />
     <Compile Include="Class Files\Calibration.cs" />
-    <Compile Include="Class Files\GCodeCommands.cs" />
     <Compile Include="Class Files\Printer.cs" />
     <Compile Include="Class Files\Regression.cs" />
     <Compile Include="Class Files\SerialPort.cs" />
     <Compile Include="Class Files\Settings.cs" />
     <Compile Include="Class Files\UserInterface.cs" />
-    <Compile Include="Class Files\Validation.cs" />
     <Compile Include="OpenDACT.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +112,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="mainForm.resx">
+      <DependentUpon>OpenDACT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenDACT.resx">
       <DependentUpon>OpenDACT.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

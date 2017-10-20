@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace OpenDACT.Class_Files
 {
-    class SerialPort
+    public class SerialPort
     {
         private SerialPortStream serialStream;
         private delegate SerialPinChange Test();

@@ -77,41 +77,56 @@ namespace OpenDACT.Class_Files
 
         public void LoadParameters(string location)
         {
-            Tuple<List<string>, List<string>> parameters = ReadCSVToString(location);
+            Dictionary<string, string> parameters = ReadCSVToString(location);
 
-            gCodeCommands.LoadGCodeMappings(test);
+            gCodeCommands.LoadGCodeMappings(location);
 
             throw new NotImplementedException();
         }
 
-        public class GCodeCommands
+        public void ReadParametersPort(SerialPort serialPort)
         {
-            public List<string> checkHeights;
+            //send command, read command
+
+            throw new NotImplementedException();
+        }
+
+        public void WriteParametersPort(SerialPort serialPort)
+        {
+            //write each parameter and send save command
+            throw new NotImplementedException();
+        }
+
+        public class GCodeCommands : IParameters
+        {
             public List<string> CoordinatesYOppX { get; set; }
             public List<string> CoordinatesXZOpp { get; set; }
             public List<string> CoordinatesZOppY { get; set; }
             public List<string> CoordinatesYXOpp { get; set; }
             public List<string> CoordinatesXOppZ { get; set; }
+            public List<string> CoordinatesXY { get; set; }
+            public List<string> CoordinatesXZ { get; set; }
 
             public GCodeCommands(double bedDiameter)
             {
-                checkHeights = new List<string>(new string[]{
-                    "",
-                    "",
-                    ""
-                });
-
                 string test = GCODE.HomeAllAxes;
-                CalculateBedCoordinates(bedDiameter);
+
+                CalculateSixPointBedCoordinateTransitions(bedDiameter);
+                CalculateThreePointBedCoordinateTransitions(bedDiameter);
             }
 
-            private void CalculateBedCoordinates(double bedDiameter)
+            private void CalculateSixPointBedCoordinateTransitions(double bedDiameter)
             {
                 CoordinatesYOppX = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(300, 240, 0.5, bedDiameter/2));
                 CoordinatesXZOpp = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(240, 180, 0.5, bedDiameter/2));
                 CoordinatesZOppY = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(180, 120, 0.5, bedDiameter/2));
                 CoordinatesYXOpp = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(120, 60,  0.5, bedDiameter/2));
                 CoordinatesXOppZ = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(60,  0,   0.5, bedDiameter/2));
+            }
+            private void CalculateThreePointBedCoordinateTransitions(double bedDiameter)
+            {
+                CoordinatesXY = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(240, 120, 0.5, bedDiameter / 2));
+                CoordinatesXZ = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(120, 0, 0.5, bedDiameter / 2));
             }
 
             private List<Tuple<double, double>> CalculateCoordinateRange(double startDegree, double stopDegree, double degreeAccuracy, double radius)
@@ -138,17 +153,23 @@ namespace OpenDACT.Class_Files
                 return gCodeCoordinates;
             }
 
-            public void LoadGCodeMappings()
+            public void LoadGCodeMappings(string location)
             {
-                GCODE.HomeAllAxes;// G28
-                GCODE.SingleProbe;// G30
-                GCODE.EmergencyReset;// M112
-                GCODE.SendToCenter;// G0 X0 Y0
+                Dictionary<string, string> parameters = ReadCSVToString(location);
+                
+                parameters.TryGetValue("HomeAllAxes", out string HomeAllAxes);
+
+                GCODE.HomeAllAxes = ParseGCodeParameter(HomeAllAxes);// G28
+
+                string test = "123456";
+                string result = $"Param: {test}";
 
                 throw new NotImplementedException();
+            }
 
-                //read in from csv set parameters of homing, setting
-
+            public string ParseGCodeParameter(string parameter)
+            {
+                throw new NotImplementedException();
             }
 
             //check heights
@@ -160,7 +181,6 @@ namespace OpenDACT.Class_Files
                 public static string HomeAllAxes { get; set; }
                 public static string SingleProbe { get; set; }
                 public static string EmergencyReset { get; set; }
-                public static string SendToCenter { get; set; }
             };
         }
     }

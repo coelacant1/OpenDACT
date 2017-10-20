@@ -67,23 +67,31 @@ namespace OpenDACT.Class_Files
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
-            printer = new Printer();
             serialPort = new SerialPort();
             serialPort.Open(portsCombo.Text, baudRateCombo.Text);
         }
 
         private void DisconnectButton_Click(object sender, EventArgs e)
         {
-            serialPort.Close();
+            if (serialPort.IsOpen())
+            {
+                serialPort.Close();
+                serialPort.Dispose();
+            }
+            else
+            {
+                UserInterface.LogConsole("Not connected");
+            }
         }
 
         private void CalibrateButton_Click(object sender, EventArgs e)
         {
             if (serialPort.IsOpen())
             {
+                printer = new Printer(Double.Parse(bedDiameter.Text));
                 //process software settings
                 //calibration routine
-                
+
             }
             else
             {
@@ -223,7 +231,7 @@ namespace OpenDACT.Class_Files
                 this.textDeltaTower.Text = UserVariables.deltaTower.ToString();
                 this.diagonalRodLengthText.Text = UserVariables.diagonalRodLength.ToString();
                 this.alphaText.Text = UserVariables.alphaRotationPercentage.ToString();
-                this.textPlateDiameter.Text = UserVariables.plateDiameter.ToString();
+                this.bedDiameter.Text = UserVariables.plateDiameter.ToString();
                 this.textProbingHeight.Text = UserVariables.probingHeight.ToString();
 
                 //XYZ Offset percs
@@ -275,7 +283,7 @@ namespace OpenDACT.Class_Files
             UserVariables.deltaTower = Convert.ToSingle(this.textDeltaTower.Text);
             UserVariables.diagonalRodLength = Convert.ToSingle(this.diagonalRodLengthText.Text);
             UserVariables.alphaRotationPercentage = Convert.ToSingle(this.alphaText.Text);
-            UserVariables.plateDiameter = Convert.ToSingle(this.textPlateDiameter.Text);
+            UserVariables.plateDiameter = Convert.ToSingle(this.bedDiameter.Text);
             UserVariables.probingHeight = Convert.ToSingle(this.textProbingHeight.Text);
 
             //XYZ Offset percs

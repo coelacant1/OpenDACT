@@ -1,0 +1,40 @@
+//Printer Settings
+PrinterName,DeltaTest
+ZMaxHeight,500
+XCarriageOffset,0
+YCarriageOffset,0
+ZCarriageOffset,0
+XDeltaRadius,0
+YDeltaRadius,0
+ZDeltaRadius,0
+XAlphaRotation,210
+YAlphaRotation,330
+ZAlphaRotation,90
+HorizontalRadius,140
+DiagonalRod,275
+StepsPerMillimeter,160
+ZProbeOffset,-0.3
+//
+//GCode Settings
+FirmwareName,Smoothieware
+HomeAllAxes,G28
+SingleProbe,G30
+EmergencyReset,M112
+RapidMove,G0 X{XPosition} Y{YPosition} Z{ZPosition}
+GetZMaxHeight,M665 H{}
+GetCarriageOffset,M666 X{} Y{} Z{}
+GetDeltaRadius,M665 A{} B{} C{}
+GetAlphaRotation,M665 D{} E{} H{}
+GetHorizontalRadius,M665 R{}
+GetDiagonalRodLength,M665 L{}
+GetStepsPerMillimeter,M92 X0 Y0 Z{StepsPerMillimeter}
+GetZProbeOffset,M565 X0 Y0 Z{ZProbeOffset}
+SetZMaxHeight,M665 Z{ZMaxHeight}
+SetCarriageOffsets,M666 X{XOffset} Y{YOffset} Z{ZOffset}
+SetDeltaRadii,M665 A{XDeltaOffset} B{YDeltaOffset} C{ZDeltaOffset}
+SetAlphaRotation,M665 D{XAlphaRotation} E{YAlphaRotation} H{ZAlphaRotation}
+SetHorizontalRadius,M665 R{HorizontalRadius}
+SetDiagonalRodLength,M665 L{DiagonalRodLength}
+SaveParameters,M500
+//
+//Software Settings

@@ -1,8 +1,32 @@
-#Delta-Auto-Calibration-Source
-This is the new location for the source files for the delta kinematics auto calibration program that I am working on. This is not guaranteed to always work, I will upload the stabile versions to my Google Drive and will post them on the forum.
+###Branch is incomplete, merge will take place when working version is available.
 
-I will not be responsible for any damage to your printer, especially if you are not careful with the program. Serial ports tend to have buffer issues, so always stay close to your printer when running any version of this software.
+##Open Source Delta Automatic Calibration Tool
 
-If you would like to contribute to the main project, then send me an email at steventrowland (at) gmail.com or message me on the SeeMeCNC forum.
+#What's new in Version 4:
+  - Better serialport handling
+  - GCode configuration to allow any firmware type
+  - Quick snapshot saving of settings
 
-Forum post - http://forum.seemecnc.com/viewtopic.php?f=36&t=8698
+##Introduction:
+
+##Requirements:
+  - Time, initial configuration may take a while
+  - 
+
+##Installation:
+  - Download zip under release Version 4.0.0
+  - Run Setup.exe
+  - Edit or Download Configuration file for your printer
+  - Run Calibration
+
+##Relevant Links:
+  - Setup Process Video: 
+  - Calibration Demonstration: 
+  - Post on SeeMeCNC Forums: http://forum.seemecnc.com/viewtopic.php?f=36&t=8698
+
+
+##Warnings/Recommendations:
+I will not be responsible for any damage to your printer. Always stay close to your printer when running any version of this software. Pay close attention to the way that the program is configured. If it is not configured properly it can result in toolhead crashes, broken borosilicate plates, or worse.
+
+##License:
+OpenDACT is Licensed Under the Apache License 2.0

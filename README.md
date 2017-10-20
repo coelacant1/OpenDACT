@@ -1,6 +1,6 @@
 ### Branch is incomplete, merge will take place when working version is available.
 
-## Open Source Delta Automatic Calibration Tool
+## OpenDACT(Open Source Delta Automatic Calibration Tool)
 
 # What's new in Version 4:
   - Better serialport handling

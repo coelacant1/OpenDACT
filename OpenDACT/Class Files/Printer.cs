@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 
 namespace OpenDACT.Class_Files
 {
-    public class Printer : IParameters
+    public class Printer : Parameters
     {
         public BedHeightMap bedHeightMap;
         public Kinematics kinematics;
         public GCodeCommands gCodeCommands;
 
-        public Printer(double bedDiameter)
+        public Printer()
         {
             bedHeightMap = new BedHeightMap();
             kinematics = new Kinematics();
-            gCodeCommands = new GCodeCommands(bedDiameter);
         }
 
         public class BedHeightMap
@@ -70,118 +69,36 @@ namespace OpenDACT.Class_Files
             public double Z { get; set; }
         };
         
-        public void SaveParameters(string location)
+        public override void SaveParameters(string location)
         {
             throw new NotImplementedException();
         }
 
-        public void LoadParameters(string location)
+        public override void LoadParameters(string location)
         {
             Dictionary<string, string> parameters = ReadCSVToString(location);
 
-            gCodeCommands.LoadGCodeMappings(location);
+            gCodeCommands.LoadParameters(location);
 
             throw new NotImplementedException();
         }
 
-        public void ReadParametersPort(SerialPort serialPort)
+        public void LoadParametersPort(SerialPort serialPort)
         {
             //send command, read command
 
             throw new NotImplementedException();
         }
 
-        public void WriteParametersPort(SerialPort serialPort)
+        public void SaveParametersPort(SerialPort serialPort)
         {
             //write each parameter and send save command
             throw new NotImplementedException();
         }
 
-        public class GCodeCommands : IParameters
+        public override void ValidateParameters()
         {
-            public List<string> CoordinatesYOppX { get; set; }
-            public List<string> CoordinatesXZOpp { get; set; }
-            public List<string> CoordinatesZOppY { get; set; }
-            public List<string> CoordinatesYXOpp { get; set; }
-            public List<string> CoordinatesXOppZ { get; set; }
-            public List<string> CoordinatesXY { get; set; }
-            public List<string> CoordinatesXZ { get; set; }
-
-            public GCodeCommands(double bedDiameter)
-            {
-                string test = GCODE.HomeAllAxes;
-
-                CalculateSixPointBedCoordinateTransitions(bedDiameter);
-                CalculateThreePointBedCoordinateTransitions(bedDiameter);
-            }
-
-            private void CalculateSixPointBedCoordinateTransitions(double bedDiameter)
-            {
-                CoordinatesYOppX = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(300, 240, 0.5, bedDiameter/2));
-                CoordinatesXZOpp = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(240, 180, 0.5, bedDiameter/2));
-                CoordinatesZOppY = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(180, 120, 0.5, bedDiameter/2));
-                CoordinatesYXOpp = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(120, 60,  0.5, bedDiameter/2));
-                CoordinatesXOppZ = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(60,  0,   0.5, bedDiameter/2));
-            }
-            private void CalculateThreePointBedCoordinateTransitions(double bedDiameter)
-            {
-                CoordinatesXY = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(240, 120, 0.5, bedDiameter / 2));
-                CoordinatesXZ = ConvertBedCoordinatesToGCode(CalculateCoordinateRange(120, 0, 0.5, bedDiameter / 2));
-            }
-
-            private List<Tuple<double, double>> CalculateCoordinateRange(double startDegree, double stopDegree, double degreeAccuracy, double radius)
-            {
-                List<Tuple<double, double>> coordinates = new List<Tuple<double, double>>();
-
-                for (double i = 0; i < 300; i += degreeAccuracy)
-                {
-                    coordinates.Add(Tuple.Create(radius * Math.Cos(i) * 180 / Math.PI, radius * Math.Sin(i) * 180 / Math.PI));
-                }
-
-                return coordinates;
-            }
-
-            private List<string> ConvertBedCoordinatesToGCode(List<Tuple<double, double>> coordinates)
-            {
-                List<string> gCodeCoordinates = new List<string>();
-
-                foreach (Tuple<double, double> coordinate in coordinates)
-                {
-                    gCodeCoordinates.Add("G0 X" + coordinate.Item1 + " Y" + coordinate.Item2);
-                }
-
-                return gCodeCoordinates;
-            }
-
-            public void LoadGCodeMappings(string location)
-            {
-                Dictionary<string, string> parameters = ReadCSVToString(location);
-                
-                parameters.TryGetValue("HomeAllAxes", out string HomeAllAxes);
-
-                GCODE.HomeAllAxes = ParseGCodeParameter(HomeAllAxes);// G28
-
-                string test = "123456";
-                string result = $"Param: {test}";
-
-                throw new NotImplementedException();
-            }
-
-            public string ParseGCodeParameter(string parameter)
-            {
-                throw new NotImplementedException();
-            }
-
-            //check heights
-            //read parameters
-            //write parameters
-
-            public static class GCODE
-            {
-                public static string HomeAllAxes { get; set; }
-                public static string SingleProbe { get; set; }
-                public static string EmergencyReset { get; set; }
-            };
+            throw new NotImplementedException();
         }
     }
 }

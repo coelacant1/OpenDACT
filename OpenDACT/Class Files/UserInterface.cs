@@ -16,21 +16,20 @@ namespace OpenDACT.Class_Files
 {
     static class UserInterface
     {
-        
-        public static void LogConsole(string value)
+        public static void LogConsole(string value, Settings settings)
         {
             Program.MainForm.Invoke((MethodInvoker)delegate { Program.MainForm.consoleMain.AppendText(value + "\n"); });
-            if (Settings.ScrollToBottomSoftwareLog)
+            if (settings.ScrollToBottomSoftwareLog)
             {
                 Program.MainForm.Invoke((MethodInvoker)delegate { Program.MainForm.consoleMain.ScrollToCaret(); });
             }
         }
 
 
-        public static void LogPrinter(string value)
+        public static void LogPrinter(string value, Settings settings)
         {
             Program.MainForm.Invoke((MethodInvoker)delegate { Program.MainForm.consolePrinter.AppendText(value + "\n"); });
-            if (Settings.ScrollToBottomPrinterLog)
+            if (settings.ScrollToBottomPrinterLog)
             {
                 Program.MainForm.Invoke((MethodInvoker)delegate { Program.MainForm.consolePrinter.ScrollToCaret(); });
             }
@@ -53,7 +52,7 @@ namespace OpenDACT.Class_Files
             double YOpp = printer.bedHeightMap.YOpposite;
             double Z = printer.bedHeightMap.ZTower;
             double ZOpp = printer.bedHeightMap.ZOpposite;
-
+            /*
             //set base heights for advanced calibration comparison
             if (Calibration.iterationNum == 0)
             {
@@ -82,10 +81,12 @@ namespace OpenDACT.Class_Files
                 Invoke((MethodInvoker)delegate { this.ZText.Text = Math.Round(Z, 3).ToString(); });
                 Invoke((MethodInvoker)delegate { this.ZOppText.Text = Math.Round(ZOpp, 3).ToString(); });
             }
+            */
         }
 
         public static void SetEEPROMGUIList()
         {
+            /*
             Invoke((MethodInvoker)delegate
             {
                 this.stepsPerMMText.Text = EEPROM.stepsPerMM.ToString();
@@ -104,6 +105,7 @@ namespace OpenDACT.Class_Files
                 this.DBText.Text = EEPROM.DB.ToString();
                 this.DCText.Text = EEPROM.DC.ToString();
             });
+            */
         }
     }
 }

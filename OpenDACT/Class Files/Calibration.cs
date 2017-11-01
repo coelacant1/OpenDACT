@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-
+/*
 namespace OpenDACT.Class_Files
 {
     static class Calibration
@@ -396,10 +396,6 @@ namespace OpenDACT.Class_Files
 /// <param name="ZOpp"></param>
         private static void StepsPerMillimeter(ref float X, ref float XOpp, ref float Y, ref float YOpp, ref float Z, ref float ZOpp)
         {
-            /*
-            float diagChange = 1 / UserVariables.deltaOpp;
-            float towChange = 1 / UserVariables.deltaTower;
-            */
 
             float diagChange = 1 / UserVariables.deltaOpp;
             float towChange = 1 / UserVariables.deltaTower;
@@ -422,8 +418,7 @@ namespace OpenDACT.Class_Files
             UserInterface.LogConsole("Steps per Millimeter: " + EEPROM.stepsPerMM.ToString());
         }
 
-
-        /*
+    
          //Delta Radius Calibration******************************************************
 	    function linearRegression(y,x){
 		    var lr = {};
@@ -494,10 +489,11 @@ namespace OpenDACT.Class_Files
 	    console.log("Tower heights after delta radius calibration: ", X, XOpp, Y, YOpp, Z, ZOpp);
 
 
-         */
 
 
 
 
     }
 }
+
+         */

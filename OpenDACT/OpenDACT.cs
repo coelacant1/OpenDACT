@@ -17,6 +17,8 @@ namespace OpenDACT.Class_Files
     {
         SerialPort serialPort;
         Printer printer;
+        Settings settings;
+        GCodeCommands gCodeCommands;
 
         public MainForm()
         {
@@ -61,7 +63,7 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                UserInterface.LogConsole("No ports available");
+                UserInterface.LogConsole("No ports available", settings);
             }
         }
 
@@ -80,7 +82,7 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                UserInterface.LogConsole("Not connected");
+                UserInterface.LogConsole("Not connected", settings);
             }
         }
 
@@ -88,14 +90,16 @@ namespace OpenDACT.Class_Files
         {
             if (serialPort.IsOpen())
             {
-                printer = new Printer(Double.Parse(bedDiameter.Text));
+                InitializePrinter();
+                InitializeSettings();
+                InitializeGCodeCommandsSmoothieware();
                 //process software settings
                 //calibration routine
 
             }
             else
             {
-                UserInterface.LogConsole("Not connected");
+                UserInterface.LogConsole("Not connected", settings);
             }
         }
         
@@ -107,7 +111,7 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                UserInterface.LogConsole("Not connected");
+                UserInterface.LogConsole("Not connected", settings);
             }
         }
 
@@ -139,10 +143,10 @@ namespace OpenDACT.Class_Files
             {
             if (serialPort.IsOpen()) {
                 serialPort.WriteLine(GCodeBox.Text.ToString().ToUpper());
-                UserInterface.LogConsole("Sent: " + GCodeBox.Text.ToString().ToUpper());
+                UserInterface.LogConsole("Sent: " + GCodeBox.Text.ToString().ToUpper(), settings);
             }
             else {
-                UserInterface.LogConsole("Not Connected");
+                UserInterface.LogConsole("Not Connected", settings);
             }
         }
 
@@ -180,7 +184,7 @@ namespace OpenDACT.Class_Files
 
 
         private void SendEEPROMButton_Click(object sender, EventArgs e)
-        {
+        {/*
             EEPROM.stepsPerMM = Convert.ToInt32(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.stepsPerMMText.Text, out value); return value; }));
             EEPROM.zMaxLength = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zMaxLengthText.Text, out value); return value; }));
             EEPROM.zProbeHeight = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.zProbeText.Text, out value); return value; }));
@@ -198,6 +202,7 @@ namespace OpenDACT.Class_Files
             EEPROM.DC = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(this.DCText.Text, out value); return value; }));
 
             EEPROMFunctions.sendEEPROM();
+            */
         }
 
         private void ReadEEPROM_Click(object sender, EventArgs e)
@@ -208,12 +213,13 @@ namespace OpenDACT.Class_Files
             }
             else
             {
-                UserInterface.LogConsole("Not Connected");
+                UserInterface.LogConsole("Not Connected", settings);
             }
         }
 
         public void SetButtonValues()
         {
+            /*
             Invoke((MethodInvoker)delegate
             {
                 this.textAccuracy.Text = UserVariables.calculationAccuracy.ToString();
@@ -240,6 +246,7 @@ namespace OpenDACT.Class_Files
                 this.textTowPerc.Text = UserVariables.towPerc.ToString();
                 this.textOppPerc.Text = UserVariables.oppPerc.ToString();
             });
+            */
         }
         private string GetZMin()
         {
@@ -266,7 +273,7 @@ namespace OpenDACT.Class_Files
         }
 
         public void SetUserVariables()
-        {
+        {/*
             UserVariables.calculationAccuracy = Convert.ToSingle(this.textAccuracy.Text);
             UserVariables.accuracy = Convert.ToSingle(this.textAccuracy2.Text);
             UserVariables.HRadRatio = Convert.ToSingle(this.textHRadRatio.Text);
@@ -293,6 +300,7 @@ namespace OpenDACT.Class_Files
             UserVariables.oppPerc = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(textOppPerc.Text, out value); return value; }));
 
             UserVariables.xySpeed = Convert.ToSingle(this.Invoke((Func<double>)delegate { double value; Double.TryParse(xySpeedTxt.Text, out value); return value; }));
+            */
         }
 
         private void CheckHeights_Click(object sender, EventArgs e)
@@ -314,7 +322,7 @@ namespace OpenDACT.Class_Files
         }
 
         private void ManualCalibrateBut_Click(object sender, EventArgs e)
-        {
+        {/*
             try
             {
                 Calibration.calibrationState = true;
@@ -379,6 +387,68 @@ namespace OpenDACT.Class_Files
             {
                 UserInterface.LogConsole(ex.ToString());
             }
-        }        
+            */
+        }
+
+        public void InitializePrinter()
+        {
+            printer = new Printer();
+        }
+
+        public void InitializeSettings()
+        {
+            settings = new Settings.Builder() {
+                CalculationAccuracy = 0,
+                HeightmapAccuracy = 0,
+                HorizontalRadiusChange = 0,
+                ProbingSpeed = 0,
+                ProbingHeight = 0,
+                StepsPerMMChange = 0,
+                TowerSPMChange = 0,
+                OppositeSPMChange = 0,
+                AlphaRotationChange = 0,
+                TowerOffsetCorrectionMain = 0,
+                TowerOffsetCorrectionMainOpposite = 0,
+                TowerOffsetCorrectionSecondary = 0,
+                TowerOffsetCorrectionSecondaryOpposite = 0,
+                XYTravelSpeed = 0,
+                PlateDiameter = 0,
+                Firmware = "",
+                COMPort = "",
+                ScrollToBottomPrinterLog = true,
+                ScrollToBottomSoftwareLog = true,
+                MaximumIterations = 0,
+                GCodeCalculationAccuracy = 0
+            }.Build();
+        }
+
+        public void InitializeGCodeCommandsSmoothieware()
+        {
+            gCodeCommands = new GCodeCommands.Builder() {
+                HomeAllAxes = "G28",
+                SingleProbe = "G30",
+                EmergencyReset = "M112"
+            }.Build();
+        }
+        
+        public void InitializeGCodeCommandsRepetier()
+        {
+            gCodeCommands = new GCodeCommands.Builder()
+            {
+                HomeAllAxes = "G28",
+                SingleProbe = "G30",
+                EmergencyReset = "M112"
+            }.Build();
+        }
+        
+        public void InitializeGCodeCommandsMarlin()
+        {
+            gCodeCommands = new GCodeCommands.Builder()
+            {
+                HomeAllAxes = "G28",
+                SingleProbe = "G30",
+                EmergencyReset = "M112"
+            }.Build();
+        }
     }
 }

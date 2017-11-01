@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenDACT.Class_Files
 {
-    public abstract class IParameters
+    public abstract class Parameters
     {
         public Dictionary<string, string> ReadCSVToString(string location)
         {
@@ -26,5 +26,14 @@ namespace OpenDACT.Class_Files
 
             return CSVContent;
         }
+
+        public abstract void SaveParameters(string location);
+        public abstract void LoadParameters(string location);
+        public abstract void ValidateParameters();//ensures that the parameters are properly initialized, if not it lets users know
+
+        public abstract class Builder<T> where T : Parameters
+        {
+            public abstract T Build();
+        };
     }
 }

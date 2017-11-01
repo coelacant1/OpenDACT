@@ -29,4 +29,4 @@
 I will not be responsible for any damage to your printer. Always stay close to your printer when running any version of this software. Pay close attention to the way that the program is configured. If it is not configured properly it can result in toolhead crashes, broken borosilicate plates, or worse.
 
 ## License:
-OpenDACT is Licensed Under the Apache License 2.0
+OpenDACT is Licensed Under the GNU AGPLv3
